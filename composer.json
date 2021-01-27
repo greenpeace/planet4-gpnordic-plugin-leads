@@ -1,6 +1,6 @@
 {
   "name": "greenpeace/planet4-gpnordic-plugin-leads",
-  "description": "Greenpeace Nordic Leads Plugin with ACF fileds",
+  "description": "This repository contains the Greenpeace Nordic Leads Plugin with ACF blocks.",
   "type": "wordpress-plugin",
   "minimum-stability" : "stable",
   "license": "GPL-3.0+",
