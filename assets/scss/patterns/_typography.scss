@@ -1,0 +1,119 @@
+@font-face {
+  font-family: "DK Plakkaat";
+  src: url("../assets/fonts/Plakkaat.ttf") format("truetype");
+}
+/* Typefaces */
+$header-font-family: "DK Plakkaat", 'Helvetica Neue', 'Helvetica', sans-serif;
+$body-font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+
+.leads-form {
+  /* General styles */
+  h2 {
+      font-family: $header-font-family;
+      font-size: 4rem;
+      line-height: 1.05em;
+      @media only screen and (max-width: $leads--large) {
+        font-size: 3rem;
+      }
+      &.under {
+        &-10 {
+          font-size: 5.5rem; 
+          @media screen and (max-width: $leads--large) {
+            font-size: 4.125rem;
+          }
+        }
+        &-20 {
+          font-size: 5.5rem; 
+          @media screen and (max-width: $leads--large) {
+            font-size: 4.125rem;
+          }
+        }
+        &-25 {
+          font-size: 4.75rem; 
+          @media screen and (max-width: $leads--large) {
+            font-size: 3.6rem;
+          }
+        }
+        &-30 {
+          font-size: 4.5rem; 
+          @media screen and (max-width: $leads--large) {
+            font-size: 3.375rem;
+          }
+        }
+        &-35 {
+          font-size: 4.25rem; 
+          @media screen and (max-width: $leads--large) {
+            font-size: 3.2rem;
+          }
+        }
+        &-45 {
+          font-size: 4rem; 
+          @media screen and (max-width: $leads--large) {
+            font-size: 3rem;
+          }
+        }
+        &-60 {
+          font-size: 3.5rem; 
+          @media screen and (max-width: $leads--large) {
+            font-size: 2.6rem;
+          }
+        }
+        &-85 {
+          font-size: 3rem; 
+          @media screen and (max-width: $leads--large) {
+            font-size: 2.25rem;
+          }
+        }
+      }
+      &.over-95 {
+        font-size: 2.5rem;
+        @media screen and (max-width: $leads--large) {
+          font-size: 1.875rem;
+        }
+      }
+  }
+  h3 {
+    font-family: $body-font-family;
+    font-size: 2rem;
+    line-height: 2.5rem;
+    font-weight: bold;
+  }
+  h4 {
+      font-family: $body-font-family;
+      font-size: 1.5rem;
+      line-height: 2rem;
+      font-weight: bold;
+  }
+  p {
+      font-family: $body-font-family;
+      font-size: 1rem;
+      line-height: 1.5rem;
+      font-weight: 500;
+      &.medium {
+        font-weight: 500;
+      }
+      &.bold {
+        font-weight: 700;
+      }
+  }
+
+  small,
+  small p {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+  .preamble,
+  .preamble p {
+    font-size: 2rem;
+    line-height: 2.25rem;
+    font-weight: 500;
+    @media only screen and (max-width: $leads--large) {
+      font-size: 1.5rem;
+      line-height: 1.7rem;
+    }
+    p {
+      margin-bottom: 0;
+    }
+  }
+  /* Text decorations */
+}

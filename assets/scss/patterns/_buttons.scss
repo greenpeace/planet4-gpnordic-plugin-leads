@@ -1,0 +1,72 @@
+/* CUSTOM LINKS / BUTTON STYLING */
+
+.leads-form {
+  .button {
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    font-family: $body-font-family;
+    font-weight: 700;
+    border-radius: 3px;
+    padding: 0.75rem 3rem;
+    text-align: center;
+    width: auto;
+    cursor: pointer;
+  
+    @media only screen and (max-width: 1366px) {
+      display: block;
+      width: 100%;
+    }
+    &--submit {
+      display: block;
+      width: 100%;
+      max-height: 3.4rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        color: white;
+        padding-right: 0.5rem;
+      }
+      svg {
+        opacity: 0.9;
+        margin-bottom: 3px;
+        margin-right: 3px;
+      }
+    }
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  a.button--arrow {
+    font-size: 1rem;
+    background-color: transparent;
+    font-family: $body-font-family;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    color: white;
+    cursor: pointer;
+    svg {
+      margin-right: 0.5rem;
+      path {
+        stroke: white;
+      }
+    }
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  a.button--share {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+}

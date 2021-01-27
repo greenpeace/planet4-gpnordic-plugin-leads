@@ -1,0 +1,59 @@
+/* Custom colors */
+
+// Gray
+$gray: #A1A1A1;
+$gray--light: #F0F0F0;
+$gray--dark: #4A4A4A;
+$blue: #86EEE7;
+$blue--light: #B9F6FF;
+$blue--dark: #093944;
+$yellow: #FFF6CD;
+
+$leads--black: #212121;
+$black--opacity-60: rgba($leads--black, 0.6);
+$black--opacity-40: rgba($leads--black, 0.4);
+$black--opacity-20: rgba($leads--black, 0.2);
+$black--opacity-5: rgba($leads--black, 0.05);
+
+$leads--white: #fff;
+$white--opacity-80: rgba($leads--white, 0.8);
+$white--opacity-60: rgba($leads--white, 0.6);
+$white--opacity-40: rgba($leads--white, 0.4);
+$white--opacity-20: rgba($leads--white, 0.2);
+$white--opacity-10: rgba($leads--white, 0.1);
+$white--opacity-5: rgba($leads--white, 0.05);
+
+$colors: (
+  'gray': $gray,
+  'gray--light': $gray--light,
+  'gray--dark': $gray--dark,
+  'black--opacity-60' : $black--opacity-60,
+  'black--opacity-40' : $black--opacity-40,
+  'black--opacity-20' : $black--opacity-20,
+  'black--opacity-5' : $black--opacity-5,
+  'white--opacity-80' : $white--opacity-80,
+  'white--opacity-60' : $white--opacity-60,
+  'white--opacity-40' : $white--opacity-40,
+  'white--opacity-20' : $white--opacity-20,
+  'white--opacity-10' : $white--opacity-10,
+  'white--opacity-5' : $white--opacity-5,
+);
+
+@each $color in $colors {
+  $key: nth($color, 1);
+  $value: nth($color, 2);
+  .background-color__#{$key} {
+    background-color: $value;
+  }
+  .color__#{$key} {
+    color: $value !important;
+  }
+}
+
+@function textcolor($color) {
+  @if (lightness($color) > 50) {
+    @return $leads--black;
+  } @else {
+    @return #ffffff;
+  }
+}

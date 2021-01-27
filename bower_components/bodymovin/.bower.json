@@ -1,0 +1,42 @@
+{
+  "name": "bodymovin",
+  "description": "After Effects plugin for exporting animations to SVG + JavaScript or canvas + JavaScript",
+  "main": "./build/player/lottie.js",
+  "authors": [
+    "hernan <bodymovin@users.noreply.github.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "animation",
+    "canvas",
+    "svg",
+    "after",
+    "effects",
+    "plugin",
+    "export"
+  ],
+  "homepage": "https://github.com/bodymovin/bodymovin",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "player/",
+    "test",
+    "tests"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bodymovin/bodymovin.git"
+  },
+  "version": "5.7.3",
+  "_release": "5.7.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v5.7.3",
+    "commit": "d96d44a8c859818153c7d2b2ba29421d563165d5"
+  },
+  "_source": "https://github.com/bodymovin/bodymovin.git",
+  "_target": "^5.7.3",
+  "_originalSource": "bodymovin",
+  "_direct": true
+}

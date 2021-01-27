@@ -1,0 +1,21 @@
+/* Custom icons */
+
+$icons: (
+);
+
+@each $value in $icons {
+  .icon-#{$value} {
+    background: url('../images/icons/#{$value}.svg') no-repeat center center / contain;
+  }
+}
+
+.leads-form {
+  .arrow-icon  {
+  
+    &--rotated {
+      svg {
+        transform: rotateZ(180deg);
+      }
+    }
+  }
+}
