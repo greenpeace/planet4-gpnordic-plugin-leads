@@ -1,5 +1,5 @@
 {
-  "name": "greenpeace/greenpeace-leads",
+  "name": "greenpeace/planet4-gpnordic-plugin-leads",
   "description": "Greenpeace Nordic Leads Plugin with ACF fileds",
   "type": "wordpress-plugin",
   "minimum-stability" : "stable",
