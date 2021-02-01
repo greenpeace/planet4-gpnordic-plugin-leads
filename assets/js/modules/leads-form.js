@@ -11,6 +11,7 @@
    * @param   object attributes The block attributes (only available when editing).
    * @return  void
    */
+
   var initializeBlock = ($block) => {
     // console.log($block, jQuery($block).hasClass('leads-form'), $block[0].children[0])
     if (!jQuery($block).hasClass('leads-form'))
@@ -92,7 +93,7 @@
 
         if (this.blockData.enableCounter && Array.isArray(this.blockData.counterApiEndpoints)) {
           this.blockData.counterApiEndpoints.forEach(e => {
-            if (e && trim(e) !== '' && e !== undefined)
+            if (e && jQuery.trim(e) !== '' && e !== undefined)
               jQuery.get(e, this.formFields, (response) => {
                 this.targetCounter = this.targetCounter + +response.counter
                 this.animateCounter()
@@ -103,7 +104,7 @@
         }
       },
       methods: {
-        animateCounter: _.debounce(function (t = this) {
+        animateCounter: lodash.debounce(function (t = this) {
           console.log('Updating counter')
           var Cont = { val: t.counter }, NewVal = t.targetCounter;
           TweenLite.to(Cont, 2, {
