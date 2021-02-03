@@ -1500,5 +1500,5 @@ if (function_exists('acf_add_local_field_group')) :
         return $field;
     }
     add_filter('acf/load_field/name=donate_url', 'load_donate_url_field');
-    
+
 endif;
