@@ -29,7 +29,7 @@ class FormController
       $hostname = get_field('database_host', 'options');
 
       $count = 0;
-      if (!strpos(get_site_url(), '.dev') && get_post_status($form_id) == 'publish') {
+      if (!strpos(get_site_url(), '.develop') && get_post_status($form_id) == 'publish') {
         $remote_db = new \wpdb($username, $password, $dbname, $hostname);
         $results = $remote_db->get_results("INSERT INTO LEADS VALUES (null, '$email', '$firstname', '$lastname', '$date', $approved_terms, '$source_code', '$country_iso', '$phone', '$utm', CURRENT_TIMESTAMP);");
         $remote_db->close();
@@ -95,17 +95,17 @@ class FormController
   public static function register_api_routes()
   {
      // Post Leads
-    register_rest_route("window.location.pathname.split('/')[1]", "gplp/v2", '/leads', array(
+    register_rest_route("gplp/v2", '/leads', array(
       'methods' => 'POST',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::set',
     ));
-    register_rest_route("window.location.pathname.split('/')[1]", "gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
+    register_rest_route("gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
       'methods' => 'GET',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::get_count',
     ));
-    register_rest_route("window.location.pathname.split('/')[1]", "gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
+    register_rest_route("gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
       'methods' => 'POST',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::set_count',
