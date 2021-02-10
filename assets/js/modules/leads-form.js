@@ -5,7 +5,7 @@
    * Adds custom JavaScript to the block HTML.
    *
    * @date    15/4/19
-   * @since   1.0.0
+   * @since   1.0.1
    *
    * @param   object $block The block jQuery element.
    * @param   object attributes The block attributes (only available when editing).
