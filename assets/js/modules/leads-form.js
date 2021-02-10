@@ -166,7 +166,7 @@
 
           if (this.errors.length == 0) {
             this.loading = true
-            jQuery.post(`/wp-json/gplp/v2/leads`, this.formFields, (response) => {
+            jQuery.post(` /${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`, this.formFields, (response) => {
               this.loading = false
               this.counter++
               this.dataLayer && this.dataLayer.push({

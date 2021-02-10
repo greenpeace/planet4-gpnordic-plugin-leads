@@ -95,17 +95,17 @@ class FormController
   public static function register_api_routes()
   {
      // Post Leads
-    register_rest_route("gplp/v2", '/leads', array(
+    register_rest_route("/${window.location.pathname.split('/')[1]}/gplp/v2", '/leads', array(
       'methods' => 'POST',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::set',
     ));
-    register_rest_route("gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
+    register_rest_route("/${window.location.pathname.split('/')[1]}/gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
       'methods' => 'GET',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::get_count',
     ));
-    register_rest_route("gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
+    register_rest_route("/${window.location.pathname.split('/')[1]}/gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
       'methods' => 'POST',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::set_count',
