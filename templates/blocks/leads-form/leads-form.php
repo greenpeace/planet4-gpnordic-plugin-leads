@@ -398,11 +398,11 @@ $url = get_the_permalink();
     }
 
     #<?php echo $id; ?>.dark .leads-form__counter {
-        background-color: white;
+        background-color: rgba(255,255,255,.05);
     }
 
     #<?php echo $id; ?>.dark .leads-form__counter__progress {
-        background-color: <?php echo hex2rgba($secondary_color, 0.2); ?>
+        background-color: <?php echo $secondary_color; ?>;
     }
 
     #<?php echo $id; ?>.dark .leads-form__counter--success {
