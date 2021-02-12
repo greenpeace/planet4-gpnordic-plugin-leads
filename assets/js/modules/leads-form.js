@@ -92,7 +92,10 @@
           .from(".leads-form__form", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
 
         if (this.blockData.enableCounter && Array.isArray(this.blockData.counterApiEndpoints)) {
-          this.blockData.counterApiEndpoints.forEach(e => {
+          jQuery.get(`/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
+            console.log(count,this.targetCounter)
+            this.targetCounter = count.counter
+            this.blockData.counterApiEndpoints.forEach(e => {
             if (e && jQuery.trim(e) !== '' && e !== undefined)
               jQuery.get(e, this.formFields, (response) => {
                 this.targetCounter = this.targetCounter + +response.counter
@@ -101,6 +104,8 @@
           })
           if (this.blockData.counterApiEndpoints.length == 0)
             this.animateCounter()
+          })
+
         }
       },
       methods: {
@@ -200,7 +205,8 @@
                           .from(".leads-form__counter", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
                           .from(".leads-form__share", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
                           .from(".leads-form__donate", { y: 100, opacity: 0, duration: this.animationSpeed, onComplete: this.addBlur() }, `-=${this.animationSpeed / 2}`)
-                      })
+                     //add datalayer here
+                     })
                     })
                   })
                 }
