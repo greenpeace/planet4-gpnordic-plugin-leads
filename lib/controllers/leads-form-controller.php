@@ -91,21 +91,32 @@ class FormController
     return array('counter' => $count + (int)$form_settings['counter']);
   }
 
+  // public static function get_country(){
+  //   // $fetch_country = jQuery(window.location.pathname.split('/')[1]);
+  //   $fetch_country = explode('/', $_SERVER['REQUEST_URI'])[1];
+
+  //   return $fetch_country;
+  //   echo '<script>console.log('$fetch_country')</script>';
+
+  // }
 
   public static function register_api_routes()
   {
+
+    $fetch_country = explode('/', $_SERVER['REQUEST_URI'])[1];
+
      // Post Leads
-    register_rest_route("/gplp/v2", '/leads', array(
+    register_rest_route($fetch_country."/gplp/v2", '/leads', array(
       'methods' => 'POST',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::set',
     ));
-    register_rest_route("/gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
+    register_rest_route($fetch_country."/gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
       'methods' => 'GET',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::get_count',
     ));
-    register_rest_route("/gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
+    register_rest_route($fetch_country."/gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
       'methods' => 'POST',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::set_count',
