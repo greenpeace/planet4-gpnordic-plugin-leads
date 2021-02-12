@@ -40,7 +40,7 @@ function leads_custom_column($column, $post_id)
       echo get_post_meta($post_id, 'form_settings_source_code', true);
       break;
     case 'live':
-      echo get_post_status($post_id) == 'publish' ? '<span>Y</span>' : '<span>N</span>';
+      echo get_post_status($post_id) == 'publish' ? '<span style="color:darkgreen;">Yes</span>' : '<span style="color:darkorange;">No</span>';
       break;
   }
 }
