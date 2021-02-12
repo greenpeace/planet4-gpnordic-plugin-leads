@@ -26,9 +26,9 @@ add_action('init', __NAMESPACE__ . '\\create_leads_post_type');
 function add_acf_columns_to_leads($columns)
 {
   return array_merge($columns, array(
-    'sourcecode' => __('Source code'),
+    'sourcecode' => __('Campaign code'),
     'live'   => __('Live'),
-    'author'   => __('Author'),
+    'author'   => __('Created by'),
   ));
 }
 add_filter('manage_leads-form_posts_columns', __NAMESPACE__ . '\\add_acf_columns_to_leads');
