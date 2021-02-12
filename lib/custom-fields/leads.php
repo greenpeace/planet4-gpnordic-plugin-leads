@@ -704,7 +704,7 @@ if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group(array(
         'key' => 'group_5f969db2d4824',
-        'title' => 'Leads Form Block',
+        'title' => 'Petition Form Block',
         'fields' => array(
             array(
                 'key' => 'field_5f969dceef2b3',
