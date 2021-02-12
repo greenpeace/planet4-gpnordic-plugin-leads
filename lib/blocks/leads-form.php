@@ -9,8 +9,8 @@ function acf_blocks_init()
     if (function_exists('acf_register_block_type')) {
         acf_register_block_type(array(
             'name'              => 'leads-form',
-            'title'             => __('Leads Form'),
-            'description'       => __('A custom leads form.'),
+            'title'             => __('Petition Form'),
+            'description'       => __('Select a petition form and how it should be displayed.'),
             'render_template'   => GPLP_PLUGIN_ROOT_URI . 'templates/blocks/leads-form/leads-form.php',
             'enqueue_style'     => GPLP_PLUGIN_ROOT . 'css/app.css?v=' . $plugin_data['Version'],
             'enqueue_script'    => GPLP_PLUGIN_ROOT . 'public/js/modules/leads-form.js?v=' . $plugin_data['Version'],
