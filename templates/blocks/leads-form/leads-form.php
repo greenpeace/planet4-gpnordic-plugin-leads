@@ -83,6 +83,7 @@ $hero_description = (isset($hero_settings['description']) && $hero_settings['des
 $url = get_the_permalink();
 ?>
 
+
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
     <div class="leads-form__grid">
         <div class="leads-form__content" v-show="!success">
@@ -193,7 +194,7 @@ $url = get_the_permalink();
 
                 <a @click="submit" class="button button--submit">
                     <span v-if="!loading"><?php svg_icon('send-message'); ?></span>
-                    <span v-html="loading ? '<?php echo $form_fields_translations['sending']; ?>' : '<?php echo $form_settings['call_to_action']; ?>'"></span>
+                    <span v-html="loading ? '<?php echo $form_fields_translations['sending']; ?>' : '<?php echo addslashes($form_settings['call_to_action']); ?>'"></span>
                 </a>
                 <?php if ($form_settings['consent_method'] === 'assumed') : ?>
                     <small><?php echo $form_settings['consent_message'] !== '' ? $form_settings['consent_message'] : $form_fields_translations['terms_agree']; ?></small>
@@ -258,6 +259,7 @@ $url = get_the_permalink();
     <div v-if="!success" class="leads-form__bottom-label"><?php svg_icon('hero-bottom-label'); ?></div>
 </div>
 <style>
+    .leads-form {opacity: 1 !important;}
     /* Counter */
     #<?php echo $id . ' '; ?>.leads-form__counter {
         background: <?php echo $secondary_color; ?>;
