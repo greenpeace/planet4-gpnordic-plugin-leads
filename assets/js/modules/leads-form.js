@@ -86,13 +86,14 @@
         this.dataLayer && this.dataLayer.push({
           'sourceCode': this.sourceCode,
           'counter': this.blockData.enableCounter ? 'yes' : 'no'
+
         });
         gsap.timeline({})
           .from(".leads-form__content", { y: 100, opacity: 0, duration: this.animationSpeed })
           .from(".leads-form__form", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
 
         if (this.blockData.enableCounter && Array.isArray(this.blockData.counterApiEndpoints)) {
-          jQuery.get(`${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
+          jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
             console.log(count,this.targetCounter)
             this.targetCounter = count.counter
             this.blockData.counterApiEndpoints.forEach(e => {
