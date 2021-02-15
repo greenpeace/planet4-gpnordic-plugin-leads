@@ -94,7 +94,7 @@
 
         if (this.blockData.enableCounter && Array.isArray(this.blockData.counterApiEndpoints)) {
           jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
-            console.log(count,this.targetCounter)
+            //console.log(count,this.targetCounter)
             this.targetCounter = count.counter
             this.blockData.counterApiEndpoints.forEach(e => {
             if (e && jQuery.trim(e) !== '' && e !== undefined)
@@ -111,7 +111,7 @@
       },
       methods: {
         animateCounter: lodash.debounce(function (t = this) {
-          console.log('Updating counter')
+          //console.log('Updating counter')
           var Cont = { val: t.counter }, NewVal = t.targetCounter;
           TweenLite.to(Cont, 2, {
             val: NewVal, roundProps: "val", onUpdate: () => {
