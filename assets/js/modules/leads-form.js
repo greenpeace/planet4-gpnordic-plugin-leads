@@ -92,7 +92,7 @@
           .from(".leads-form__form", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
 
         if (this.blockData.enableCounter && Array.isArray(this.blockData.counterApiEndpoints)) {
-          jQuery.get(`/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
+          jQuery.get(`${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
             console.log(count,this.targetCounter)
             this.targetCounter = count.counter
             this.blockData.counterApiEndpoints.forEach(e => {
