@@ -12,7 +12,7 @@ function acf_blocks_init()
             'title'             => __('Petition Form'),
             'description'       => __('Select a petition form and how it should be displayed.'),
             'render_template'   => GPLP_PLUGIN_ROOT_URI . 'templates/blocks/leads-form/leads-form.php',
-            'enqueue_style'     => GPLP_PLUGIN_ROOT . 'css/app.css?v=' . $plugin_data['Version'],
+            'enqueue_style'     => GPLP_PLUGIN_ROOT . 'public/css/app.css?v=' . $plugin_data['Version'],
             'enqueue_script'    => GPLP_PLUGIN_ROOT . 'public/js/modules/leads-form.js?v=' . $plugin_data['Version'],
             'category'          => 'widgets',
             'icon'              => 'welcome-write-blog',
