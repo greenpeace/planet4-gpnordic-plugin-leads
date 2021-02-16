@@ -93,8 +93,18 @@
           .from(".leads-form__form", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
 
         if (this.blockData.enableCounter && Array.isArray(this.blockData.counterApiEndpoints)) {
-          jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
-            //console.log(count,this.targetCounter)
+          // fix for the local dev env
+          // let jQueryPostStrCounter = '';
+          // if ($(location).attr('hostname') === 'www.planet4.test'){
+          //   jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
+          //   console.log(jQueryPostStrCounter)
+          // } else {
+          //   jQueryPostStrCounter = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
+          //   console.log(jQueryPostStrCounter)
+          // }
+
+          // jQuery.get(jQueryPostStrCounter, (count) => {
+            jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {            //console.log(count,this.targetCounter)
             this.targetCounter = count.counter
             this.blockData.counterApiEndpoints.forEach(e => {
             if (e && jQuery.trim(e) !== '' && e !== undefined)
@@ -172,14 +182,24 @@
 
           if (this.errors.length == 0) {
             this.loading = true
+            // fix for the local dev env
+            // let jQueryPostStr = '';
+            // if ($(location).attr('hostname') === 'www.planet4.test'){
+            //   jQueryPostStr = `/wp-json/gplp/v2/leads`;
+            //   console.log(jQueryPostStr)
+            // } else {
+            //   jQueryPostStr = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`;
+            //   console.log(jQueryPostStr)
+            // }
+            // jQuery.post(jQueryPostStr, this.formFields, (response) => {
             jQuery.post(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`, this.formFields, (response) => {
               this.loading = false
               this.counter++
               this.dataLayer && this.dataLayer.push({
                 'event': 'petitionSignup',
                 'gGoal': 'Petition Signup',
-                'gConsent': this.formFields.consent.value ? 'optin' : 'optout',
-                'gPhone': 'withPhone'
+                'gConsent': this.formFields.consent.value ? 'optIn' : 'optOut',
+                'gPhone': this.formFields.phone.value ? 'withPhone' : 'withoutPhone'
               });
 
               gsap.timeline({
@@ -206,8 +226,12 @@
                           .from(".leads-form__counter", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
                           .from(".leads-form__share", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
                           .from(".leads-form__donate", { y: 100, opacity: 0, duration: this.animationSpeed, onComplete: this.addBlur() }, `-=${this.animationSpeed / 2}`)
-                     //add datalayer here
+                        //add datalayer here
                      })
+                      this.dataLayer && this.dataLayer.push({
+                        'event': 'petitionDonation',
+                        'PetitionDonationLink': 'Pre-selected amount to donation'
+                      });
                     })
                   })
                 }
