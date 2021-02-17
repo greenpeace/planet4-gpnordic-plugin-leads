@@ -247,7 +247,7 @@ $url = get_the_permalink();
                     <div class="input-container">
                         <input class="ghost" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" v-model="donateAmount" @keypress="numbersOnly($event)" @change="checkMinVal($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
                     </div>
-                    <a :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button button--submit" target="_blank"><?php svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
+                    <a id="donate-button" :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button button--submit" target="_blank"><?php svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
                 </div>
             </div>
         </div>
