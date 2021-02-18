@@ -446,14 +446,14 @@ $url = get_the_permalink();
                 id: 'fname',
                 fieldName: '<?php echo $form_fields_translations['first_name']; ?>',
                 required: true,
-                regex: ''
+                regex: /^([^0-9]*){2,30}$/
             },
             lname: {
                 value: '',
                 id: 'lname',
                 fieldName: '<?php echo $form_fields_translations['last_name']; ?>',
                 required: true,
-                regex: ''
+                regex: /^([^0-9]*){2,30}$/
             },
             email: {
                 value: '',
