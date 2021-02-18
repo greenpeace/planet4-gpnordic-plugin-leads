@@ -1,3 +1,23 @@
+## V 5.7.6
+- FIX: es6 support on export
+- IMPROVEMENT: added linting rules
+- FIX: seedrandom and main fix
+- FIX: image export fix
+
+## V 5.7.5
+- FIX: Enable HImageElement to use preloaded images thanks @dbettini
+- FIX: lottie-light effects breaking on destroy
+- FIX: loaded_images event fired in safari
+
+## V 5.7.4
+- FIX: `addEventListener` method returns function except `void`
+- EXPRESSIONS:  added support for toWorldVec, fromWorldVec and getValueAtTime for transforms
+- EXPRESSIONS: fixed propertyGroup expression
+- FIX: added svg effects placeholder
+- FIX: added check for wrapper on destroy canvas
+- EXPORTER: missing layer styles
+- EXPORTER: export only work area
+
 ## V 5.7.3
 - EXPRESSIONS: Added more expressions support
 

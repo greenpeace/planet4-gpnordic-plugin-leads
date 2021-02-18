@@ -9,10 +9,10 @@ function acf_blocks_init()
     if (function_exists('acf_register_block_type')) {
         acf_register_block_type(array(
             'name'              => 'leads-form',
-            'title'             => __('Leads Form'),
-            'description'       => __('A custom leads form.'),
+            'title'             => __('Petition Form'),
+            'description'       => __('Select a petition form and how it should be displayed.'),
             'render_template'   => GPLP_PLUGIN_ROOT_URI . 'templates/blocks/leads-form/leads-form.php',
-            'enqueue_style'     => GPLP_PLUGIN_ROOT . 'css/app.css?v=' . $plugin_data['Version'],
+            'enqueue_style'     => GPLP_PLUGIN_ROOT . 'public/css/app.css?v=' . $plugin_data['Version'],
             'enqueue_script'    => GPLP_PLUGIN_ROOT . 'public/js/modules/leads-form.js?v=' . $plugin_data['Version'],
             'category'          => 'widgets',
             'icon'              => 'welcome-write-blog',
@@ -24,6 +24,6 @@ function acf_blocks_init()
 function block_enqueue_assets() {
     wp_enqueue_script('vue', GPLP_PLUGIN_ROOT . '/bower_components/vue/dist/vue.min.js', array(), '', true);
     wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js', array(), '', true);
-    wp_enqueue_script('lodash', GPLP_PLUGIN_ROOT . '/bower_components/lodash/dist/lodash.min.js', array(), '', true);
+    wp_enqueue_script('lodash', 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js', array(), '', true);
 }
 add_action('acf/init', __NAMESPACE__ . '\\acf_blocks_init');

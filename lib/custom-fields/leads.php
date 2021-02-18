@@ -704,7 +704,7 @@ if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group(array(
         'key' => 'group_5f969db2d4824',
-        'title' => 'Leads Form Block',
+        'title' => 'Petition Form Block',
         'fields' => array(
             array(
                 'key' => 'field_5f969dceef2b3',
@@ -1479,8 +1479,8 @@ if (function_exists('acf_add_local_field_group')) :
     function load_counter_api_field($field)
     {
         $rest_url = get_rest_url();
-        $souce_code = get_post_meta(get_the_ID(), 'form_settings_source_code', true);
-        $field['instructions'] = "The endpoint for this form is <strong>{$rest_url}gplp/v1/leads/count/$souce_code</strong>";
+        $source_code = get_post_meta(get_the_ID(), 'form_settings_source_code', true);
+        $field['instructions'] = "The endpoint for this form is <strong>{$rest_url}gplp/v2/leads/count/$source_code</strong>";
         return $field;
     }
     add_filter('acf/load_field/name=counter_api-endpoints', 'load_counter_api_field');
@@ -1500,5 +1500,5 @@ if (function_exists('acf_add_local_field_group')) :
         return $field;
     }
     add_filter('acf/load_field/name=donate_url', 'load_donate_url_field');
-    
+
 endif;

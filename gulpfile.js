@@ -26,7 +26,7 @@ gulp.task('sass', gulp.parallel([], () => {
       })
     })
     .pipe(autoprefixer())
-    .pipe(gulp.dest('css'))
+    .pipe(gulp.dest('public/css'))
     .pipe(browserSync.stream())
 }))
 

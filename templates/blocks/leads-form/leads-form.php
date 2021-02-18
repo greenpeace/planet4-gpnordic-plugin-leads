@@ -83,6 +83,7 @@ $hero_description = (isset($hero_settings['description']) && $hero_settings['des
 $url = get_the_permalink();
 ?>
 
+
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
     <div class="leads-form__grid">
         <div class="leads-form__content" v-show="!success">
@@ -193,7 +194,7 @@ $url = get_the_permalink();
 
                 <a @click="submit" class="button button--submit">
                     <span v-if="!loading"><?php svg_icon('send-message'); ?></span>
-                    <span v-html="loading ? '<?php echo $form_fields_translations['sending']; ?>' : '<?php echo $form_settings['call_to_action']; ?>'"></span>
+                    <span v-html="loading ? '<?php echo $form_fields_translations['sending']; ?>' : '<?php echo addslashes($form_settings['call_to_action']); ?>'"></span>
                 </a>
                 <?php if ($form_settings['consent_method'] === 'assumed') : ?>
                     <small><?php echo $form_settings['consent_message'] !== '' ? $form_settings['consent_message'] : $form_fields_translations['terms_agree']; ?></small>
@@ -230,10 +231,10 @@ $url = get_the_permalink();
                 </h4>
                 <?php echo $thank_you_settings['share_description']; ?>
                 <div class="leads-form__share__icons">
-                    <a class="button--share" href="https://twitter.com/intent/tweet?text=<?php echo $url; ?> <?php echo $thank_you_settings['twitter_share_text']; ?>" target="_blank"><?php svg_icon('twitter'); ?></a>
-                    <a class="button--share" href="https://wa.me/?text=<?php echo $url; ?> <?php echo $thank_you_settings['whatsapp_share_text']; ?>" target="_blank"><?php svg_icon('whatsapp'); ?></a>
-                    <a class="button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
-                    <a class="button--share email" href="mailto:?subject=<?php echo $thank_you_settings['email_share_subject']; ?>&amp;body=<?php echo str_replace('%site_url%', $url, $thank_you_settings['email_share_text']); ?>" target="_blank"><?php svg_icon('email'); ?></a>
+                    <a id="facebook" class="button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
+                    <a id="twitter" class="button--share" href="https://twitter.com/intent/tweet?text=<?php echo $url; ?> <?php echo $thank_you_settings['twitter_share_text']; ?>" target="_blank"><?php svg_icon('twitter'); ?></a>
+                    <a id="email" class="button--share email" href="mailto:?subject=<?php echo $thank_you_settings['email_share_subject']; ?>&amp;body=<?php echo str_replace('%site_url%', $url, $thank_you_settings['email_share_text']); ?>" target="_blank"><?php svg_icon('email'); ?></a>
+                    <a id="whatsapp" class="button--share" href="https://wa.me/?text=<?php echo $url; ?> <?php echo $thank_you_settings['whatsapp_share_text']; ?>" target="_blank"><?php svg_icon('whatsapp'); ?></a>
                 </div>
             </div>
             <div v-show="success" class="leads-form__donate">
@@ -246,7 +247,7 @@ $url = get_the_permalink();
                     <div class="input-container">
                         <input class="ghost" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" v-model="donateAmount" @keypress="numbersOnly($event)" @change="checkMinVal($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
                     </div>
-                    <a :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button button--submit" target="_blank"><?php svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
+                    <a id="donate-button" :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button button--submit" target="_blank"><?php svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
                 </div>
             </div>
         </div>
@@ -258,6 +259,7 @@ $url = get_the_permalink();
     <div v-if="!success" class="leads-form__bottom-label"><?php svg_icon('hero-bottom-label'); ?></div>
 </div>
 <style>
+    .leads-form {opacity: 1 !important;}
     /* Counter */
     #<?php echo $id . ' '; ?>.leads-form__counter {
         background: <?php echo $secondary_color; ?>;
@@ -396,11 +398,11 @@ $url = get_the_permalink();
     }
 
     #<?php echo $id; ?>.dark .leads-form__counter {
-        background-color: white;
+        background-color: rgba(255,255,255,.05);
     }
 
     #<?php echo $id; ?>.dark .leads-form__counter__progress {
-        background-color: <?php echo hex2rgba($secondary_color, 0.2); ?>
+        background-color: <?php echo $secondary_color; ?>;
     }
 
     #<?php echo $id; ?>.dark .leads-form__counter--success {
@@ -444,14 +446,14 @@ $url = get_the_permalink();
                 id: 'fname',
                 fieldName: '<?php echo $form_fields_translations['first_name']; ?>',
                 required: true,
-                regex: ''
+                regex: /^([^0-9]*){2,30}$/
             },
             lname: {
                 value: '',
                 id: 'lname',
                 fieldName: '<?php echo $form_fields_translations['last_name']; ?>',
                 required: true,
-                regex: ''
+                regex: /^([^0-9]*){2,30}$/
             },
             email: {
                 value: '',

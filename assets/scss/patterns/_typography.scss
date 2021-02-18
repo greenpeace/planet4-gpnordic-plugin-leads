@@ -1,6 +1,6 @@
 @font-face {
   font-family: "DK Plakkaat";
-  src: url("../assets/fonts/Plakkaat.ttf") format("truetype");
+  src: url("../../assets/fonts/Plakkaat.ttf") format("truetype");
 }
 /* Typefaces */
 $header-font-family: "DK Plakkaat", 'Helvetica Neue', 'Helvetica', sans-serif;
@@ -17,49 +17,49 @@ $body-font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
       }
       &.under {
         &-10 {
-          font-size: 5.5rem; 
+          font-size: 5.5rem;
           @media screen and (max-width: $leads--large) {
             font-size: 4.125rem;
           }
         }
         &-20 {
-          font-size: 5.5rem; 
+          font-size: 5.5rem;
           @media screen and (max-width: $leads--large) {
             font-size: 4.125rem;
           }
         }
         &-25 {
-          font-size: 4.75rem; 
+          font-size: 4.75rem;
           @media screen and (max-width: $leads--large) {
             font-size: 3.6rem;
           }
         }
         &-30 {
-          font-size: 4.5rem; 
+          font-size: 4.5rem;
           @media screen and (max-width: $leads--large) {
             font-size: 3.375rem;
           }
         }
         &-35 {
-          font-size: 4.25rem; 
+          font-size: 4.25rem;
           @media screen and (max-width: $leads--large) {
             font-size: 3.2rem;
           }
         }
         &-45 {
-          font-size: 4rem; 
+          font-size: 4rem;
           @media screen and (max-width: $leads--large) {
             font-size: 3rem;
           }
         }
         &-60 {
-          font-size: 3.5rem; 
+          font-size: 3.5rem;
           @media screen and (max-width: $leads--large) {
             font-size: 2.6rem;
           }
         }
         &-85 {
-          font-size: 3rem; 
+          font-size: 3rem;
           @media screen and (max-width: $leads--large) {
             font-size: 2.25rem;
           }

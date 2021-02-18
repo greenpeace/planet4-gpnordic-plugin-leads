@@ -5,12 +5,13 @@
    * Adds custom JavaScript to the block HTML.
    *
    * @date    15/4/19
-   * @since   1.0.0
+   * @since   1.0.1
    *
    * @param   object $block The block jQuery element.
    * @param   object attributes The block attributes (only available when editing).
    * @return  void
    */
+
   var initializeBlock = ($block) => {
     // console.log($block, jQuery($block).hasClass('leads-form'), $block[0].children[0])
     if (!jQuery($block).hasClass('leads-form'))
@@ -85,14 +86,28 @@
         this.dataLayer && this.dataLayer.push({
           'sourceCode': this.sourceCode,
           'counter': this.blockData.enableCounter ? 'yes' : 'no'
+
         });
         gsap.timeline({})
           .from(".leads-form__content", { y: 100, opacity: 0, duration: this.animationSpeed })
           .from(".leads-form__form", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
 
         if (this.blockData.enableCounter && Array.isArray(this.blockData.counterApiEndpoints)) {
-          this.blockData.counterApiEndpoints.forEach(e => {
-            if (e && trim(e) !== '' && e !== undefined)
+          // fix for the local dev env
+          let jQueryPostStrCounter = '';
+          if ($(location).attr('hostname') === 'www.planet4.test'){
+            jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
+            console.log(jQueryPostStrCounter)
+          } else {
+            jQueryPostStrCounter = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
+            console.log(jQueryPostStrCounter)
+          }
+
+          jQuery.get(jQueryPostStrCounter, (count) => {
+            // jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {            //console.log(count,this.targetCounter)
+            this.targetCounter = count.counter
+            this.blockData.counterApiEndpoints.forEach(e => {
+            if (e && jQuery.trim(e) !== '' && e !== undefined)
               jQuery.get(e, this.formFields, (response) => {
                 this.targetCounter = this.targetCounter + +response.counter
                 this.animateCounter()
@@ -100,11 +115,13 @@
           })
           if (this.blockData.counterApiEndpoints.length == 0)
             this.animateCounter()
+          })
+
         }
       },
       methods: {
-        animateCounter: _.debounce(function (t = this) {
-          console.log('Updating counter')
+        animateCounter: lodash.debounce(function (t = this) {
+          //console.log('Updating counter')
           var Cont = { val: t.counter }, NewVal = t.targetCounter;
           TweenLite.to(Cont, 2, {
             val: NewVal, roundProps: "val", onUpdate: () => {
@@ -163,16 +180,35 @@
           Object.keys(this.formFields).forEach(key => this.formFields[key].value == '' && this.formFields[key].required && this.pushMessage(this.formFields[key].id, blockData.errorMessages.required.replace('${fieldName}', this.formFields[key].fieldName)))
           Object.keys(this.formFields).forEach(key => this.formFields[key].value !== '' && this.formFields[key].regex !== '' && !this.formFields[key].regex.test(this.formFields[key].value) && this.pushMessage(this.formFields[key].id, blockData.errorMessages.format.replace('${fieldName}', this.formFields[key].fieldName)))
 
+          this.dataLayer && this.dataLayer.push({
+            'event': 'errorMessage',
+            'errorMessageEmail': this.emailErrors[0],
+            'errorMessageFirstName': this.firstNameErrors[0],
+            'errorMessageLastName': this.lastNameErrors[0],
+            'errorMessagePhone': this.phoneErrors[0],
+            'errorMessageOther': this.otherErrors[0]
+          });
+
           if (this.errors.length == 0) {
             this.loading = true
-            jQuery.post(`/wp-json/gplp/v1/leads`, this.formFields, (response) => {
+            // fix for the local dev env
+            let jQueryPostStr = '';
+            if ($(location).attr('hostname') === 'www.planet4.test'){
+              jQueryPostStr = `/wp-json/gplp/v2/leads`;
+              console.log(jQueryPostStr)
+            } else {
+              jQueryPostStr = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`;
+              console.log(jQueryPostStr)
+            }
+            jQuery.post(jQueryPostStr, this.formFields, (response) => {
+            // jQuery.post(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`, this.formFields, (response) => {
               this.loading = false
               this.counter++
               this.dataLayer && this.dataLayer.push({
                 'event': 'petitionSignup',
                 'gGoal': 'Petition Signup',
-                'gConsent': this.formFields.consent.value ? 'optin' : 'optout',
-                'gPhone': 'withPhone'
+                'gConsent': this.formFields.consent.value ? 'optIn' : 'optOut',
+                'gPhone': this.formFields.phone.value ? 'withPhone' : 'withoutPhone'
               });
 
               gsap.timeline({
@@ -200,6 +236,56 @@
                           .from(".leads-form__share", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
                           .from(".leads-form__donate", { y: 100, opacity: 0, duration: this.animationSpeed, onComplete: this.addBlur() }, `-=${this.animationSpeed / 2}`)
                       })
+
+                      this.dataLayer && this.dataLayer.push({
+                        'event': 'petitionThankYou',
+                        'donationOption': 'Pre-selected amount to donation'
+                      });
+
+                      const donateBtn = document.getElementById("donate-button");
+                      donateBtn.addEventListener('click', () => {
+                        this.dataLayer && this.dataLayer.push({
+                          'event': 'petitionDonation',
+                          'PetitionDonationLink': 'Pre-selected amount to donation'
+                        });
+                      })
+
+                      const fbShare = document.getElementById("facebook");
+                      fbShare.addEventListener('click', () =>{
+                        this.dataLayer && this.dataLayer.push({
+                          'event': 'uaevent',
+                          'eventAction': 'Facebook',
+                          'eventCategory':'Social Share'
+                        });
+                      });
+
+                      const twShare = document.getElementById("twitter");
+                      twShare.addEventListener('click', () =>{
+                        this.dataLayer && this.dataLayer.push({
+                          'event': 'uaevent',
+                          'eventAction': 'Twitter',
+                          'eventCategory':'Social Share'
+                        });
+                      });
+
+                      const eShare = document.getElementById("email");
+                      eShare.addEventListener('click', () =>{
+                        this.dataLayer && this.dataLayer.push({
+                          'event': 'uaevent',
+                          'eventAction': 'Email',
+                          'eventCategory':'Social Share'
+                        });
+                      });
+
+                      const waShare = document.getElementById("whatsapp");
+                      waShare.addEventListener('click', () =>{
+                        this.dataLayer && this.dataLayer.push({
+                          'event': 'uaevent',
+                          'eventAction': 'Whatsapp',
+                          'eventCategory':'Social Share'
+                        });
+                      });
+
                     })
                   })
                 }

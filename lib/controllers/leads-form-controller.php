@@ -29,7 +29,7 @@ class FormController
       $hostname = get_field('database_host', 'options');
 
       $count = 0;
-      if (!strpos(get_site_url(), '.test') && get_post_status($form_id) == 'publish') {
+      if (!strpos(get_site_url(), '.develop') && get_post_status($form_id) == 'publish') {
         $remote_db = new \wpdb($username, $password, $dbname, $hostname);
         $results = $remote_db->get_results("INSERT INTO LEADS VALUES (null, '$email', '$firstname', '$lastname', '$date', $approved_terms, '$source_code', '$country_iso', '$phone', '$utm', CURRENT_TIMESTAMP);");
         $remote_db->close();
@@ -62,7 +62,7 @@ class FormController
       return new \WP_Error('not_found', "No petition with source_code '$source_code' could be found.", array('status' => 404));
     $form = $petition->posts[0];
     $form_settings = get_field('form_settings', $form->ID);
-    $count = (int)get_post_meta($form_id, 'count', true) ?: 0;
+    $count = (int)get_post_meta($form->ID, 'count', true) ?: 0;
     return array('counter' => $count + (int)$form_settings['counter']);
   }
 
@@ -90,24 +90,27 @@ class FormController
     // update_post_meta($form->ID, 'form_settings_counter', $count);
     return array('counter' => $count + (int)$form_settings['counter']);
   }
+
   public static function register_api_routes()
   {
-    // Post Leads
-    register_rest_route("gplp/v1", '/leads', array(
+
+     // Post Leads
+    register_rest_route("gplp/v2", '/leads', array(
       'methods' => 'POST',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::set',
     ));
-    register_rest_route("gplp/v1", '/leads/count/(?P<source_code>.{1,})', array(
+    register_rest_route("gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
       'methods' => 'GET',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::get_count',
     ));
-    register_rest_route("gplp/v1", '/leads/count/(?P<source_code>.{1,})', array(
+    register_rest_route("gplp/v2", '/leads/count/(?P<source_code>.{1,})', array(
       'methods' => 'POST',
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::set_count',
     ));
+
   }
 }
 add_action('rest_api_init', __NAMESPACE__ . '\\FormController::register_api_routes');
