@@ -97,10 +97,10 @@
           let jQueryPostStrCounter = '';
           if ($(location).attr('hostname') === 'www.planet4.test'){
             jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
-            console.log(jQueryPostStrCounter)
+            // console.log(jQueryPostStrCounter)
           } else {
             jQueryPostStrCounter = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
-            console.log(jQueryPostStrCounter)
+            // console.log(jQueryPostStrCounter)
           }
 
           jQuery.get(jQueryPostStrCounter, (count) => {
@@ -195,10 +195,10 @@
             let jQueryPostStr = '';
             if ($(location).attr('hostname') === 'www.planet4.test'){
               jQueryPostStr = `/wp-json/gplp/v2/leads`;
-              console.log(jQueryPostStr)
+              // console.log(jQueryPostStr)
             } else {
               jQueryPostStr = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`;
-              console.log(jQueryPostStr)
+              // console.log(jQueryPostStr)
             }
             jQuery.post(jQueryPostStr, this.formFields, (response) => {
             // jQuery.post(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`, this.formFields, (response) => {
