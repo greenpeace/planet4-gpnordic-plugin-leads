@@ -9,7 +9,7 @@ $body-font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
 .leads-form {
   /* General styles */
   h2 {
-      font-family: $header-font-family;
+      font-family: $header-font-family !important;
       font-size: 4rem;
       line-height: 1.05em;
       @media only screen and (max-width: $leads--large) {

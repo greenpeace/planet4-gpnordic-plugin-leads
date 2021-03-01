@@ -22,7 +22,7 @@ function acf_blocks_init()
 }
 
 function block_enqueue_assets() {
-    wp_enqueue_script('vue', GPLP_PLUGIN_ROOT . '/bower_components/vue/dist/vue.min.js', array(), '', true);
+    wp_enqueue_script('vue', GPLP_PLUGIN_ROOT . 'bower_components/vue/dist/vue.min.js', array(), '', true);
     wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js', array(), '', true);
     wp_enqueue_script('lodash', 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js', array(), '', true);
 }
