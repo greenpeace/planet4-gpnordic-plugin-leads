@@ -55,7 +55,7 @@ if (function_exists('acf_add_local_field_group')) :
                         'choices' => array(
                             'checkbox_checked' => 'Checkbox (checked)',
                             'checkbox_unchecked' => 'Checkbox (unchecked)',
-                            'assumed' => 'Assumed',
+                            'assumed' => 'No checkbox (assuming legitimate interest)',
                         ),
                         'allow_null' => 0,
                         'other_choice' => 0,
@@ -66,7 +66,7 @@ if (function_exists('acf_add_local_field_group')) :
                     ),
                     array(
                         'key' => 'field_5f96dba665c13',
-                        'label' => 'Consent Message',
+                        'label' => 'Consent message',
                         'name' => 'consent_message',
                         'type' => 'wysiwyg',
                         'instructions' => '',
@@ -77,9 +77,9 @@ if (function_exists('acf_add_local_field_group')) :
                             'class' => '',
                             'id' => '',
                         ),
-                        'default_value' => '',
+                        'default_value' => 'This is the default consent message. Only change this message if the data-handling deviates from the norm.',
                         'tabs' => 'all',
-                        'toolbar' => 'full',
+                        'toolbar' => 'basic',
                         'media_upload' => 1,
                         'delay' => 0,
                     ),
@@ -260,7 +260,7 @@ if (function_exists('acf_add_local_field_group')) :
                     ),
                     array(
                         'key' => 'field_5f96daf365c0f',
-                        'label' => 'Phone',
+                        'label' => 'Phone number field',
                         'name' => 'phone',
                         'type' => 'radio',
                         'instructions' => '',
@@ -272,9 +272,9 @@ if (function_exists('acf_add_local_field_group')) :
                             'id' => '',
                         ),
                         'choices' => array(
-                            'required' => 'Yes (required)',
-                            'optional' => 'Yes (optional)',
-                            'false' => 'No',
+                            'required' => 'Enabled (required)',
+                            'optional' => 'Enabled (optional)',
+                            'false' => 'Disabled',
                         ),
                         'allow_null' => 0,
                         'other_choice' => 0,
@@ -452,7 +452,7 @@ if (function_exists('acf_add_local_field_group')) :
                     ),
                     array(
                         'key' => 'field_5f97f89bbbccb',
-                        'label' => 'Share headline',
+                        'label' => 'Share block headline',
                         'name' => 'share_headline',
                         'type' => 'text',
                         'instructions' => '',
@@ -471,7 +471,7 @@ if (function_exists('acf_add_local_field_group')) :
                     ),
                     array(
                         'key' => 'field_5f97f8adbbccc',
-                        'label' => 'Share description',
+                        'label' => 'Share block description',
                         'name' => 'share_description',
                         'type' => 'wysiwyg',
                         'instructions' => '',
@@ -1205,10 +1205,9 @@ if (function_exists('acf_add_local_field_group')) :
                     ),
                     array(
                         'key' => 'field_5f97d98e55f25',
-                        'label' => 'Consent message (optional)',
+                        'label' => 'Consent message',
                         'name' => 'terms_agree',
                         'type' => 'wysiwyg',
-                        'instructions' => 'This is the default consent message. Only change this message if the data-handling deviates from the norm.',
                         'required' => 0,
                         'conditional_logic' => 0,
                         'wrapper' => array(
