@@ -28,6 +28,10 @@ class ComposerStaticInit384d74150aa1647e7afc8f5515a54d2f
         array (
             'Symfony\\Polyfill\\Ctype\\' => 23,
         ),
+        'R' => 
+        array (
+            'Rize\\' => 5,
+        ),
         'P' => 
         array (
             'Psr\\Log\\' => 8,
@@ -76,6 +80,10 @@ class ComposerStaticInit384d74150aa1647e7afc8f5515a54d2f
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Rize\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/rize/uri-template/src/Rize',
         ),
         'Psr\\Log\\' => 
         array (
@@ -144,16 +152,6 @@ class ComposerStaticInit384d74150aa1647e7afc8f5515a54d2f
         'Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\' => 
         array (
             0 => __DIR__ . '/..' . '/dealerdirect/phpcodesniffer-composer-installer/src',
-        ),
-    );
-
-    public static $prefixesPsr0 = array (
-        'R' => 
-        array (
-            'Rize\\UriTemplate' => 
-            array (
-                0 => __DIR__ . '/..' . '/rize/uri-template/src',
-            ),
         ),
     );
 
@@ -707,7 +705,6 @@ class ComposerStaticInit384d74150aa1647e7afc8f5515a54d2f
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit384d74150aa1647e7afc8f5515a54d2f::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit384d74150aa1647e7afc8f5515a54d2f::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit384d74150aa1647e7afc8f5515a54d2f::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit384d74150aa1647e7afc8f5515a54d2f::$classMap;
 
         }, null, ClassLoader::class);
