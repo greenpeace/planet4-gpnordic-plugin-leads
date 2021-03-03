@@ -347,7 +347,7 @@
   }
 
   // Initialize each block on page load (front end).
-  $(document).on('ready', () => {
+  document.addEventListener('DOMContentLoaded', () => {
     if (jQuery('.leads-form').length > 0) {
       $('.leads-form').each((index, block) => {
         initializeBlock($(block))
