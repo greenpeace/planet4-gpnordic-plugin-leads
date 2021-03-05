@@ -13,14 +13,14 @@
    */
 
   var initializeBlock = ($block) => {
-    console.log($block, jQuery($block).hasClass('leads-form'), $block[0].children[0])
+    //console.log($block, jQuery($block).hasClass('leads-form'), $block[0].children[0])
     if (!jQuery($block).hasClass('leads-form'))
       $block = $block[0].children[0]
     else
       $block = `#${$block.attr('id')}`
-    console.log('Initialize Block', `leads_form_${jQuery($block).attr('data-block-id')}`, $block)
+    //console.log('Initialize Block', `leads_form_${jQuery($block).attr('data-block-id')}`, $block)
     const blockData = window[`leads_form_${jQuery($block).attr('data-block-id')}`]
-    console.log('blockData', blockData)
+    //console.log('blockData', blockData)
 
     new Vue({
       el: $block,
@@ -97,14 +97,15 @@
           let jQueryPostStrCounter = '';
           if ($(location).attr('hostname') === 'www.planet4.test'){
             jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
-            console.log(jQueryPostStrCounter)
+            //console.log(jQueryPostStrCounter)
           } else {
             jQueryPostStrCounter = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
-            console.log(jQueryPostStrCounter)
+            //console.log(jQueryPostStrCounter)
           }
 
           jQuery.get(jQueryPostStrCounter, (count) => {
-            // jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {            //console.log(count,this.targetCounter)
+            // jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
+            //console.log(count,this.targetCounter)
             this.targetCounter = count.counter
             this.blockData.counterApiEndpoints.forEach(e => {
             if (e && jQuery.trim(e) !== '' && e !== undefined)
@@ -121,7 +122,7 @@
       },
       methods: {
         animateCounter: lodash.debounce(function (t = this) {
-          console.log('Updating counter')
+          //console.log('Updating counter')
           var Cont = { val: t.counter }, NewVal = t.targetCounter;
           TweenLite.to(Cont, 2, {
             val: NewVal, roundProps: "val", onUpdate: () => {
@@ -195,10 +196,10 @@
             let jQueryPostStr = '';
             if ($(location).attr('hostname') === 'www.planet4.test'){
               jQueryPostStr = `/wp-json/gplp/v2/leads`;
-              console.log(jQueryPostStr)
+              //console.log(jQueryPostStr)
             } else {
               jQueryPostStr = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`;
-              console.log(jQueryPostStr)
+              //console.log(jQueryPostStr)
             }
             jQuery.post(jQueryPostStr, this.formFields, (response) => {
             // jQuery.post(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`, this.formFields, (response) => {
@@ -296,7 +297,7 @@
               this.errors.push(error.responseJSON.message)
               this.otherErrors.push(error.responseJSON.message)
               this.loading = false
-              console.log(error.responseJSON)
+              //console.log(error.responseJSON)
             })
           }
           return false

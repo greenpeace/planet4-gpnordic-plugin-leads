@@ -5,6 +5,8 @@
 
 # Node artifact files
 node_modules/
+vendor/
+bower_components/
 
 # Compiled Java class files
 *.class
