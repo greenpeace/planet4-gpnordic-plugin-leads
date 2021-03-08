@@ -31,6 +31,6 @@
     "phpunit/phpunit": "^6.2"
   },
   "require": {
-
+    "google/cloud-storage": "^1.23"
   }
 }
