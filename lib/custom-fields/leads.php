@@ -77,7 +77,7 @@ if (function_exists('acf_add_local_field_group')) :
                             'class' => '',
                             'id' => '',
                         ),
-                        'default_value' => '',
+                        'default_value' => 'This is the default consent message. Only change this message if the data-handling deviates from the norm.',
                         'tabs' => 'all',
                         'toolbar' => 'basic',
                         'media_upload' => 0,

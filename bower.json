@@ -1,0 +1,22 @@
+{
+  "name": "planet4-gpnordic-plugin-leads",
+  "description": "Greenpeace Nordic Leads Plugin with ACF blocks.",
+  "main": "gulpfile.js",
+  "authors": [
+    "Simma Lugnt <info@simmalugnt.se>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/greenpeace/planet4-gpnordic-plugin-leads",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "vue": "^2.6.12",
+    "lodash": "^4.17.20",
+    "bodymovin": "^5.7.6"
+  }
+}
