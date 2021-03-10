@@ -8,7 +8,7 @@ if (!defined('GPLP_ACF_URL'))
 // Include the ACF plugin.
 include_once( GPLP_ACF_PATH . 'acf.php' );
 include_once( GPLP_PLUGIN_ROOT_URI . 'lib/custom-fields/leads.php' );
-include_once( GPLP_PLUGIN_ROOT_URI . 'lib/custom-fields/options.php' );
+// include_once( GPLP_PLUGIN_ROOT_URI . 'lib/custom-fields/options.php' );
 
 // Customize the url setting to fix incorrect asset URLs.
 add_filter('acf/settings/url', 'gplp_acf_settings_url');
