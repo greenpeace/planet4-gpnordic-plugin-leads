@@ -425,7 +425,7 @@ if (function_exists('acf_add_local_field_group')) :
                             'class' => '',
                             'id' => '',
                         ),
-                        'default_value' => 'Thank you ${fname}!',
+                        'default_value' => 'Thank you, ${fname}!',
                         'placeholder' => '',
                         'prepend' => '',
                         'append' => '',
