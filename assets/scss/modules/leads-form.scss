@@ -15,6 +15,7 @@
         padding-bottom: 4.5rem;
         margin-top: -3.375rem;
     }
+    a.external-link::after { content: none; } // Should fix the external links
     &__bkg {
         background-size: cover;
         background-repeat: no-repeat;
@@ -551,6 +552,8 @@
         }
     }
 }
+
+.leads-form
 
 // No fillwidth in admin
 .acf-block-preview {
