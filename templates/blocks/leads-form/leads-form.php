@@ -186,12 +186,6 @@ $url = get_the_permalink();
                         </div>
                     </div>
                 <?php endif; ?>
-                <div v-if="hasFieldErrors(otherErrors)" class="leads-form__callout leads-form__callout--error">
-                    <ul>
-                        <li v-for="(error, index) in otherErrors" :key="index" v-html="error"></li>
-                    </ul>
-                </div>
-
                 <a @click="submit" class="button button--submit">
                     <span v-if="!loading"><?php svg_icon('send-message'); ?></span>
                     <span v-html="loading ? '<?php echo $form_fields_translations['sending']; ?>' : '<?php echo addslashes($form_settings['call_to_action']); ?>'"></span>
