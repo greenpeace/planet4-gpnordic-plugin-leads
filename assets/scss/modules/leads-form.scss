@@ -242,6 +242,7 @@
         }
         h2 {
             margin-bottom: 1rem;
+            word-break: break-word;
         }
         @media only screen and (max-width: $leads--large) {
             max-width: 720px;
