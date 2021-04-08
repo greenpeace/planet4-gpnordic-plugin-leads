@@ -13,7 +13,7 @@ class FormController
       $firstname = $args['fname']['value'];
       $lastname = $args['lname']['value'];
       $email = $args['email']['value'];
-      $phone = $args['phone']['value'];
+      $phone = $form_fields_translations['country_code'].$args['phone']['value'];
       $approved_terms = (int)($args['consent']['value'] == 'true');
       $country_iso = get_field('country_code_iso', 'options');
 
