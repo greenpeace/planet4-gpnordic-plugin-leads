@@ -186,12 +186,6 @@ $url = get_the_permalink();
                         </div>
                     </div>
                 <?php endif; ?>
-                <div v-if="hasFieldErrors(otherErrors)" class="leads-form__callout leads-form__callout--error">
-                    <ul>
-                        <li v-for="(error, index) in otherErrors" :key="index" v-html="error"></li>
-                    </ul>
-                </div>
-
                 <a @click="submit" class="button button--submit">
                     <span v-if="!loading"><?php svg_icon('send-message'); ?></span>
                     <span v-html="loading ? '<?php echo $form_fields_translations['sending']; ?>' : '<?php echo addslashes($form_settings['call_to_action']); ?>'"></span>
@@ -232,9 +226,9 @@ $url = get_the_permalink();
                 <?php echo $thank_you_settings['share_description']; ?>
                 <div class="leads-form__share__icons">
                     <a id="facebook" class="button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
-                    <a id="twitter" class="button--share" href="https://twitter.com/intent/tweet?text=<?php echo $url; ?> <?php echo $thank_you_settings['twitter_share_text']; ?>" target="_blank"><?php svg_icon('twitter'); ?></a>
-                    <a id="email" class="button--share email" href="mailto:?subject=<?php echo $thank_you_settings['email_share_subject']; ?>&amp;body=<?php echo str_replace('%site_url%', $url, $thank_you_settings['email_share_text']); ?>" target="_blank"><?php svg_icon('email'); ?></a>
-                    <a id="whatsapp" class="button--share" href="https://wa.me/?text=<?php echo $url; ?> <?php echo $thank_you_settings['whatsapp_share_text']; ?>" target="_blank"><?php svg_icon('whatsapp'); ?></a>
+                    <a id="twitter" class="button--share" href="https://twitter.com/intent/tweet?text=<?php echo $url; ?> <?php echo urlencode($thank_you_settings['twitter_share_text']); ?>" target="_blank"><?php svg_icon('twitter'); ?></a>
+                    <a id="email" class="button--share email" href="mailto:?subject=<?php echo rawurlencode($thank_you_settings['email_share_subject']); ?>&amp;body=<?php echo rawurlencode(str_replace('%site_url%', $url, $thank_you_settings['email_share_text'])); ?>" target="_blank"><?php svg_icon('email'); ?></a>
+                    <a id="whatsapp" class="button--share" href="https://wa.me/?text=<?php echo $url; ?> <?php echo urlencode($thank_you_settings['whatsapp_share_text']); ?>" target="_blank"><?php svg_icon('whatsapp'); ?></a>
                 </div>
             </div>
             <div v-show="success" class="leads-form__donate">

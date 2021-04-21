@@ -18,7 +18,7 @@
       $block = $block[0].children[0]
     else
       $block = `#${$block.attr('id')}`
-    //console.log('Initialize Block', `leads_form_${jQuery($block).attr('data-block-id')}`, $block)
+    // console.log('Initialize Block', `leads_form_${jQuery($block).attr('data-block-id')}`, $block)
     const blockData = window[`leads_form_${jQuery($block).attr('data-block-id')}`]
     //console.log('blockData', blockData)
 
