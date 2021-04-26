@@ -190,6 +190,7 @@ class ACF {
 		
 		// Add filters.
 		add_filter( 'posts_where', array($this, 'posts_where'), 10, 2 );
+		add_filter( 'acf/settings/show_admin', '__return_false');
 	}
 	
 	/**
