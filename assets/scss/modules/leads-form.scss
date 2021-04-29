@@ -144,6 +144,9 @@
         }
         h2 {
             margin-bottom: 1.5rem;
+            @media only screen and (max-width: $leads--medium) {
+                word-break: break-word;
+            }
         }
         p,
         .description .text {
