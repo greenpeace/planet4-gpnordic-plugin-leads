@@ -13,12 +13,35 @@ class FormController
       $firstname = $args['fname']['value'];
       $lastname = $args['lname']['value'];
       $email = $args['email']['value'];
-      $phonePrefix = get_field('form_fields_translations', 'options')['country_code'];
-      $phone_number = $args['phone']['value'];
-      $phone = $phonePrefix.$phone_number;
+      $phone = $args['phone']['value'];
 
       $approved_terms = (int)($args['consent']['value'] == 'true');
       $country_iso = get_field('country_code_iso', 'options');
+
+      // SANITIZATION LOGIC - - - - - - - - - - - -
+
+      $dkVars = array('45','7','8');
+      $fiVars = array('358','8','10');
+      $noVars = array('47','7','8');
+      $seVars = array('46','7','9');
+      $blist = "/000000|111111|222222|333333|444444|555555|666666|777777|888888|999999|12345|54321|1010101|111222333/";
+
+      switch($country_iso){
+         case "dk": case "DK": $v = $dkVars; break;
+         case "fi": case "FI": $v = $fiVars; break;
+         case "no": case "NO": $v = $noVars; break;
+         case "se": case "SE": $v = $seVars; break;
+      }
+
+      $phone = preg_replace("/\D/", "", $phone); // strip non-numeric
+      substr($phone, 0, strlen("00")) === "00" ? $phone = substr($phone, 2) : $phone; // strip 00 (catching 0045, etc)
+      substr($phone, 0, strlen("0")) === "0" ? $phone = substr($phone, 1) : $phone; // strip 0 (catching 040, 070, etc)
+      (strlen($phone) > $v[2]) && (substr($phone, 0, strlen($v[0])) === $v[0]) ? $phone = substr($phone, strlen($v[0])) : $phone; // strip expected country code if still too long
+      strlen($phone) > $v[2] ? $phone = "" : $phone; // set to 0 if still too long (non-nordic or country mismatch)
+      preg_match($blist, $phone) ? $phone = "" : $phone; // set to 0 if it resembles black list regex
+      strlen($phone) > $v[1] ? $phone = "+".$v[0].$phone : $phone = ""; // clear value if too small, otherwise add + country code
+
+      // END LOGIC - - - - - - - - - - - - - - - -
 
       $date = date('Y-m-d');
       $utm = $args['utm']['value'];
