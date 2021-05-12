@@ -34,11 +34,11 @@ class FormController
       }
 
       $phone = preg_replace("/\D/", "", $phone); // strip non-numeric
-      substr($phone, 0, strlen("00")) === "00" ? $phone = substr($phone, 2) : $x; // strip 00 (catching 0045, etc)
-      (strlen($phone) > $v[2]) && (substr($phone, 0, strlen($v[0])) === $v[0]) ? $phone = substr($phone, strlen($v[0])) : x; // strip expected country code if still too long
-      strlen($phone) > $v[2] ? $phone = "" : $x; // clear value if still too long (non-nordic or country mismatch)
-      preg_match($blist, $phone) ? $phone = "" : $x; // clear value if it resembles black list regex
-      substr($phone, 0, strlen("0")) === "0" ? $phone = substr($phone, 1) : $x; // strip 0 (catching 040, 070, etc)
+      substr($phone, 0, strlen("00")) === "00" ? $phone = substr($phone, 2) : $phone; // strip 00 (catching 0045, etc)
+      substr($phone, 0, strlen("0")) === "0" ? $phone = substr($phone, 1) : $phone; // strip 0 (catching 040, 070, etc)
+      (strlen($phone) > $v[2]) && (substr($phone, 0, strlen($v[0])) === $v[0]) ? $phone = substr($phone, strlen($v[0])) : $phone; // strip expected country code if still too long
+      strlen($phone) > $v[2] ? $phone = "" : $phone; // set to 0 if still too long (non-nordic or country mismatch)
+      preg_match($blist, $phone) ? $phone = "" : $phone; // set to 0 if it resembles black list regex
       strlen($phone) > $v[1] ? $phone = "+".$v[0].$phone : $phone = ""; // clear value if too small, otherwise add + country code
 
       // END LOGIC - - - - - - - - - - - - - - - -
