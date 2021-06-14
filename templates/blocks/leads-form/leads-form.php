@@ -236,9 +236,11 @@ $url = get_the_permalink();
                 </h4>
                 <?php echo $thank_you_settings['donate_description']; ?>
                 <div class="donate-container">
+                  <?php if ($form_settings['enable_donation_amount']) : ?>
                     <div class="input-container">
                         <input class="ghost" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" v-model="donateAmount" @keypress="numbersOnly($event)" @change="checkMinVal($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
                     </div>
+                    <?php endif; ?>
                     <a id="donate-button" :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button button--submit" target="_blank"><?php svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
                 </div>
             </div>
@@ -410,6 +412,7 @@ $url = get_the_permalink();
 
 <script>
     window['leads_form_<?php echo $block['id']; ?>'] = {
+        // toggle donations amount
         donateAmount: <?php echo $thank_you_settings['donate_default_amount'] ? $thank_you_settings['donate_default_amount'] : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0); ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
         thankYouTitle: '<?php echo $thank_you_settings['headline']; ?>',
