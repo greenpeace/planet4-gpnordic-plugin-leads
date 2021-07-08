@@ -10,6 +10,7 @@
     justify-content: center;
     margin-top: -3.75rem;
     margin-bottom: 3.75rem;
+    overflow: hidden;// Fixes blurring over neighbouring objects
     @media only screen and (max-width: $leads--large) {
         height: auto;
         padding-bottom: 4.5rem;
@@ -27,6 +28,7 @@
         position: absolute;
         z-index: -1;
         // transform: scale(1.1);
+        overflow: hidden; //attmpting to hide the excesive bkg in editor
         will-change: filter, -webkit-filter;
         filter: blur(0);
         transition: filter 1.5s ease, -webkit-filter 1.5s ease;
@@ -469,8 +471,7 @@
                 .checkbox-container {
                     grid-column: 1/4;
                     grid-row: 3/4;
-                    margin: 0;
-                    margin-top: 1rem;
+                    margin: 0.5rem 0 1.5rem 0;
                 }
                 small {
                     grid-column: 1/4;
@@ -523,12 +524,12 @@
             }
             small {
                 p {
-                    color: $white--opacity-40;
+                    color: $white--opacity-60;
                 }
             }
             .checkbox {
                 label, p {
-                    color: $white--opacity-40;
+                    color: $white--opacity-60;
                 }
             }
             input {
@@ -557,12 +558,4 @@
     }
 }
 
-.leads-form
 
-// No fillwidth in admin
-.acf-block-preview {
-    .leads-form {
-        width: 100%;
-        margin-left: 0;
-    }
-}

@@ -238,18 +238,47 @@
                           .from(".leads-form__donate", { y: 100, opacity: 0, duration: this.animationSpeed, onComplete: this.addBlur() }, `-=${this.animationSpeed / 2}`)
                       })
 
-                      this.dataLayer && this.dataLayer.push({
-                        'event': 'petitionThankYou',
-                        'donationOption': 'Pre-selected amount to donation'
-                      });
-
+                      const element = document.querySelector('#donate-container');
+                      const elementChildren = element.querySelectorAll('.donation-options');
+                      let firstElementChild = elementChildren[0].className.split(" ")[0];
                       const donateBtn = document.getElementById("donate-button");
-                      donateBtn.addEventListener('click', () => {
-                        this.dataLayer && this.dataLayer.push({
-                          'event': 'petitionDonation',
-                          'PetitionDonationLink': 'Pre-selected amount to donation'
-                        });
-                      })
+                      // console.log(elementChildren);
+                      // console.log(firstElementChild);
+                      switch (firstElementChild) {
+                        case "ghost":
+                          // console.log("Pre-selected amount shown");
+                          this.dataLayer && this.dataLayer.push({
+                            'event': 'petitionThankYou',
+                            'donationOption': 'Pre-selected amount to donation'
+                          });
+
+                          donateBtn.addEventListener('click', () => {
+                            this.dataLayer && this.dataLayer.push({
+                              'event': 'petitionDonation',
+                              'PetitionDonationLink': 'Pre-selected amount to donation'
+                            });
+                          })
+                        break;
+
+                        case "button--submit":
+                          // console.log("Donation button only");
+                          this.dataLayer && this.dataLayer.push({
+                            'event': 'petitionThankYou',
+                            'donationOption': 'Direct link to choose amount'
+                          });
+
+                          donateBtn.addEventListener('click', () => {
+                            this.dataLayer && this.dataLayer.push({
+                              'event': 'petitionDonation',
+                              'PetitionDonationLink': 'Direct link to choose amount'
+                            });
+                          })
+                          break;
+
+                        default:
+                        console.log("Nada.");
+                        break;
+                      }
 
                       const fbShare = document.getElementById("facebook");
                       fbShare.addEventListener('click', () =>{

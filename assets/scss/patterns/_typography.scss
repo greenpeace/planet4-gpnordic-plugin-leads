@@ -1,10 +1,15 @@
 @font-face {
   font-family: "DK Plakkaat";
-  src: url("../../assets/fonts/Plakkaat.ttf") format("truetype");
+  src: local("DK Plakkaat"), local("DK-Plakkaat"),
+  url("../../assets/fonts/Plakkaat.otf") format("opentype"), /* IE */
+  url("../../assets/fonts/Plakkaat.woff2") format("woff2"),  /* chrome、firefox */
+  url("../../assets/fonts/Plakkaat.woff") format("woff"),    /* chrome、firefox */
+  url("../../assets/fonts/Plakkaat.ttf") format("truetype"); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
 }
+
 /* Typefaces */
-$header-font-family: "DK Plakkaat", 'Helvetica Neue', 'Helvetica', sans-serif;
-$body-font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
+$header-font-family: "DK Plakkaat", "Helvetica Now Display Bold", "Helvetica Neue", "Helvetica", sans-serif;
+$body-font-family: "Helvetica Now Display Regular", "Helvetica", sans-serif;
 
 .leads-form {
   /* General styles */
@@ -74,8 +79,8 @@ $body-font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
   }
   h3 {
     font-family: $body-font-family;
-    font-size: 2rem;
-    line-height: 2.5rem;
+    font-size: 1.9rem;
+    line-height: 2.2rem;
     font-weight: bold;
   }
   h4 {
@@ -88,7 +93,7 @@ $body-font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
       font-family: $body-font-family;
       font-size: 1rem;
       line-height: 1.5rem;
-      font-weight: 500;
+      font-weight: 400;
       &.medium {
         font-weight: 500;
       }
@@ -99,14 +104,14 @@ $body-font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
 
   small,
   small p {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     line-height: 1rem;
   }
   .preamble,
   .preamble p {
     font-size: 2rem;
     line-height: 2.25rem;
-    font-weight: 500;
+    font-weight: 400;
     @media only screen and (max-width: $leads--large) {
       font-size: 1.5rem;
       line-height: 1.7rem;
@@ -116,4 +121,7 @@ $body-font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     }
   }
   /* Text decorations */
+  div.leads-form__content div.description div.text {
+    font-weight: 600;
+  }
 }

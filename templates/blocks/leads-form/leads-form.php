@@ -82,8 +82,6 @@ $hero_description = (isset($hero_settings['description']) && $hero_settings['des
 
 $url = get_the_permalink();
 ?>
-
-
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
     <div class="leads-form__grid">
         <div class="leads-form__content" v-show="!success">
@@ -237,11 +235,13 @@ $url = get_the_permalink();
                     <?php echo $thank_you_settings['donate_headline']; ?>
                 </h4>
                 <?php echo $thank_you_settings['donate_description']; ?>
-                <div class="donate-container">
-                    <div class="input-container">
-                        <input class="ghost" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" v-model="donateAmount" @keypress="numbersOnly($event)" @change="checkMinVal($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
+                <div id="donate-container" class="donate-container">
+                  <?php if ($thank_you_settings['enable_donation_amount']) : ?>
+                    <div id="donate-input-amount" class="input-container">
+                        <input id="ghost" class="ghost donation-options" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" v-model="donateAmount" @keypress="numbersOnly($event)" @change="checkMinVal($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
                     </div>
-                    <a id="donate-button" :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button button--submit" target="_blank"><?php svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
+                    <?php endif; ?>
+                    <a id="donate-button" :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button--submit button donation-options" target="_blank"><?php svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
                 </div>
             </div>
         </div>
@@ -252,7 +252,13 @@ $url = get_the_permalink();
     <div ref="bkg" class="leads-form__bkg <?php echo $opacity; ?> <?php if ($small_screen_image) echo "leads-form__bkg--large" ?>" style="background-image: url(<?php echo $background_image; ?>);"></div>
     <div v-if="!success" class="leads-form__bottom-label"><?php svg_icon('hero-bottom-label'); ?></div>
 </div>
+
 <style>
+    /* hide overflowing background on editor screen */
+    .acf-block-component.acf-block-body .acf-block-preview {
+    max-width: 70vw !important;
+    overflow: hidden;
+    }
     .leads-form {opacity: 1 !important;}
     /* Counter */
     #<?php echo $id . ' '; ?>.leads-form__counter {
@@ -403,8 +409,10 @@ $url = get_the_permalink();
         background: rgba(255, 255, 255, 0.25);
     }
 </style>
+
 <script>
     window['leads_form_<?php echo $block['id']; ?>'] = {
+        // toggle donations amount
         donateAmount: <?php echo $thank_you_settings['donate_default_amount'] ? $thank_you_settings['donate_default_amount'] : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0); ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
         thankYouTitle: '<?php echo $thank_you_settings['headline']; ?>',
