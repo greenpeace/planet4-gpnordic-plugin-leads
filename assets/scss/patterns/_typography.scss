@@ -5,6 +5,7 @@
   url("../../assets/fonts/Plakkaat.woff2") format("woff2"),  /* chrome、firefox */
   url("../../assets/fonts/Plakkaat.woff") format("woff"),    /* chrome、firefox */
   url("../../assets/fonts/Plakkaat.ttf") format("truetype"); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  font-display: swap; //should prevent font flickering
 }
 
 /* Typefaces */
