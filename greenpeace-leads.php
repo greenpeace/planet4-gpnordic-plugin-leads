@@ -60,4 +60,10 @@ function gplp_enqueue_scripts()
 add_action('wp_enqueue_scripts', 'gplp_enqueue_scripts');
 add_action('admin_enqueue_scripts', 'gplp_enqueue_scripts');
 
+//Adding label for FB shares
+function fb_label_render_field( $field ) {
+  echo '<div style="position: relative; margin: 25px 0 0 0; padding: 15px 0 0; border-top: #eee solid 1px;"><div class="acf-label"><label>Sharing settings: Facebook</label><p>You can find the Title, Description and Image Override used for sharing on Facebook in the "Open Graph/Social Fields" page settings on the page where you will be using this form.</p></div></div>';
+}
 
+// Apply to field named "share_description".
+add_action('acf/render_field/name=share_description', 'fb_label_render_field');
