@@ -223,10 +223,10 @@ $url = get_the_permalink();
                 </h4>
                 <?php echo $thank_you_settings['share_description']; ?>
                 <div class="leads-form__share__icons">
-                    <a id="facebook" class="button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
+                    <a id="facebook" class="button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>?<?php echo "share=facebook"; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
                     <a id="twitter" class="button--share" href="https://twitter.com/intent/tweet?text=<?php echo $url; ?> <?php echo urlencode($thank_you_settings['twitter_share_text']); ?>" target="_blank"><?php svg_icon('twitter'); ?></a>
                     <a id="email" class="button--share email" href="mailto:?subject=<?php echo rawurlencode($thank_you_settings['email_share_subject']); ?>&amp;body=<?php echo rawurlencode(str_replace('%site_url%', $url, $thank_you_settings['email_share_text'])); ?>" target="_blank"><?php svg_icon('email'); ?></a>
-                    <a id="whatsapp" class="button--share" href="https://wa.me/?text=<?php echo $url; ?> <?php echo urlencode($thank_you_settings['whatsapp_share_text']); ?>" target="_blank"><?php svg_icon('whatsapp'); ?></a>
+                    <a id="whatsapp" class="button--share" href="https://wa.me/?text=<?php echo $url; ?><?php echo urlencode($thank_you_settings['whatsapp_share_text']); ?>?<?php echo "share=whatsapp"; ?>" target="_blank"><?php svg_icon('whatsapp'); ?></a>
                 </div>
             </div>
             <div v-show="success" class="leads-form__donate">
