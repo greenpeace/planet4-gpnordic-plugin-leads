@@ -220,7 +220,7 @@
                   }).then(() => {
                     this.showThankYouAnimation = true
                     //window.scrollTo({ top: 0, behavior: 'smooth' })
-                    var blockID = $('[id*="leads-form-block_"]').map(function(){return this.id}).get();
+                    var blockID = jQuery('[id*="leads-form-block_"]').map(function(){return this.id}).get();
                     document.querySelector('#'+blockID[0]).scrollIntoView();
                     const a = lottie.loadAnimation({
                       container: this.$refs.animation, // the dom element that will contain the animation
