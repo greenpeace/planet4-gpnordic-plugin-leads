@@ -438,7 +438,7 @@ $url = get_the_permalink();
                 regex: ''
             },
             utm: {
-                value: '<?php echo isset($_GET['utm']) ? $_GET['utm'] : ''; ?>',
+                value: '<?php echo parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY) ?>', //the fixed parsing of the UTM values from the URL
                 fieldName: 'UTM',
                 required: false,
                 regex: ''

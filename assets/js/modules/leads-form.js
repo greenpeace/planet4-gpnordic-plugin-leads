@@ -20,7 +20,9 @@
       $block = `#${$block.attr('id')}`
     // console.log('Initialize Block', `leads_form_${jQuery($block).attr('data-block-id')}`, $block)
     const blockData = window[`leads_form_${jQuery($block).attr('data-block-id')}`]
-    //console.log('blockData', blockData)
+    console.log('blockData', blockData)
+
+
 
     new Vue({
       el: $block,
