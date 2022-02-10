@@ -85,7 +85,7 @@ $url = get_the_permalink();
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
     <div class="leads-form__grid">
         <div class="leads-form__content" v-show="!success">
-            <h2 :class="lengthClass(heroTitle)" v-if="heroTitle !== ''"><?php echo $hero_settings['headline']; ?></h2>
+            <h2 :class="lengthClass(heroTitle)" v-if="heroTitle !== ''"><?php echo stripslashes($hero_settings['headline']); ?></h2>
             <div class="description">
                 <div class="text" ref="heroDescription" v-html="limitedText(heroDescription, textOpen)" v-if="heroDescription !== ''"><?php echo $hero_description; ?>
                 </div>
@@ -196,7 +196,7 @@ $url = get_the_permalink();
         <div class="leads-form__thank-you-animation" ref="animation" v-show="showThankYouAnimation"></div>
         <div v-show="success" class="leads-form__thank-you">
             <h2 :class="lengthClass(thankYouTitle)" v-html="thankYouTitle"></h2>
-            <div class="preamble"><?php echo $thank_you_settings['description']; ?></div>
+            <div class="preamble"><?php echo stripslashes($thank_you_settings['description']); ?></div>
         </div>
 
         <div v-show="success" class="leads-form__further-actions">
@@ -415,9 +415,9 @@ $url = get_the_permalink();
         // toggle donations amount
         donateAmount: <?php echo $thank_you_settings['donate_default_amount'] ? $thank_you_settings['donate_default_amount'] : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0); ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
-        thankYouTitle: '<?php echo $thank_you_settings['headline']; ?>',
+        thankYouTitle: '<?php echo addslashes($thank_you_settings['headline']); ?>',
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
-        heroTitle: '<?php echo $hero_settings['headline']; ?>',
+        heroTitle: '<?php echo addslashes($hero_settings['headline']); ?>',
         heroDescription: "<?php echo trim(preg_replace('/\s\s+/', ' ', strip_tags($hero_description))); ?>",
         display: "<?php echo $display; ?>",
         formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
