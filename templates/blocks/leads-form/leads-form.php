@@ -427,7 +427,7 @@ $url = get_the_permalink();
         counterApiEndpoints: [<?php echo $form_settings['counter_api-endpoints'] ? join(',', array_map(function ($url) {
                                     return "\"${url['endpoint']}\"";
                                 }, $form_settings['counter_api-endpoints'])) : ''; ?>],
-        sourceCode: '<?php echo $form_settings['source_code']; ?>',
+        sourceCode: '<?php echo trim($form_settings['source_code'], " \t\n\r\0\x0B"); ?>',
         readMore: '<?php echo $form_fields_translations['read_more']; ?>',
         readLess: '<?php echo $form_fields_translations['read_less']; ?>',
         formFields: {
