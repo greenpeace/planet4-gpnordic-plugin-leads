@@ -33,13 +33,36 @@ $thank_you_settings = get_field('thank_you_settings', $form_id);
 $form_styles = get_field('form_styles', $form_id);
 $extra_options = get_field('extra_options', $form_id);
 $form_fields_translations = get_field('form_fields_translations', 'options');
+
+//Copy the page link to share
+$checkLanguage = $_SERVER['REQUEST_URI'];
+$checkLanguage = explode('/', $checkLanguage);
+$checkLanguage = $checkLanguage[1];
+
+switch ($checkLanguage) {
+  case "denmark":
+    $copyLink = "Kopier link";
+  break;
+  case "finland":
+    $copyLink = "Kopioi linkki";
+  break;
+  case "norway":
+    $copyLink = "Kopier lenke";
+  break;
+  case "sweden":
+    $copyLink = "Kopiera länk";
+  break;
+  default:
+    $copyLink = "Copy link";
+}
+
+
 // Background Image
 $background_image = get_the_post_thumbnail_url($form_id, 'large');
 // Small screen Image
 $small_screen_image = $extra_options['small_screen_image'];
 
 // Colors
-
 $brand_green_light = "#73BE1E";
 $brand_green_dark = "#005C42";
 
@@ -63,7 +86,6 @@ $theme_option = $form_styles['colors']['theme'];
 $theme = (isset($theme_option) && $theme_option != false) ? $theme_option : '';
 
 //CTA text color
-
 if (isset($form_styles['colors']['cta_text']) && $form_styles['colors']['cta_text'] != false) {
     $cta_text_color = $form_styles['colors']['cta_text'];
 } elseif ($theme_option == 'dark') {
@@ -224,9 +246,12 @@ $url = get_the_permalink();
                 <?php echo $thank_you_settings['share_description']; ?>
                 <div class="leads-form__share__icons">
                     <a id="facebook" class="button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>?<?php echo "share=facebook"; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
-                    <a id="twitter" class="button--share" href="https://twitter.com/intent/tweet?text=<?php echo $url; ?> <?php echo urlencode($thank_you_settings['twitter_share_text']); ?>" target="_blank"><?php svg_icon('twitter'); ?></a>
+                    <!-- <a id="copy-link" class="button--share" href="<?php echo $copy_link; ?>" target="_blank"><?php svg_icon('link'); ?><?php echo 'Copy link'; ?></a> -->
+                    <button id="copy-link" class="button--share"><?php svg_icon('link'); ?><?php echo $copyLink; ?></button>
+                    <!-- Implementing the winning A/B test version -->
+                    <!-- <a id="twitter" class="button--share" href="https://twitter.com/intent/tweet?text=<?php echo $url; ?> <?php echo urlencode($thank_you_settings['twitter_share_text']); ?>" target="_blank"><?php svg_icon('twitter'); ?></a>
                     <a id="email" class="button--share email" href="mailto:?subject=<?php echo rawurlencode($thank_you_settings['email_share_subject']); ?>&amp;body=<?php echo rawurlencode(str_replace('%site_url%', $url, $thank_you_settings['email_share_text'])); ?>" target="_blank"><?php svg_icon('email'); ?></a>
-                    <a id="whatsapp" class="button--share" href="https://wa.me/?text=<?php echo $url . "?share=whatsapp "; ?><?php echo urlencode($thank_you_settings['whatsapp_share_text']); ?>" target="_blank"><?php svg_icon('whatsapp'); ?></a>
+                    <a id="whatsapp" class="button--share" href="https://wa.me/?text=<?php echo $url . "?share=whatsapp "; ?><?php echo urlencode($thank_you_settings['whatsapp_share_text']); ?>" target="_blank"><?php svg_icon('whatsapp'); ?></a> -->
                 </div>
             </div>
             <div v-show="success" class="leads-form__donate">
@@ -294,10 +319,144 @@ $url = get_the_permalink();
         fill: <?php echo $cta_text_color; ?> !important;
     }
 
-    #<?php echo $id . ' '; ?>.button--share.email svg path {
+    /* implementing the winnig A/B test */
+    #<?php echo $id . ' '; ?>#facebook.button--share {
+      background-color : <?php echo $primary_color; ?>;
+      box-shadow: 0 0 0 0 <?php echo hex2rgba($primary_color, 0.5); ?> !important;
+      cursor: pointer;
+      -webkit-animation: pulse 1.5s infinite;
+      -moz-animation: pulse 1.5s infinite;
+      animation: pulse 1.5s infinite;
+      padding: 0.3rem 0.5rem;
+      border-radius: 2rem;
+      width: 9rem;
+      text-align: center;
+    }
+
+
+    #<?php echo $id . ' '; ?>#facebook svg path {
+      fill: <?php echo $cta_text_color; ?>;
+    }
+
+
+    #<?php echo $id . ' '; ?>#facebook.button--share:hover {
+      -webkit-animation: none;
+      -moz-animation: none;
+      animation: none;
+    }
+
+    #<?php echo $id . ' '; ?>#facebook.button--share:active {
+      -webkit-animation: none;
+      -moz-animation: none;
+      animation: none;
+    }
+
+    @-webkit-keyframes pulse {
+      0% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+      }
+      70% {
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+      }
+      100% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+      }
+    }
+
+    @-moz-keyframes pulse {
+      0% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+      }
+      70% {
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+      }
+      100% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+      }
+      70% {
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+      }
+      100% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+      }
+    }
+
+    #<?php echo $id . ' '; ?>#copy-link::before {
+        display: none;
+    }
+
+    #<?php echo $id . ' '; ?>#copy-link::before {
+        display: none;
+    }
+
+    #<?php echo $id . ' '; ?>#copy-link {
+      background: <?php echo $primary_color; ?>;
+      color: <?php echo $cta_text_color; ?>;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border: none!important;
+      padding: 0 0.6rem 0 0.9rem;
+      border-radius: 2rem;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      width: 10rem;
+      text-align: center;
+      -webkit-transition: all 0.3s ease-in-out;
+      -moz-transition: all 0.3s ease-in-out;
+      -ms-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+
+    #<?php echo $id . ' '; ?>#copy-link svg#link path {
+      fill: <?php echo $cta_text_color; ?> !important;
+      background: transparent !important;
+    }
+
+    /* Implementing the winning A/B test */
+    /* #<?php echo $id . ' '; ?>.button--share.email svg path {
         fill: transparent !important;
         stroke: <?php echo $cta_text_color; ?> !important;
-    }
+    } */
 
     #<?php echo $id . ' '; ?>.button--submit span,
     .button--submit svg path {

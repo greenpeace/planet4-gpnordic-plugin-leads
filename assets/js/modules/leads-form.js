@@ -293,32 +293,80 @@
                         });
                       });
 
-                      const twShare = document.getElementById("twitter");
-                      twShare.addEventListener('click', () =>{
+                      // Implementing the winning A/B test version
+                      const linkCopy = document.getElementById("copy-link");
+                      linkCopy.addEventListener('click', () =>{
+                        let copyURL= document.createElement('input'),
+                        text = window.location.href,
+                        linkParam = "";
+
+                        if(window.location.href.indexOf("?") > -1){
+                            linkParam = text + '&share=copy_link';
+                        }else{
+                            linkParam = text + '?share=copy_link';
+                        }
+
+                        let setLanguage = window.location.pathname.split('/')[1];
+                        let $linkCopied = "";
+
+                        switch (setLanguage) {
+                          case "denmark":
+                            $linkCopied = "Link kopieret!";
+                          break;
+                          case "finland":
+                            $linkCopied = "Linkki kopioitu!";
+                          break;
+                          case "norway":
+                            $linkCopied = "Lenke kopiert!";
+                          break;
+                          case "sweden":
+                            $linkCopied = "Länk kopierad!";
+                          break;
+                          default:
+                            $linkCopied = "Link copied!";
+                        }
+
+                        document.body.appendChild(copyURL);
+                        copyURL.value = linkParam;
+                        copyURL.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(copyURL);
+                        document.querySelector('#copy-link').innerHTML = $linkCopied;
+                        console.log(copyURL);
+
                         this.dataLayer && this.dataLayer.push({
                           'event': 'uaevent',
-                          'eventAction': 'Twitter',
+                          'eventAction': 'Copy link',
                           'eventCategory':'Social Share'
                         });
                       });
 
-                      const eShare = document.getElementById("email");
-                      eShare.addEventListener('click', () =>{
-                        this.dataLayer && this.dataLayer.push({
-                          'event': 'uaevent',
-                          'eventAction': 'Email',
-                          'eventCategory':'Social Share'
-                        });
-                      });
+                      // const twShare = document.getElementById("twitter");
+                      // twShare.addEventListener('click', () =>{
+                      //   this.dataLayer && this.dataLayer.push({
+                      //     'event': 'uaevent',
+                      //     'eventAction': 'Twitter',
+                      //     'eventCategory':'Social Share'
+                      //   });
+                      // });
 
-                      const waShare = document.getElementById("whatsapp");
-                      waShare.addEventListener('click', () =>{
-                        this.dataLayer && this.dataLayer.push({
-                          'event': 'uaevent',
-                          'eventAction': 'Whatsapp',
-                          'eventCategory':'Social Share'
-                        });
-                      });
+                      // const eShare = document.getElementById("email");
+                      // eShare.addEventListener('click', () =>{
+                      //   this.dataLayer && this.dataLayer.push({
+                      //     'event': 'uaevent',
+                      //     'eventAction': 'Email',
+                      //     'eventCategory':'Social Share'
+                      //   });
+                      // });
+
+                      // const waShare = document.getElementById("whatsapp");
+                      // waShare.addEventListener('click', () =>{
+                      //   this.dataLayer && this.dataLayer.push({
+                      //     'event': 'uaevent',
+                      //     'eventAction': 'Whatsapp',
+                      //     'eventCategory':'Social Share'
+                      //   });
+                      // });
 
                     })
                   })
