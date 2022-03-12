@@ -53,7 +53,7 @@ switch ($checkLanguage) {
     $copyLink = "Kopiera länk";
   break;
   default:
-    $copyLink = "Copy link";
+    $copyLink = "Kopioi linkki";
 }
 
 
@@ -245,9 +245,9 @@ $url = get_the_permalink();
                 </h4>
                 <?php echo $thank_you_settings['share_description']; ?>
                 <div class="leads-form__share__icons">
-                    <a id="facebook" class="button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>?<?php echo "share=facebook"; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
+                    <a id="facebook" class="button button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>?<?php echo "share=facebook"; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
                     <!-- <a id="copy-link" class="button--share" href="<?php echo $copy_link; ?>" target="_blank"><?php svg_icon('link'); ?><?php echo 'Copy link'; ?></a> -->
-                    <button id="copy-link" class="button--share"><?php svg_icon('link'); ?><?php echo $copyLink; ?></button>
+                    <button id="copy-link" class="button button--share"><?php svg_icon('link'); ?><?php echo $copyLink; ?></button>
                     <!-- Implementing the winning A/B test version -->
                     <!-- <a id="twitter" class="button--share" href="https://twitter.com/intent/tweet?text=<?php echo $url; ?> <?php echo urlencode($thank_you_settings['twitter_share_text']); ?>" target="_blank"><?php svg_icon('twitter'); ?></a>
                     <a id="email" class="button--share email" href="mailto:?subject=<?php echo rawurlencode($thank_you_settings['email_share_subject']); ?>&amp;body=<?php echo rawurlencode(str_replace('%site_url%', $url, $thank_you_settings['email_share_text'])); ?>" target="_blank"><?php svg_icon('email'); ?></a>
@@ -327,17 +327,17 @@ $url = get_the_permalink();
       -webkit-animation: pulse 1.5s infinite;
       -moz-animation: pulse 1.5s infinite;
       animation: pulse 1.5s infinite;
-      padding: 0.3rem 0.5rem;
-      border-radius: 2rem;
-      width: 9rem;
       text-align: center;
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.2rem;
+      min-width: 9rem;
+      max-width: fit-content;
+      max-height: 3.4rem;
     }
-
 
     #<?php echo $id . ' '; ?>#facebook svg path {
       fill: <?php echo $cta_text_color; ?>;
     }
-
 
     #<?php echo $id . ' '; ?>#facebook.button--share:hover {
       -webkit-animation: none;
@@ -431,20 +431,29 @@ $url = get_the_permalink();
     #<?php echo $id . ' '; ?>#copy-link {
       background: <?php echo $primary_color; ?>;
       color: <?php echo $cta_text_color; ?>;
-      font-size: 1.2rem;
-      font-weight: 700;
       border: none!important;
-      padding: 0 0.6rem 0 0.9rem;
-      border-radius: 2rem;
+      border-radius: 0.2rem;
+      padding: 0.5rem 1.6rem 0.2rem;
+      word-break: keep-all;
       justify-content: center;
       align-items: center;
-      cursor: pointer;
-      width: 10rem;
       text-align: center;
+      cursor: pointer;
+      min-width: fit-content;
+      max-width: fit-content;
+      width: fit-content;
+      font-size: 1.1rem;
+      line-height: 1.80rem;
+      max-height: 3.4rem;
       -webkit-transition: all 0.3s ease-in-out;
       -moz-transition: all 0.3s ease-in-out;
       -ms-transition: all 0.3s ease-in-out;
       transition: all 0.3s ease-in-out;
+    }
+
+
+    #<?php echo $id . ' '; ?>#copy-link svg#link{
+      margin-top: 0.25rem;
     }
 
     #<?php echo $id . ' '; ?>#copy-link svg#link path {
