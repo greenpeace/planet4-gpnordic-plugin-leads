@@ -323,7 +323,7 @@
                             $linkCopied = "Länk kopierad!";
                           break;
                           default:
-                            $linkCopied = "Linkki kopioitu!";
+                            $linkCopied = "Link Copied!";
                         }
 
                         document.body.appendChild(copyURL);

@@ -38,6 +38,7 @@ $form_fields_translations = get_field('form_fields_translations', 'options');
 $checkLanguage = $_SERVER['REQUEST_URI'];
 $checkLanguage = explode('/', $checkLanguage);
 $checkLanguage = $checkLanguage[1];
+$copyLink = "";
 
 switch ($checkLanguage) {
   case "denmark":
@@ -53,7 +54,7 @@ switch ($checkLanguage) {
     $copyLink = "Kopiera länk";
   break;
   default:
-    $copyLink = "Kopioi linkki";
+    $copyLink = "Copy link";
 }
 
 
