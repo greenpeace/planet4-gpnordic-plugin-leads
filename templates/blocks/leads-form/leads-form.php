@@ -331,6 +331,10 @@ $url = get_the_permalink();
       max-height: 3.4rem;
     }
 
+    #<?php echo $id . ' '; ?>#facebook svg {
+      padding-bottom: 1.2rem;
+    }
+
     #<?php echo $id . ' '; ?>#facebook svg path {
       fill: <?php echo $cta_text_color; ?>;
     }
