@@ -33,13 +33,37 @@ $thank_you_settings = get_field('thank_you_settings', $form_id);
 $form_styles = get_field('form_styles', $form_id);
 $extra_options = get_field('extra_options', $form_id);
 $form_fields_translations = get_field('form_fields_translations', 'options');
+
+//Copy the page link to share
+$checkLanguage = $_SERVER['REQUEST_URI'];
+$checkLanguage = explode('/', $checkLanguage);
+$checkLanguage = $checkLanguage[1];
+$copyLink = "";
+
+switch ($checkLanguage) {
+  case "denmark":
+    $copyLink = "Kopier link";
+  break;
+  case "finland":
+    $copyLink = "Kopioi linkki";
+  break;
+  case "norway":
+    $copyLink = "Kopier lenke";
+  break;
+  case "sweden":
+    $copyLink = "Kopiera länk";
+  break;
+  default:
+    $copyLink = "Copy link";
+}
+
+
 // Background Image
 $background_image = get_the_post_thumbnail_url($form_id, 'large');
 // Small screen Image
 $small_screen_image = $extra_options['small_screen_image'];
 
 // Colors
-
 $brand_green_light = "#73BE1E";
 $brand_green_dark = "#005C42";
 
@@ -63,7 +87,6 @@ $theme_option = $form_styles['colors']['theme'];
 $theme = (isset($theme_option) && $theme_option != false) ? $theme_option : '';
 
 //CTA text color
-
 if (isset($form_styles['colors']['cta_text']) && $form_styles['colors']['cta_text'] != false) {
     $cta_text_color = $form_styles['colors']['cta_text'];
 } elseif ($theme_option == 'dark') {
@@ -85,7 +108,7 @@ $url = get_the_permalink();
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
     <div class="leads-form__grid">
         <div class="leads-form__content" v-show="!success">
-            <h2 :class="lengthClass(heroTitle)" v-if="heroTitle !== ''"><?php echo $hero_settings['headline']; ?></h2>
+            <h2 :class="lengthClass(heroTitle)" v-if="heroTitle !== ''"><?php echo stripslashes($hero_settings['headline']); ?></h2>
             <div class="description">
                 <div class="text" ref="heroDescription" v-html="limitedText(heroDescription, textOpen)" v-if="heroDescription !== ''"><?php echo $hero_description; ?>
                 </div>
@@ -196,7 +219,7 @@ $url = get_the_permalink();
         <div class="leads-form__thank-you-animation" ref="animation" v-show="showThankYouAnimation"></div>
         <div v-show="success" class="leads-form__thank-you">
             <h2 :class="lengthClass(thankYouTitle)" v-html="thankYouTitle"></h2>
-            <div class="preamble"><?php echo $thank_you_settings['description']; ?></div>
+            <div class="preamble"><?php echo stripslashes($thank_you_settings['description']); ?></div>
         </div>
 
         <div v-show="success" class="leads-form__further-actions">
@@ -223,10 +246,8 @@ $url = get_the_permalink();
                 </h4>
                 <?php echo $thank_you_settings['share_description']; ?>
                 <div class="leads-form__share__icons">
-                    <a id="facebook" class="button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>?<?php echo "share=facebook"; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
-                    <a id="twitter" class="button--share" href="https://twitter.com/intent/tweet?text=<?php echo $url; ?> <?php echo urlencode($thank_you_settings['twitter_share_text']); ?>" target="_blank"><?php svg_icon('twitter'); ?></a>
-                    <a id="email" class="button--share email" href="mailto:?subject=<?php echo rawurlencode($thank_you_settings['email_share_subject']); ?>&amp;body=<?php echo rawurlencode(str_replace('%site_url%', $url, $thank_you_settings['email_share_text'])); ?>" target="_blank"><?php svg_icon('email'); ?></a>
-                    <a id="whatsapp" class="button--share" href="https://wa.me/?text=<?php echo $url . "?share=whatsapp "; ?><?php echo urlencode($thank_you_settings['whatsapp_share_text']); ?>" target="_blank"><?php svg_icon('whatsapp'); ?></a>
+                    <a id="facebook" class="button button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>?<?php echo "share=facebook"; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
+                    <button id="copy-link" class="button button--share"><?php svg_icon('link'); ?><?php echo $copyLink; ?></button>
                 </div>
             </div>
             <div v-show="success" class="leads-form__donate">
@@ -294,10 +315,157 @@ $url = get_the_permalink();
         fill: <?php echo $cta_text_color; ?> !important;
     }
 
-    #<?php echo $id . ' '; ?>.button--share.email svg path {
+    /* implementing the winnig A/B test */
+    #<?php echo $id . ' '; ?>#facebook.button--share {
+      background-color : <?php echo $primary_color; ?>;
+      box-shadow: 0 0 0 0 <?php echo hex2rgba($primary_color, 0.5); ?> !important;
+      cursor: pointer;
+      -webkit-animation: pulse 1.5s infinite;
+      -moz-animation: pulse 1.5s infinite;
+      animation: pulse 1.5s infinite;
+      text-align: center;
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.2rem;
+      min-width: 9rem;
+      max-width: fit-content;
+      max-height: 3.4rem;
+    }
+
+    #<?php echo $id . ' '; ?>#facebook svg {
+      padding-bottom: 0.2rem;
+    }
+
+    #<?php echo $id . ' '; ?>#facebook svg path {
+      fill: <?php echo $cta_text_color; ?>;
+    }
+
+    #<?php echo $id . ' '; ?>#facebook.button--share:hover {
+      -webkit-animation: none;
+      -moz-animation: none;
+      animation: none;
+    }
+
+    #<?php echo $id . ' '; ?>#facebook.button--share:active {
+      -webkit-animation: none;
+      -moz-animation: none;
+      animation: none;
+    }
+
+    @-webkit-keyframes pulse {
+      0% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+      }
+      70% {
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+      }
+      100% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+      }
+    }
+
+    @-moz-keyframes pulse {
+      0% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+      }
+      70% {
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+      }
+      100% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+      }
+      70% {
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+      }
+      100% {
+        -moz-transform: scale(0.9);
+        -ms-transform: scale(0.9);
+        -webkit-transform: scale(0.9);
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+      }
+    }
+
+    #<?php echo $id . ' '; ?>#copy-link::before {
+        display: none;
+    }
+
+    #<?php echo $id . ' '; ?>#copy-link::before {
+        display: none;
+    }
+
+    #<?php echo $id . ' '; ?>#copy-link {
+      background: <?php echo $primary_color; ?>;
+      color: <?php echo $cta_text_color; ?>;
+      border: none!important;
+      border-radius: 0.2rem;
+      padding: 0.3rem 1.6rem 0.1rem;
+      word-break: keep-all;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      min-width: fit-content;
+      max-width: fit-content;
+      width: fit-content;
+      font-size: 1.4rem;
+      line-height: 1.80rem;
+      max-height: 3.4rem;
+      -webkit-transition: all 0.3s ease-in-out;
+      -moz-transition: all 0.3s ease-in-out;
+      -ms-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+
+
+    #<?php echo $id . ' '; ?>#copy-link svg#link{
+      margin-top: 0.25rem;
+    }
+
+    #<?php echo $id . ' '; ?>#copy-link svg#link path {
+      fill: <?php echo $cta_text_color; ?> !important;
+      background: transparent !important;
+    }
+
+    /* Implementing the winning A/B test */
+    /* #<?php echo $id . ' '; ?>.button--share.email svg path {
         fill: transparent !important;
         stroke: <?php echo $cta_text_color; ?> !important;
-    }
+    } */
 
     #<?php echo $id . ' '; ?>.button--submit span,
     .button--submit svg path {
@@ -415,9 +583,9 @@ $url = get_the_permalink();
         // toggle donations amount
         donateAmount: <?php echo $thank_you_settings['donate_default_amount'] ? $thank_you_settings['donate_default_amount'] : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0); ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
-        thankYouTitle: '<?php echo $thank_you_settings['headline']; ?>',
+        thankYouTitle: '<?php echo addslashes($thank_you_settings['headline']); ?>',
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
-        heroTitle: '<?php echo $hero_settings['headline']; ?>',
+        heroTitle: '<?php echo addslashes($hero_settings['headline']); ?>',
         heroDescription: "<?php echo trim(preg_replace('/\s\s+/', ' ', strip_tags($hero_description))); ?>",
         display: "<?php echo $display; ?>",
         formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
@@ -427,7 +595,7 @@ $url = get_the_permalink();
         counterApiEndpoints: [<?php echo $form_settings['counter_api-endpoints'] ? join(',', array_map(function ($url) {
                                     return "\"${url['endpoint']}\"";
                                 }, $form_settings['counter_api-endpoints'])) : ''; ?>],
-        sourceCode: '<?php echo $form_settings['source_code']; ?>',
+        sourceCode: '<?php echo trim($form_settings['source_code'], " \t\n\r\0\x0B"); ?>',
         readMore: '<?php echo $form_fields_translations['read_more']; ?>',
         readLess: '<?php echo $form_fields_translations['read_less']; ?>',
         formFields: {
