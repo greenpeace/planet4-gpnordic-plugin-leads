@@ -332,7 +332,7 @@ $url = get_the_permalink();
     }
 
     #<?php echo $id . ' '; ?>#facebook svg {
-      padding-bottom: 1.2rem;
+      padding-bottom: 0.2rem;
     }
 
     #<?php echo $id . ' '; ?>#facebook svg path {
@@ -433,7 +433,7 @@ $url = get_the_permalink();
       color: <?php echo $cta_text_color; ?>;
       border: none!important;
       border-radius: 0.2rem;
-      padding: 0.5rem 1.6rem 0.2rem;
+      padding: 0.3rem 1.6rem 0.1rem;
       word-break: keep-all;
       justify-content: center;
       align-items: center;
@@ -442,7 +442,7 @@ $url = get_the_permalink();
       min-width: fit-content;
       max-width: fit-content;
       width: fit-content;
-      font-size: 1.1rem;
+      font-size: 1.4rem;
       line-height: 1.80rem;
       max-height: 3.4rem;
       -webkit-transition: all 0.3s ease-in-out;
