@@ -587,7 +587,7 @@ $url = get_the_permalink();
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
         //heroTitle trim slashes,remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
-        heroDescription: "<?php echo trim(str_replace('/\s\s+/', ' ', strip_tags($hero_description))); ?>",
+        heroDescription: "<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_description)))); ?>",
         display: "<?php echo $display; ?>",
         formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
         enableCounter: '<?php echo $form_settings['enable_counter']; ?>',
