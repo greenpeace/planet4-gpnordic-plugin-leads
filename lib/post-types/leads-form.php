@@ -44,7 +44,7 @@ function leads_custom_column($column, $post_id)
       echo get_post_status($post_id) == 'publish' ? '<span style="color:green;">Yes</span>' : '<span style="color:darkorange;">No</span>';
       break;
     case 'included':
-      $page_ids = array('post_status' => array('draft', 'pending', 'future', 'private', 'publish'));
+      $page_ids = array('post_status' => array('draft', 'pending', 'future', 'private', 'publish', 'auto-draft', 'inherit'));
       $pages = get_pages($page_ids);
 
       if (is_array($pages) || is_object($pages))
@@ -73,6 +73,10 @@ function leads_custom_column($column, $post_id)
           }
           //switch case the post status
           switch ($page_status) {
+            case $page_status == 'auto-draft':
+              $page_status = '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>';
+              break;
+
             case $page_status == 'draft':
               $page_status = '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>';
               break;
@@ -94,7 +98,7 @@ function leads_custom_column($column, $post_id)
               break;
 
             default:
-              # code...
+              $page_status = '<span style="padding-left:0.2rem;color:darkorange;"><small> (Inherit) </small></span>';
               break;
           }
 
@@ -103,7 +107,7 @@ function leads_custom_column($column, $post_id)
           $page_meta = get_post_meta($page_id);
           //parse the contents
           $page_content = apply_filters('the_content', $page_content);
-          //if the post id is equal to the 'data-form-id' value - works for published pages only
+          //if the post id is equal to the 'data-form-id' value and display it
           if (strpos($page_content, 'data-form-id="' . $post_id . '"') !== false) {
             $font_end = '<strong><a href="' . $page_permalink . '" target="_blank">' . $page_title . '</a></strong>' . $page_status . '</br>';
             // $back_end = '<strong><a href="' . $page_edit_link . '" target="_blank"> Editor page: ' . $page_title . '</a></strong></br></br>';
