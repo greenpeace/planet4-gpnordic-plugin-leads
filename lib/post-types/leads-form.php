@@ -44,7 +44,7 @@ function leads_custom_column($column, $post_id)
       echo get_post_status($post_id) == 'publish' ? '<span style="color:green;">Yes</span>' : '<span style="color:darkorange;">No</span>';
       break;
     case 'included':
-      $page_ids = array('post_status' => array('draft', 'pending', 'future', 'private', 'publish', 'auto-draft', 'inherit'));
+      $page_ids = array('post_status' => array('auto-draft', 'draft', 'publish', 'pending', 'future', 'private', 'inherit'));
       $pages = get_pages($page_ids);
 
       if (is_array($pages) || is_object($pages))
@@ -54,7 +54,7 @@ function leads_custom_column($column, $post_id)
           $page_title = $page->post_title;
           $page_content = $page->post_content;
           $page_id = $page->ID;
-          $page_status = get_post_status($page_id, 'any');
+          $page_status = get_post_status($page_id, 'auto-draft', 'draft', 'publish', 'pending', 'future', 'private', 'inherit');
           $page_edit_link = get_edit_post_link($page_id);
 
           //add the page status to the array
@@ -68,7 +68,7 @@ function leads_custom_column($column, $post_id)
             $page_ids[] = $page_id;
           }
           //check and add it to the array
-          if ($user_can_see_page !== null && $page_status == 'publish' || $page_status == 'draft' || $page_status == 'pending' || $page_status == 'future' || $page_status == 'private') {
+          if ($user_can_see_page !== null && $page_status == 'auto-draft' || $page_status == 'draft' || $page_status == 'publish' || $page_status == 'pending' || $page_status == 'future' || $page_status == 'private' || $page_status == 'inherit' ) {
             $page_ids[] = $page_id;
           }
           //switch case the post status
