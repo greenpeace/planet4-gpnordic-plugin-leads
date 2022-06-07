@@ -12,10 +12,11 @@
     "gulp-autoprefixer": "^6.1.0",
     "gulp-babel": "^7.0.1",
     "gulp-load-plugins": "^1.1.0",
-    "gulp-sass": "^4.1.0",
+    "gulp-sass": "^5.1.0",
     "gulp-uglify": "^3.0.1",
     "motion-ui": "~1.2.2",
-    "node-notifier": "^5.2.0"
+    "node-notifier": "^10.0.1",
+    "sass": "^1.52.2"
   },
   "author": "Simma Lugnt <info@simmalugnt.se>",
   "license": "MIT",
