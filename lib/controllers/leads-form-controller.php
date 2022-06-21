@@ -85,7 +85,9 @@ class FormController
       )
     ));
     if (!$petition->have_posts())
-      return new \WP_Error('not_found', "No petition with source_code '$source_code' could be found.", array('status' => 404));
+      // return new \WP_Error('not_found', "No petition with source_code '$source_code' could be found, returning 0.", array('status' => 404));
+      //return new array with counter = 0
+      return array('counter' => 0);
     $form = $petition->posts[0];
     $form_settings = get_field('form_settings', $form->ID);
     $count = (int)get_post_meta($form->ID, 'count', true) ?: 0;
@@ -107,7 +109,8 @@ class FormController
       )
     ));
     if (!$petition->have_posts())
-      return new \WP_Error('not_found', "No petition with source_code '$source_code' could be found.", array('status' => 404));
+      // return new \WP_Error('not_found', "No petition with source_code '$source_code' could be found.", array('status' => 404));
+      return array('counter' => 0);
     $form = $petition->posts[0];
     $form_settings = get_field('form_settings', $form->ID);
     // $count = (int)$form_settings['counter'] + 1;
