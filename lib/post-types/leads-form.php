@@ -44,18 +44,6 @@ function leads_custom_column($column, $post_id)
       echo get_post_status($post_id) == 'publish' ? '<span style="color:green;">Yes</span>' : '<span style="color:darkorange;">No</span>';
       break;
     case 'included':
-      $page_ids = array('post_status' => array('draft', 'pending', 'future', 'private', 'publish'));
-      $cache_key = 'pages_with_post_id_' . $post_id;
-      $pages = wp_cache_get($cache_key);
-      if (false === $pages) {
-        $pages = get_pages($page_ids);
-        wp_cache_set($cache_key, $pages);
-      }
-      $all_pages = count($pages);
-      $page_statuses = [];
-      $page_contents = [];
-
-
       $status_labels = [
         'draft' => '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>',
         'publish' => '<span style="padding-left:0.2rem;color:green;"><small> (Published) </small></span>',
@@ -63,34 +51,48 @@ function leads_custom_column($column, $post_id)
         'future' => '<span style="padding-left:0.2rem;color:green;"><small> (Scheduled) </small></span>',
         'private' => '<span style="padding-left:0.2rem;color:darkorange;"><small> (Private) </small></span>'
       ];
+      // checking if the certain key which is the LP block (wp:acf/leads-form) exists in the cache.
+      $cache_key = 'wp:acf/leads-form';
+      $page_list = wp_cache_get($cache_key);
+      //creating a global variable for the WordPress database.
+      global $wpdb;
 
-      if (is_array($pages) || is_object($pages)) {
-        for ($i = 0; $i < $all_pages; $i++) {
-          $page = $pages[$i];
+      try {
+        // if the key does not exist in the cache, it queries the WordPress database for the specific pages
+        if(!$page_list){
+          $results = $wpdb->get_results( "SELECT ID, post_title, post_content, post_status FROM $wpdb->posts WHERE post_content LIKE '%wp:acf/leads-form%' AND post_type = 'page' AND post_status IN ('publish','draft','pending','future','private')" );
+          // the results of this query are added to the cache with the key of wp:acf/leads-form and an expiration time of 3600 seconds
+          wp_cache_set( $cache_key, $results, '', 3600 );
+        }
+        else{
+          // if the key does exist in the cache, it uses the cached results instead of querying the database again
+          $results = $page_list;
+        }
+
+        $pages = array();
+        //iterrating obver the results and assigning values for each page to variables
+        foreach($results as $page) {
           $page_id = $page->ID;
           $page_title = $page->post_title;
           $page_content = $page->post_content;
-          $page_status = get_post_status($page_id, 'any');
-          $page_edit_link = get_edit_post_link($page_id);
-
-          if (!array_key_exists($page_id, $page_statuses)) {
-          $page_statuses[$page_id] = $page_status;
-          }
-          if (!array_key_exists($page_id, $page_contents)) {
-          $page_contents[$page_id] = apply_filters('the_content', $page_content);
-          }
-
+          $page_status = $page->post_status;
+          //getting the permalink and the meta of the page and filetring the content
           $page_permalink = get_permalink($page_id);
           $page_meta = get_post_meta($page_id);
-
-            $page_status = $status_labels[$page_statuses[$page_id]] ?? '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>';
-            if (strpos($page_contents[$page_id], 'data-form-id="' . $post_id . '"') !== false) {
-              $font_end = '<strong><a href="' . $page_permalink . '" target="_blank">' . $page_title . '</a></strong>' . $page_status . '</br>';
-              echo $font_end;
-            }
+          $page_content = apply_filters('the_content', $page_content);
+          //assigning teh custom styles of the page statuses
+          $page_status = $status_labels[$page_status] ?? '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>';
+          //regular expression to search for a match in the first param within the string provided in the second param by returning a number if match is found
+          preg_match('/data-form-id="(.*?)"/', $page_content, $form_id);
+          //if there is a match with the data attibute and a form ID then output a link to the page
+          if(isset($form_id[1]) && $form_id[1] == $post_id) {
+              echo '<a href="' . $page_permalink . '" target="_blank">' . $page_title . '</a>' . $page_status . '<br>';
+          }
         }
+      } catch (exception $e) {
+          echo 'Error: ' . $e->getMessage();
       }
-  break;
+    break;
   }
 }
 add_action('manage_leads-form_posts_custom_column', __NAMESPACE__ . '\\leads_custom_column', 10, 2);
