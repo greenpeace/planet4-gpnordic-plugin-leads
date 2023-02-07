@@ -51,24 +51,11 @@ function leads_custom_column($column, $post_id)
         'future' => '<span style="padding-left:0.2rem;color:green;"><small> (Scheduled) </small></span>',
         'private' => '<span style="padding-left:0.2rem;color:darkorange;"><small> (Private) </small></span>'
       ];
-      // checking if the certain key which is the LP block (wp:acf/leads-form) exists in the cache.
-      $cache_key = 'wp:acf/leads-form';
-      $page_list = wp_cache_get($cache_key);
-      //creating a global variable for the WordPress database.
+
       global $wpdb;
 
       try {
-        // if the key does not exist in the cache, it queries the WordPress database for the specific pages
-        if(!$page_list){
-          $results = $wpdb->get_results( "SELECT ID, post_title, post_content, post_status FROM $wpdb->posts WHERE post_content LIKE '%wp:acf/leads-form%'AND post_status IN ('publish','draft','auto-draft','pending','future','private')" );
-          // the results of this query are added to the cache with the key of wp:acf/leads-form and an expiration time of 3600 seconds
-          wp_cache_set( $cache_key, $results, '', 3600 );
-        }
-        else{
-          // if the key does exist in the cache, it uses the cached results instead of querying the database again
-          $results = $page_list;
-        }
-
+        $results = $wpdb->get_results( "SELECT ID, post_title, post_content, post_status FROM $wpdb->posts WHERE post_content LIKE '%wp:acf/leads-form%'AND post_status IN ('publish','draft','auto-draft','pending','future','private')" );
         $pages = array();
         //iterrating obver the results and assigning values for each page to variables
         foreach($results as $page) {
