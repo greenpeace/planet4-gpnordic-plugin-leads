@@ -45,7 +45,7 @@ function leads_custom_column($column, $post_id)
       break;
     case 'included':
       $status_labels = [
-        'draft' => '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>',
+        'draft', 'auto-draft' => '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>',
         'publish' => '<span style="padding-left:0.2rem;color:green;"><small> (Published) </small></span>',
         'pending' => '<span style="padding-left:0.2rem;color:darkorange;"><small> (Pending) </small></span>',
         'future' => '<span style="padding-left:0.2rem;color:green;"><small> (Scheduled) </small></span>',
@@ -60,7 +60,7 @@ function leads_custom_column($column, $post_id)
       try {
         // if the key does not exist in the cache, it queries the WordPress database for the specific pages
         if(!$page_list){
-          $results = $wpdb->get_results( "SELECT ID, post_title, post_content, post_status FROM $wpdb->posts WHERE post_content LIKE '%wp:acf/leads-form%' AND post_type = 'page' AND post_status IN ('publish','draft','pending','future','private')" );
+          $results = $wpdb->get_results( "SELECT ID, post_title, post_content, post_status FROM $wpdb->posts WHERE post_content LIKE '%wp:acf/leads-form%'AND post_status IN ('publish','draft','auto-draft','pending','future','private')" );
           // the results of this query are added to the cache with the key of wp:acf/leads-form and an expiration time of 3600 seconds
           wp_cache_set( $cache_key, $results, '', 3600 );
         }
@@ -80,7 +80,7 @@ function leads_custom_column($column, $post_id)
           $page_permalink = get_permalink($page_id);
           $page_meta = get_post_meta($page_id);
           $page_content = apply_filters('the_content', $page_content);
-          //assigning teh custom styles of the page statuses
+          //assigning the custom styles of the page statuses
           $page_status = $status_labels[$page_status] ?? '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>';
           //regular expression to search for a match in the first param within the string provided in the second param by returning a number if match is found
           preg_match('/data-form-id="(.*?)"/', $page_content, $form_id);
