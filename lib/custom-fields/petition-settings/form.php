@@ -4,6 +4,74 @@ function get_form_settings()
 {
     $form_settings = new StoutLogic\AcfBuilder\FieldsBuilder('form_settings');
     $form_settings
+        ->addSelect('form_type', [
+            'label' => 'Form type',
+            'instructions' => 'Select the type of form you want to use.',
+            'choices' => [
+                'default' => 'Default',
+                'multistep' => 'Multi-step',
+            ],
+            'default_value' => 'petition',
+            'layout' => 'vertical',
+            'allow_null' => 0,
+            'return_format' => 'value',
+        ])
+        ->addGroup('steps', [
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'form_type',
+                        'operator' => '==',
+                        'value' => 'multistep',
+                    ],
+                ],
+            ],
+        ])
+        ->addRepeater('step', [
+            'label' => 'Steps',
+            'instructions' => 'Add the steps for the multi-step form (first and last step is not editable)',
+            'layout' => 'block',
+            'button_label' => 'Add step',
+        ])
+        ->addSelect('step', [
+            'label' => 'Step',
+            'instructions' => 'Select the step',
+            'choices' => [
+                'share' => 'Share',
+                'custom_ask' => 'Custom Ask',
+                'donation' => 'Donation',
+            ],
+            'default_value' => 'petition',
+            'layout' => 'vertical',
+            'allow_null' => 0,
+            'return_format' => 'value',
+        ])
+        ->endRepeater()
+        ->addTab('thank_you')
+        ->addText('thank_you_headline')
+        ->addWysiwyg('thank_you_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
+        ->addText('thank_you_share_button_caption', ['default_value' => 'Share'])
+        ->addText('thank_you_skip_button_caption', ['default_value' => 'Skip'])
+        ->addTab('share')
+        ->addText('share_headline')
+        ->addWysiwyg('share_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
+        ->addText('share_copy_url_button_caption', ['default_value' => 'Share'])
+        ->addText('share_skip_button_caption', ['default_value' => 'Skip'])
+        ->addTab('custom_ask')
+        ->addText('custom_ask_headline')
+        ->addWysiwyg('custom_ask_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
+        ->addText('custom_ask_button_caption', ['default_value' => 'Share'])
+        ->addUrl('custom_ask_button_url')
+        ->addColorPicker('custom_ask_button_color', ['default_value' => '#000000'])
+        ->addTab('donation')
+        ->addText('donation_headline')
+        ->addWysiwyg('donation_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
+        ->addTab('final')
+        ->addText('final_headline')
+        ->addWysiwyg('final_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
+        ->addText('final_copy_url_button_caption', ['default_value' => 'Share'])
+        ->addUrl('final_skip_button_url')
+        ->endGroup()
         ->addGroup('form_settings')
         ->addText('source_code', [
             'label' => 'Campaign code',
