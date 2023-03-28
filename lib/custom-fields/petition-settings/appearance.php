@@ -38,6 +38,18 @@ function get_appearance_settings()
             'instructions' => 'Applied to the text in the form and counter element.',
             'default_value' => '#ffffff',
         ])
+        ->endGroup()
+        ->addGroup('extra_options', [
+            'label' => 'Extra options',
+        ])
+        ->addImage('small_screen_image', [
+            'label' => 'Small screen image',
+            'instructions' => 'Can be used for when the selected background image (featured image) does not look ideal on e.g. mobile.',
+            'return_format' => 'array',
+            'preview_size' => 'thumbnail',
+            'library' => 'all',
+        ])
         ->endGroup();
+
     return $appearance;
 }
