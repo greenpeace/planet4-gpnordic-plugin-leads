@@ -9,8 +9,9 @@ if (!defined('GPLP_ACF_URL'))
 include_once(GPLP_ACF_PATH . 'acf.php');
 
 $include = [
+  'helper-functions',
   'petition-settings',
-  'leads',
+  'petition-options',
   'petition-form-block',
 ];
 foreach ($include as $file) {
