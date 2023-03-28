@@ -2,7 +2,7 @@
   "name": "greenpeace/planet4-gpnordic-plugin-leads",
   "description": "This repository contains the Greenpeace Nordic Leads Plugin with ACF blocks.",
   "type": "wordpress-plugin",
-  "minimum-stability" : "stable",
+  "minimum-stability": "stable",
   "license": "GPL-3.0+",
   "authors": [
     {
@@ -25,12 +25,12 @@
     }
   },
   "require-dev": {
-    "squizlabs/php_codesniffer": "^3.3.2",
-    "wp-coding-standards/wpcs": "^1.1.0",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.4.0",
-    "phpunit/phpunit": "^6.2"
+    "squizlabs/php_codesniffer": "^3.7",
+    "wp-coding-standards/wpcs": "^2.3",
+    "phpunit/phpunit": "^10.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
   },
   "require": {
-
+    "stoutlogic/acf-builder": "^1.12"
   }
 }
