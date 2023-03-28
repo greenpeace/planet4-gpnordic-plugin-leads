@@ -155,35 +155,6 @@ if (function_exists('acf_add_local_field_group')) :
                         'max' => '',
                         'step' => '',
                     ),
-                    // array(
-                    //     'key' => 'field_5fce5e731f6f6',
-                    //     'label' => 'Counter Start Value',
-                    //     'name' => 'counter_start_value',
-                    //     'type' => 'number',
-                    //     'instructions' => '',
-                    //     'required' => 0,
-                    //     'conditional_logic' => array(
-                    //         array(
-                    //             array(
-                    //                 'field' => 'field_5fa972fb027e6',
-                    //                 'operator' => '==',
-                    //                 'value' => '1',
-                    //             ),
-                    //         ),
-                    //     ),
-                    //     'wrapper' => array(
-                    //         'width' => '',
-                    //         'class' => '',
-                    //         'id' => '',
-                    //     ),
-                    //     'default_value' => 0,
-                    //     'placeholder' => '',
-                    //     'prepend' => '',
-                    //     'append' => '',
-                    //     'min' => '',
-                    //     'max' => '',
-                    //     'step' => '',
-                    // ),
                     array(
                         'key' => 'field_5fce5e731f6f6_counter_goal_value',
                         'label' => 'Counter goal value',
@@ -622,23 +593,23 @@ if (function_exists('acf_add_local_field_group')) :
                         'delay' => 0,
                     ),
                     array(
-                      'key' => 'field_60c7430b039cd',
-                      'label' => 'Enable default donation amount',
-                      'name' => 'enable_donation_amount',
-                      'type' => 'true_false',
-                      'instructions' => 'Allow users to change the pre-defined amount, by showing the input field on the thank you page.',
-                      'required' => 0,
-                      'conditional_logic' => 0,
-                      'wrapper' => array(
-                        'width' => '',
-                        'class' => '',
-                        'id' => '',
-                      ),
-                      'message' => 'Display the pre-defined donation amount field',
-                      'default_value' => 1,
-                      'ui' => 0,
-                      'ui_on_text' => '',
-                      'ui_off_text' => '',
+                        'key' => 'field_60c7430b039cd',
+                        'label' => 'Enable default donation amount',
+                        'name' => 'enable_donation_amount',
+                        'type' => 'true_false',
+                        'instructions' => 'Allow users to change the pre-defined amount, by showing the input field on the thank you page.',
+                        'required' => 0,
+                        'conditional_logic' => 0,
+                        'wrapper' => array(
+                            'width' => '',
+                            'class' => '',
+                            'id' => '',
+                        ),
+                        'message' => 'Display the pre-defined donation amount field',
+                        'default_value' => 1,
+                        'ui' => 0,
+                        'ui_on_text' => '',
+                        'ui_off_text' => '',
                     ),
                     array(
                         'key' => 'field_5f97f8fabbcd0_default',
@@ -721,75 +692,32 @@ if (function_exists('acf_add_local_field_group')) :
         'description' => '',
     ));
 
-    acf_add_local_field_group(array(
-        'key' => 'group_5f969db2d4824',
-        'title' => 'Petition Form Block',
-        'fields' => array(
-            array(
-                'key' => 'field_5f969dceef2b3',
-                'label' => 'Display',
-                'name' => 'display',
-                'type' => 'radio',
-                'instructions' => '',
-                'required' => 0,
-                'conditional_logic' => 0,
-                'wrapper' => array(
-                    'width' => '',
-                    'class' => '',
-                    'id' => '',
-                ),
-                'choices' => array(
-                    'hero' => 'Hero',
-                    'small' => 'Small',
-                ),
-                'allow_null' => 0,
-                'other_choice' => 0,
-                'default_value' => '',
-                'layout' => 'vertical',
-                'return_format' => 'value',
-                'save_other_choice' => 0,
-            ),
-            array(
-                'key' => 'field_5f96b4d4dd6ec',
-                'label' => 'Form',
-                'name' => 'form',
-                'type' => 'post_object',
-                'instructions' => '',
-                'required' => 0,
-                'conditional_logic' => 0,
-                'wrapper' => array(
-                    'width' => '',
-                    'class' => '',
-                    'id' => '',
-                ),
-                'post_type' => array(
-                    0 => 'leads-form',
-                ),
-                'taxonomy' => '',
-                'allow_null' => 0,
-                'multiple' => 0,
-                'return_format' => 'id',
-                'ui' => 1,
-            ),
-        ),
-        'location' => array(
-            array(
-                array(
-                    'param' => 'block',
-                    'operator' => '==',
-                    'value' => 'acf/leads-form',
-                ),
-            ),
-        ),
-        'menu_order' => 0,
-        'position' => 'normal',
-        'style' => 'default',
-        'label_placement' => 'top',
-        'instruction_placement' => 'label',
-        'hide_on_screen' => '',
-        'active' => true,
-        'description' => '',
-    ));
+    $petition_form_block = new \StoutLogic\AcfBuilder\FieldsBuilder('Petition Form Block');
+
+    $petition_form_block
+        ->setLocation('block', '==', 'acf/leads-form')
+        ->addRadio('display', [
+            'label' => 'Display',
+            'instructions' => '',
+            'required' => true,
+            'choices' => [
+                'hero' => 'Hero',
+                'small' => 'Small',
+            ],
+            'default_value' => 'hero',
+            'layout' => 'vertical',
+            'return_format' => 'value',
+        ])
+        ->addPostObject('form', [
+            'label' => 'Form',
+            'instructions' => '',
+            'required' => false,
+            'post_type' => ['leads-form'],
+            'return_format' => 'id',
+            'ui' => 1,
+        ]);
+
+    acf_add_local_field_group($petition_form_block->build());
 
     acf_add_local_field_group(array(
         'key' => 'group_5f96a3336409b',
