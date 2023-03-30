@@ -39,7 +39,7 @@
         otherErrors: [],
         success: false,
         formFields: blockData.formFields,
-        showThankYouAnimation: true,
+        showThankYouAnimation: false,
         animationSpeed: 0.6,
         heroDescription: blockData.heroDescription,
         textLimit: 300,
