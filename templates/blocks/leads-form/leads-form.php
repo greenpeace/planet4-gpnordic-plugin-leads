@@ -104,123 +104,29 @@ $align = $form_styles['placement'];
 $hero_description = (isset($hero_settings['description']) && $hero_settings['description'] != false) ? $hero_settings['description'] : '';
 
 $url = get_the_permalink();
+
+// Prepare data arrays for partials
+$contentData = array(
+    'headline' => $hero_settings['headline'],
+    'description' => $hero_description
+);
+$formData = array(
+    'form_settings' => $form_settings,
+    'form_fields_translations' => $form_fields_translations,
+    'form_status' => $form_status,
+    'display' => $display
+);
+$thankYouData = array(
+    'thank_you_settings' => $thank_you_settings
+);
 ?>
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
     <div class="leads-form__grid">
-        <div class="leads-form__content" v-show="!success">
-            <h2 :class="lengthClass(heroTitle)" v-if="heroTitle !== ''"><?php echo stripslashes($hero_settings['headline']); ?></h2>
-            <div class="description">
-                <div class="text" ref="heroDescription" v-html="limitedText(heroDescription, textOpen)" v-if="heroDescription !== ''"><?php echo $hero_description; ?>
-                </div>
-                <div v-if="showReadMore">
-                    <a @click="toggleText()" class='button--arrow'>
-                        <span class="arrow-icon" :class="{ 'arrow-icon--rotated' : textOpen }"><?php svg_icon('arrow--circle--down'); ?></span>
-                        <span v-text="moreButtonText"></span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="leads-form__form" v-show="!success">
-            <?php if ($form_settings['enable_counter']) : ?>
-                <div class="leads-form__counter">
-                    <div class="leads-form__counter__headings">
-                        <small><?php echo $form_fields_translations['signed_up']; ?></small>
-                        <small><?php echo $form_fields_translations['goal']; ?></small>
-                    </div>
-                    <div class="leads-form__counter__values">
-                        <p>{{counter}}</p>
-                        <p>{{blockData.counterGoalValue}}</p>
-                    </div>
+        <?php planet4_get_partial("form/content", $contentData); ?>
+        <?php planet4_get_partial("form/form", $formData); ?>
+        <?php planet4_get_partial("form/thankyou", $thankYouData); ?>
 
-                    <div class="leads-form__counter__progress">
-                        <div class="leads-form__counter__progress__bar" :style="{ width: `${percentReachedGoal}%` }" :class="{ 'done' : reachedGoal }"></div>
-                    </div>
-                </div>
-            <?php endif; ?>
-            <div class="leads-form__form__container">
-                <?php if ($form_status !== 'publish') : ?>
-                    <div class="leads-form__test">This form is not live!</div>
-                <?php endif; ?>
-                <?php if ($display != 'small') : ?>
-                    <h3><?php echo $form_settings['headline']; ?></h3>
-                    <?php echo $form_settings['description']; ?>
-                <?php endif; ?>
-                <div>
-                    <div class="input-container">
-                        <input @focus="hideInput = false; startedFilling = true" class="input--icon" type="email" name="email" placeholder="<?php echo $form_fields_translations['email']; ?>*" v-model="formFields.email.value" @keyup.enter="submit" />
-                        <?php svg_icon('email'); ?>
-                    </div>
-                    <div v-if="hasFieldErrors(emailErrors)" class="input-container__error">
-                        <ul>
-                            <li v-for="(error, index) in emailErrors" :key="index" v-html="error"></li>
-                        </ul>
-                    </div>
-                </div>
-                <div>
-                    <div class="overflow-hidden">
-                        <transition name="fade">
-                            <div class="input-container name" v-show="!hideInput">
-                                <input class="fname input--icon" type="text" name="fname" placeholder="<?php echo $form_fields_translations['first_name']; ?>*" v-model="formFields.fname.value" @keyup.enter="submit" />
-                                <?php svg_icon('user'); ?>
-                            </div>
-                        </transition>
-                        <transition name="fade">
-                            <div class="input-container name" v-show="!hideInput">
-                                <input class="lname" type="text" name="lname" placeholder="<?php echo $form_fields_translations['last_name']; ?>*" v-model="formFields.lname.value" @keyup.enter="submit" />
-                            </div>
-                        </transition>
-                    </div>
-                    <div v-if="hasFieldErrors(firstNameErrors) || hasFieldErrors(lastNameErrors)" class="input-container__error">
-                        <ul>
-                            <li v-for="(error, index) in firstNameErrors" :key="index" v-html="error"></li>
-                            <li v-for="(error, index) in lastNameErrors" :key="index" v-html="error"></li>
-                        </ul>
-                    </div>
-                </div>
-                <?php if ($form_settings['phone'] !== 'false' && $display != 'small') : ?>
-                    <transition name="fade">
-                        <div v-show="!hideInput">
-                            <div class="input-container phone">
-                                <input class="countrycode" type="text" name="phone-countrycode" disabled placeholder="<?php echo $form_fields_translations['country_code']; ?>" value="<?php echo $form_fields_translations['country_code']; ?>">
-                                <input class="input--icon" type="tel" name="phone" placeholder="<?php echo $form_fields_translations['phone']; ?><?php echo $form_settings['phone'] == 'required' ? '*' : ''; ?>" v-model="formFields.phone.value" @keyup.enter="submit" />
-                                <?php svg_icon('phone'); ?>
-
-                            </div>
-                            <div v-if="hasFieldErrors(phoneErrors)" class="input-container__error">
-                                <ul>
-                                    <li v-for="(error, index) in phoneErrors" :key="index" v-html="error"></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </transition>
-                <?php endif; ?>
-                <?php if ($form_settings['consent_method'] !== 'assumed') : ?>
-                    <div class="checkbox-container">
-                        <div class="checkbox">
-                            <input type="checkbox" name="terms" v-model="formFields.consent.value" />
-                            <span class="checkbox__box">
-                                <?php svg_icon('check'); ?>
-                            </span>
-                            <span class="checkbox-label">
-                                <?php echo $form_settings['consent_message'] !== '' ? $form_settings['consent_message'] : $form_fields_translations['terms_agree']; ?>
-                            </span>
-                        </div>
-                    </div>
-                <?php endif; ?>
-                <a @click="submit" class="button button--submit">
-                    <span v-if="!loading"><?php svg_icon('send-message'); ?></span>
-                    <span v-html="loading ? '<?php echo $form_fields_translations['sending']; ?>' : '<?php echo addslashes($form_settings['call_to_action']); ?>'"></span>
-                </a>
-                <?php if ($form_settings['consent_method'] === 'assumed') : ?>
-                    <small><?php echo $form_settings['consent_message'] !== '' ? $form_settings['consent_message'] : $form_fields_translations['terms_agree']; ?></small>
-                <?php endif; ?>
-            </div>
-        </div>
-        <div class="leads-form__thank-you-animation" ref="animation" v-show="showThankYouAnimation"></div>
-        <div v-show="success" class="leads-form__thank-you">
-            <h2 :class="lengthClass(thankYouTitle)" v-html="thankYouTitle"></h2>
-            <div class="preamble"><?php echo stripslashes($thank_you_settings['description']); ?></div>
-        </div>
+        
 
         <div v-show="success" class="leads-form__further-actions">
             <?php if ($form_settings['enable_counter']) : ?>
