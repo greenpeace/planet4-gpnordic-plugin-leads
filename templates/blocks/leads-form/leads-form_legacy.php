@@ -34,6 +34,29 @@ $form_styles = get_field('form_styles', $form_id);
 $extra_options = get_field('extra_options', $form_id);
 $form_fields_translations = get_field('form_fields_translations', 'options');
 
+//Copy the page link to share
+$checkLanguage = $_SERVER['REQUEST_URI'];
+$checkLanguage = explode('/', $checkLanguage);
+$checkLanguage = $checkLanguage[1];
+$copyLink = "";
+
+switch ($checkLanguage) {
+  case "denmark":
+    $copyLink = "Kopier link";
+  break;
+  case "finland":
+    $copyLink = "Kopioi linkki";
+  break;
+  case "norway":
+    $copyLink = "Kopier lenke";
+  break;
+  case "sweden":
+    $copyLink = "Kopiera länk";
+  break;
+  default:
+    $copyLink = "Copy link";
+}
+
 
 // Background Image
 $background_image = get_the_post_thumbnail_url($form_id, 'large');
@@ -93,59 +116,61 @@ $formData = array(
     'form_status' => $form_status,
     'display' => $display
 );
-$thankYouData = array(
-    'thank_you_settings' => $thank_you_settings
-);
-$counterData = array(
-    'form_settings' => $form_settings,
-);
-$shareData = array(
-    'thank_you_settings' => $thank_you_settings,
-    'url' => $url,
-);
-$donateData = array(
-    'thank_you_settings' => $thank_you_settings,
-    'form_fields_translations' => $form_fields_translations
-);
 ?>
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
     <div class="leads-form__grid">
-        <?php 
-        /**
-         * Introduction content
-         */
-        planet4_get_partial("form/content", $contentData); 
-        ?>
-        <?php 
-        /**
-         * The form
-         */
-        planet4_get_partial("form/form", $formData); 
-        ?>
-        <?php 
-        /**
-         * Thank you
-         */
-        planet4_get_partial("form/thankyou", $thankYouData); 
-        ?>
+        <?php planet4_get_partial("form/content", $contentData); ?>
+        <?php planet4_get_partial("form/form", $formData); ?>
+        
+        <div class="leads-form__thank-you-animation" ref="animation" v-show="showThankYouAnimation"></div>
+        <div v-show="success" class="leads-form__thank-you">
+            <h2 :class="lengthClass(thankYouTitle)" v-html="thankYouTitle"></h2>
+            <div class="preamble"><?php echo stripslashes($thank_you_settings['description']); ?></div>
+        </div>
 
         <div v-show="success" class="leads-form__further-actions">
-            <?php 
-            /**
-             * Counter
-             */
-            planet4_get_partial("form/counter", $counterData); 
-             
-            /**
-             * Share
-             */
-            planet4_get_partial("form/share", $shareData); 
-            
-            /**
-             * Donate
-             */
-            planet4_get_partial("form/donate", $donateData); 
-            ?>
+            <?php if ($form_settings['enable_counter']) : ?>
+                <div class="leads-form__counter leads-form__counter--success">
+                    <div class="leads-form__counter__headings">
+                        <small>Signed up</small>
+                        <small>Goal</small>
+                    </div>
+                    <div class="leads-form__counter__values">
+                        <p>{{counter}}</p>
+                        <p>{{blockData.counterGoalValue}}</p>
+                    </div>
+
+                    <div class="leads-form__counter__progress">
+                        <div class="leads-form__counter__progress__bar" :style="{ width: `${percentReachedGoal}%` }" :class="{ 'done' : reachedGoal }"></div>
+                    </div>
+                </div>
+            <?php endif; ?>
+            <div class="leads-form__share">
+                <h4>
+                    <span class="leads-form__icon"><?php svg_icon('share'); ?></span>
+                    <?php echo $thank_you_settings['share_headline']; ?>
+                </h4>
+                <?php echo $thank_you_settings['share_description']; ?>
+                <div class="leads-form__share__icons">
+                    <a id="facebook" class="button button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>?<?php echo "share=facebook"; ?>" target="_blank"><?php svg_icon('facebook'); ?></a>
+                    <button id="copy-link" class="button button--share"><?php svg_icon('link'); ?><?php echo $copyLink; ?></button>
+                </div>
+            </div>
+            <div v-show="success" class="leads-form__donate">
+                <h4>
+                    <span class="leads-form__icon"><?php svg_icon('heart'); ?></span>
+                    <?php echo $thank_you_settings['donate_headline']; ?>
+                </h4>
+                <?php echo $thank_you_settings['donate_description']; ?>
+                <div id="donate-container" class="donate-container">
+                  <?php if ($thank_you_settings['enable_donation_amount']) : ?>
+                    <div id="donate-input-amount" class="input-container">
+                        <input id="ghost" class="ghost donation-options" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" v-model="donateAmount" @keypress="numbersOnly($event)" @change="checkMinVal($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
+                    </div>
+                    <?php endif; ?>
+                    <a id="donate-button" :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button--submit button donation-options" target="_blank"><?php svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
+                </div>
+            </div>
         </div>
     </div>
     <?php if ($small_screen_image) : ?>
