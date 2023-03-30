@@ -54,7 +54,7 @@ if (isset($form_styles['colors']['form_headline']) && $form_styles['colors']['fo
 if (isset($form_styles['colors']['cta_background']) && $form_styles['colors']['cta_background'] != false) {
     $secondary_color = $form_styles['colors']['cta_background'];
 } elseif (isset($form_styles['colors']['form_headline']) && $form_styles['colors']['form_headline'] != false) {
-    $secondary_color = hexToHsl(str_replace('#', '', $primary_color));
+    $secondary_color = GPPL4\hexToHsl(str_replace('#', '', $primary_color));
 } else {
     $secondary_color = $brand_green_dark;
 }
@@ -126,9 +126,9 @@ $layoutsData = array(
     <div class="leads-form__grid">
         <?php
             if ($form_type === 'multistep') {
-                planet4_get_partial("form/layouts/default", $layoutsData); 
+                GPPL4\get_partial("form/layouts/default", $layoutsData); 
             } else {
-                planet4_get_partial("form/layouts/default", $layoutsData);  
+                GPPL4\get_partial("form/layouts/default", $layoutsData);  
             }
         ?>
     </div>
@@ -136,7 +136,7 @@ $layoutsData = array(
         <div ref="smallBkg" class="leads-form__bkg leads-form__bkg--small <?php echo $opacity; ?>" style="background-image: url(<?php echo $small_screen_image['url']; ?>);"></div>
     <?php endif; ?>
     <div ref="bkg" class="leads-form__bkg <?php echo $opacity; ?> <?php if ($small_screen_image) echo "leads-form__bkg--large" ?>" style="background-image: url(<?php echo $background_image; ?>);"></div>
-    <div v-if="!success" class="leads-form__bottom-label"><?php svg_icon('hero-bottom-label'); ?></div>
+    <div v-if="!success" class="leads-form__bottom-label"><?php GPPL4\svg_icon('hero-bottom-label'); ?></div>
 </div>
 
 <style>
@@ -183,7 +183,7 @@ $layoutsData = array(
     /* implementing the winnig A/B test */
     #<?php echo $id . ' '; ?>#facebook.button--share {
       background-color : <?php echo $primary_color; ?>;
-      box-shadow: 0 0 0 0 <?php echo hex2rgba($primary_color, 0.5); ?> !important;
+      box-shadow: 0 0 0 0 <?php echo GPPL4\hex2rgba($primary_color, 0.5); ?> !important;
       cursor: pointer;
       -webkit-animation: pulse 1.5s infinite;
       -moz-animation: pulse 1.5s infinite;
@@ -389,7 +389,7 @@ $layoutsData = array(
 
     #<?php echo $id . ' '; ?>.checkbox input:checked~.checkbox__box {
         border-color: <?php echo $primary_color; ?>;
-        background-color: <?php echo hex2rgba($primary_color, 0.2); ?>;
+        background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.2); ?>;
     }
 
     #<?php echo $id . ' '; ?>.checkbox .checkbox__box svg path {
@@ -398,7 +398,7 @@ $layoutsData = array(
 
     #<?php echo $id . ' '; ?>input:focus,
     input:active {
-        border-color: <?php echo hex2rgba($primary_color, 0.6); ?>;
+        border-color: <?php echo GPPL4\hex2rgba($primary_color, 0.6); ?>;
     }
 
     #<?php echo $id . ' '; ?>input:focus~svg path,
@@ -417,16 +417,16 @@ $layoutsData = array(
 
     #<?php echo $id; ?>.dark .checkbox .checkbox__box {
         border-color: <?php echo $primary_color; ?>;
-        background-color: <?php echo hex2rgba($primary_color, 0.2); ?>;
+        background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.2); ?>;
     }
 
     #<?php echo $id; ?>.dark input:-internal-autofill-selected,
     input:-webkit-autofill input:-webkit-autofill:hover,
     input:-webkit-autofill:focus,
     input:-webkit-autofill:active {
-        background-color: <?php echo hex2rgba($primary_color, 0.8); ?> !important;
-        -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0), inset 0 0 0 100px <?php echo hex2rgba($primary_color, 0.8); ?> !important;
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0), inset 0 0 0 100px <?php echo hex2rgba($primary_color, 0.8); ?> !important;
+        background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.8); ?> !important;
+        -webkit-box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0), inset 0 0 0 100px <?php echo GPPL4\hex2rgba($primary_color, 0.8); ?> !important;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0), inset 0 0 0 100px <?php echo GPPL4\hex2rgba($primary_color, 0.8); ?> !important;
         color: white !important;
     }
 
