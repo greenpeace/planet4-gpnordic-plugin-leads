@@ -26,7 +26,7 @@
         <div>
             <div class="input-container">
                 <input @focus="hideInput = false; startedFilling = true" class="input--icon" type="email" name="email" placeholder="<?php echo $form_fields_translations['email']; ?>*" v-model="formFields.email.value" @keyup.enter="submit" />
-                <?php svg_icon('email'); ?>
+                <?php GPPL4\svg_icon('email'); ?>
             </div>
             <div v-if="hasFieldErrors(emailErrors)" class="input-container__error">
                 <ul>
@@ -39,7 +39,7 @@
                 <transition name="fade">
                     <div class="input-container name" v-show="!hideInput">
                         <input class="fname input--icon" type="text" name="fname" placeholder="<?php echo $form_fields_translations['first_name']; ?>*" v-model="formFields.fname.value" @keyup.enter="submit" />
-                        <?php svg_icon('user'); ?>
+                        <?php GPPL4\svg_icon('user'); ?>
                     </div>
                 </transition>
                 <transition name="fade">
@@ -61,7 +61,7 @@
                     <div class="input-container phone">
                         <input class="countrycode" type="text" name="phone-countrycode" disabled placeholder="<?php echo $form_fields_translations['country_code']; ?>" value="<?php echo $form_fields_translations['country_code']; ?>">
                         <input class="input--icon" type="tel" name="phone" placeholder="<?php echo $form_fields_translations['phone']; ?><?php echo $form_settings['phone'] == 'required' ? '*' : ''; ?>" v-model="formFields.phone.value" @keyup.enter="submit" />
-                        <?php svg_icon('phone'); ?>
+                        <?php GPPL4\svg_icon('phone'); ?>
 
                     </div>
                     <div v-if="hasFieldErrors(phoneErrors)" class="input-container__error">
@@ -77,7 +77,7 @@
                 <div class="checkbox">
                     <input type="checkbox" name="terms" v-model="formFields.consent.value" />
                     <span class="checkbox__box">
-                        <?php svg_icon('check'); ?>
+                        <?php GPPL4\svg_icon('check'); ?>
                     </span>
                     <span class="checkbox-label">
                         <?php echo $form_settings['consent_message'] !== '' ? $form_settings['consent_message'] : $form_fields_translations['terms_agree']; ?>
@@ -86,7 +86,7 @@
             </div>
         <?php endif; ?>
         <a @click="submit" class="button button--submit">
-            <span v-if="!loading"><?php svg_icon('send-message'); ?></span>
+            <span v-if="!loading"><?php GPPL4\svg_icon('send-message'); ?></span>
             <span v-html="loading ? '<?php echo $form_fields_translations['sending']; ?>' : '<?php echo addslashes($form_settings['call_to_action']); ?>'"></span>
         </a>
         <?php if ($form_settings['consent_method'] === 'assumed') : ?>

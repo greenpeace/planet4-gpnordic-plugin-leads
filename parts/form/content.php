@@ -5,7 +5,7 @@
         </div>
         <div v-if="showReadMore">
             <a @click="toggleText()" class='button--arrow'>
-                <span class="arrow-icon" :class="{ 'arrow-icon--rotated' : textOpen }"><?php svg_icon('arrow--circle--down'); ?></span>
+                <span class="arrow-icon" :class="{ 'arrow-icon--rotated' : textOpen }"><?php GPPL4\svg_icon('arrow--circle--down'); ?></span>
                 <span v-text="moreButtonText"></span>
             </a>
         </div>

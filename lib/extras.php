@@ -1,6 +1,7 @@
 <?php
+namespace GPPL4;
 
-function planet4_get_partial($name, $data = [])
+function get_partial($name, $data = [])
 {
     $path = __DIR__ . "/../parts/$name.php";
     if (file_exists($path)) {
