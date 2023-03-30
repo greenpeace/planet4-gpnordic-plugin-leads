@@ -80,7 +80,11 @@ $opacity = (isset($form_styles['opacity']) && $form_styles['opacity'] != false) 
 $align = $form_styles['placement'];
 $hero_description = (isset($hero_settings['description']) && $hero_settings['description'] != false) ? $hero_settings['description'] : '';
 
+// Url
 $url = get_the_permalink();
+
+// Form type 
+$form_type = get_field('form_type', $form_id);
 
 // Prepare data arrays for partials
 $contentData = array(
@@ -107,46 +111,26 @@ $donateData = array(
     'thank_you_settings' => $thank_you_settings,
     'form_fields_translations' => $form_fields_translations
 );
+
+$layoutsData = array(
+    'contentData' => $contentData, 
+    'formData' => $formData, 
+    'thankYouData' => $thankYouData, 
+    'counterData' => $counterData, 
+    'shareData' => $shareData, 
+    'donateData' => $donateData
+);
+
 ?>
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
     <div class="leads-form__grid">
-        <?php 
-        /**
-         * Introduction content
-         */
-        planet4_get_partial("form/content", $contentData); 
+        <?php
+            if ($form_type === 'multistep') {
+                planet4_get_partial("form/layouts/default", $layoutsData); 
+            } else {
+                planet4_get_partial("form/layouts/default", $layoutsData);  
+            }
         ?>
-        <?php 
-        /**
-         * The form
-         */
-        planet4_get_partial("form/form", $formData); 
-        ?>
-        <?php 
-        /**
-         * Thank you
-         */
-        planet4_get_partial("form/thankyou", $thankYouData); 
-        ?>
-
-        <div v-show="success" class="leads-form__further-actions">
-            <?php 
-            /**
-             * Counter
-             */
-            planet4_get_partial("form/counter", $counterData); 
-             
-            /**
-             * Share
-             */
-            planet4_get_partial("form/share", $shareData); 
-            
-            /**
-             * Donate
-             */
-            planet4_get_partial("form/donate", $donateData); 
-            ?>
-        </div>
     </div>
     <?php if ($small_screen_image) : ?>
         <div ref="smallBkg" class="leads-form__bkg leads-form__bkg--small <?php echo $opacity; ?>" style="background-image: url(<?php echo $small_screen_image['url']; ?>);"></div>
