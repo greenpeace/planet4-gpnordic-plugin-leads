@@ -1,4 +1,21 @@
 <?php
+
+function planet4_get_partial($name, $data = [])
+{
+    $path = __DIR__ . "/../parts/$name.php";
+    if (file_exists($path)) {
+        extract($data);
+        // Start output buffering
+        ob_start();
+        // Include the template file
+        include $path;
+        // End buffering and return its contents
+        $output = ob_get_clean();
+
+        echo $output;
+    }
+};
+
 function svg_icon($icon) {
   $file = file_get_contents(__DIR__ . "/../assets/images/icons/$icon.svg");
   echo $file;

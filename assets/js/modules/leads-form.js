@@ -14,20 +14,17 @@
 
   var initializeBlock = ($block) => {
     //console.log($block, jQuery($block).hasClass('leads-form'), $block[0].children[0])
-    if (!jQuery($block).hasClass('leads-form'))
-      $block = $block[0].children[0]
-    else
-      $block = `#${$block.attr('id')}`
+    if (!jQuery($block).hasClass("leads-form")) $block = $block[0].children[0];
+    else $block = `#${$block.attr("id")}`;
     // console.log('Initialize Block', `leads_form_${jQuery($block).attr('data-block-id')}`, $block)
-    const blockData = window[`leads_form_${jQuery($block).attr('data-block-id')}`]
+    const blockData =
+      window[`leads_form_${jQuery($block).attr("data-block-id")}`];
     // console.log('blockData', blockData)
-
-
 
     new Vue({
       el: $block,
       data: {
-        formId: jQuery($block).attr('data-form-id'),
+        formId: jQuery($block).attr("data-form-id"),
         blockData: blockData,
         counter: 0,
         targetCounter: +blockData.counter,
@@ -49,399 +46,525 @@
         textOpen: false,
         display: blockData.display,
         heroTitle: blockData.heroTitle,
-        hideInput: blockData.formStyle == 'collapse',
+        hideInput: blockData.formStyle == "collapse",
         dataLayer: window.dataLayer,
         sourceCode: blockData.sourceCode,
         startedFilling: false,
       },
       computed: {
         percentReachedGoal: function () {
-          return Math.min((+this.counter / +blockData.counterGoalValue) * 100, 100);
+          return Math.min(
+            (+this.counter / +blockData.counterGoalValue) * 100,
+            100
+          );
         },
         reachedGoal: function () {
-          return this.counter >= this.goal
+          return this.counter >= this.goal;
         },
         thankYouTitle: function () {
-          return blockData.thankYouTitle.replace('${fname}', this.formFields.fname.value)
+          return blockData.thankYouTitle.replace(
+            "${fname}",
+            this.formFields.fname.value
+          );
         },
         hasErrors: function () {
-          return this.errors.length > 0
+          return this.errors.length > 0;
         },
         moreButtonText: function () {
           if (!this.textOpen) {
-            return blockData.readMore
+            return blockData.readMore;
           }
-          return blockData.readLess
+          return blockData.readLess;
         },
         showReadMore: function () {
-          return this.heroDescription.length >= this.textLimit
+          return this.heroDescription.length >= this.textLimit;
         },
       },
       watch: {
         startedFilling: function () {
-          this.dataLayer && this.dataLayer.push({
-            'event': 'petitionFilling'
-          });
-        }
+          this.dataLayer &&
+            this.dataLayer.push({
+              event: "petitionFilling",
+            });
+        },
       },
       mounted: function () {
-        this.dataLayer && this.dataLayer.push({
-          'sourceCode': this.sourceCode,
-          'counter': this.blockData.enableCounter ? 'yes' : 'no'
+        this.dataLayer &&
+          this.dataLayer.push({
+            sourceCode: this.sourceCode,
+            counter: this.blockData.enableCounter ? "yes" : "no",
+          });
+        gsap
+          .timeline({})
+          .from(".leads-form__content", {
+            y: 100,
+            opacity: 0,
+            duration: this.animationSpeed,
+          })
+          .from(
+            ".leads-form__form",
+            { y: 100, opacity: 0, duration: this.animationSpeed },
+            `-=${this.animationSpeed / 2}`
+          );
 
-        });
-        gsap.timeline({})
-          .from(".leads-form__content", { y: 100, opacity: 0, duration: this.animationSpeed })
-          .from(".leads-form__form", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
-
-        if (this.blockData.enableCounter && Array.isArray(this.blockData.counterApiEndpoints)) {
+        if (
+          this.blockData.enableCounter &&
+          Array.isArray(this.blockData.counterApiEndpoints)
+        ) {
           // fix for the local dev env
-          let jQueryPostStrCounter = '';
-          if ($(location).attr('hostname') === 'www.planet4.test'){
-            jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
+          let jQueryPostStrCounter = "";
+          if ($(location).attr("hostname") === "www.planet4.test") {
+            jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${
+              this.sourceCode
+            }?v=${Date.now()}`;
             //console.log(jQueryPostStrCounter)
           } else {
-            jQueryPostStrCounter = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
+            jQueryPostStrCounter = `/${
+              window.location.pathname.split("/")[1]
+            }/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
             //console.log(jQueryPostStrCounter)
           }
 
           jQuery.get(jQueryPostStrCounter, (count) => {
             // jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
             //console.log(count,this.targetCounter)
-            this.targetCounter = count.counter
-            this.blockData.counterApiEndpoints.forEach(e => {
-            if (e && jQuery.trim(e) !== '' && e !== undefined)
-              jQuery.get(e, this.formFields, (response) => {
-                this.targetCounter = this.targetCounter + +response.counter
-                this.animateCounter()
-              })
-          })
-          if (this.blockData.counterApiEndpoints.length == 0)
-            this.animateCounter()
-          })
-
+            this.targetCounter = count.counter;
+            this.blockData.counterApiEndpoints.forEach((e) => {
+              if (e && jQuery.trim(e) !== "" && e !== undefined)
+                jQuery.get(e, this.formFields, (response) => {
+                  this.targetCounter = this.targetCounter + +response.counter;
+                  this.animateCounter();
+                });
+            });
+            if (this.blockData.counterApiEndpoints.length == 0)
+              this.animateCounter();
+          });
         }
       },
       methods: {
         animateCounter: lodash.debounce(function (t = this) {
           //console.log('Updating counter')
-          var Cont = { val: t.counter }, NewVal = t.targetCounter;
+          var Cont = { val: t.counter },
+            NewVal = t.targetCounter;
           TweenLite.to(Cont, 2, {
-            val: NewVal, roundProps: "val", onUpdate: () => {
-              t.counter = Cont.val
-            }
+            val: NewVal,
+            roundProps: "val",
+            onUpdate: () => {
+              t.counter = Cont.val;
+            },
           });
         }, 1000),
         getDonateUrl: function (url) {
-          return url.replace("%amount%", this.donateAmount)
+          return url.replace("%amount%", this.donateAmount);
         },
         hasFieldErrors: function (errorType) {
-          return `${this.errorType}`.length > 0
+          return `${this.errorType}`.length > 0;
         },
         pushMessage: function (key, message) {
-          if (key == 'email') {
-            this.emailErrors.push(message)
-          } else if (key == 'fname') {
-            this.firstNameErrors.push(message)
-          } else if (key == 'lname') {
-            this.lastNameErrors.push(message)
-          } else if (key == 'phone') {
-            this.phoneErrors.push(message)
+          if (key == "email") {
+            this.emailErrors.push(message);
+          } else if (key == "fname") {
+            this.firstNameErrors.push(message);
+          } else if (key == "lname") {
+            this.lastNameErrors.push(message);
+          } else if (key == "phone") {
+            this.phoneErrors.push(message);
           } else {
-            this.otherErrors.push(message)
+            this.otherErrors.push(message);
           }
-          if (!(this.display == 'small' && key == 'phone')) {
-            this.errors.push(message)
+          if (!(this.display == "small" && key == "phone")) {
+            this.errors.push(message);
           }
         },
         addBlur: function () {
           window.setTimeout(() => {
-            this.$refs.bkg.classList.add('blur');
-            this.$refs.smallBkg && this.$refs.smallBkg.classList.add('blur');
-          }, 800)
+            this.$refs.bkg.classList.add("blur");
+            this.$refs.smallBkg && this.$refs.smallBkg.classList.add("blur");
+          }, 800);
         },
         numbersOnly(event) {
-          let charCode = (typeof event.which == "undefined") ? event.keyCode : event.which;
+          let charCode =
+            typeof event.which == "undefined" ? event.keyCode : event.which;
           let charStr = String.fromCharCode(charCode);
-          if (!charStr.match(/^[0-9]+$/))
-            event.preventDefault();
+          if (!charStr.match(/^[0-9]+$/)) event.preventDefault();
         },
         checkMinVal($event) {
-          $event.target.value = Math.max(+$event.target.value, this.blockData.donateMinimumAmount)
+          $event.target.value = Math.max(
+            +$event.target.value,
+            this.blockData.donateMinimumAmount
+          );
         },
         submit: function () {
-          if (this.loading)
-            return
-          this.hideInput = false
-          this.errors = []
-          this.emailErrors = []
-          this.firstNameErrors = []
-          this.lastNameErrors = []
-          this.phoneErrors = []
-          this.otherErrors = []
+          if (this.loading) return;
+          this.hideInput = false;
+          this.errors = [];
+          this.emailErrors = [];
+          this.firstNameErrors = [];
+          this.lastNameErrors = [];
+          this.phoneErrors = [];
+          this.otherErrors = [];
 
-          Object.keys(this.formFields).forEach(key => this.formFields[key].value == '' && this.formFields[key].required && this.pushMessage(this.formFields[key].id, blockData.errorMessages.required.replace('${fieldName}', this.formFields[key].fieldName)))
-          Object.keys(this.formFields).forEach(key => this.formFields[key].value !== '' && this.formFields[key].regex !== '' && !this.formFields[key].regex.test(this.formFields[key].value) && this.pushMessage(this.formFields[key].id, blockData.errorMessages.format.replace('${fieldName}', this.formFields[key].fieldName)))
+          Object.keys(this.formFields).forEach(
+            (key) =>
+              this.formFields[key].value == "" &&
+              this.formFields[key].required &&
+              this.pushMessage(
+                this.formFields[key].id,
+                blockData.errorMessages.required.replace(
+                  "${fieldName}",
+                  this.formFields[key].fieldName
+                )
+              )
+          );
+          Object.keys(this.formFields).forEach(
+            (key) =>
+              this.formFields[key].value !== "" &&
+              this.formFields[key].regex !== "" &&
+              !this.formFields[key].regex.test(this.formFields[key].value) &&
+              this.pushMessage(
+                this.formFields[key].id,
+                blockData.errorMessages.format.replace(
+                  "${fieldName}",
+                  this.formFields[key].fieldName
+                )
+              )
+          );
 
-          this.dataLayer && this.dataLayer.push({
-            'event': 'errorMessage',
-            'errorMessageEmail': this.emailErrors[0],
-            'errorMessageFirstName': this.firstNameErrors[0],
-            'errorMessageLastName': this.lastNameErrors[0],
-            'errorMessagePhone': this.phoneErrors[0],
-            'errorMessageOther': this.otherErrors[0]
-          });
+          this.dataLayer &&
+            this.dataLayer.push({
+              event: "errorMessage",
+              errorMessageEmail: this.emailErrors[0],
+              errorMessageFirstName: this.firstNameErrors[0],
+              errorMessageLastName: this.lastNameErrors[0],
+              errorMessagePhone: this.phoneErrors[0],
+              errorMessageOther: this.otherErrors[0],
+            });
 
           if (this.errors.length == 0) {
-            this.loading = true
+            this.loading = true;
             // fix for the local dev env
-            let jQueryPostStr = '';
-            if ($(location).attr('hostname') === 'www.planet4.test'){
+            let jQueryPostStr = "";
+            if ($(location).attr("hostname") === "www.planet4.test") {
               jQueryPostStr = `/wp-json/gplp/v2/leads`;
               //console.log(jQueryPostStr)
             } else {
-              jQueryPostStr = `/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`;
+              jQueryPostStr = `/${
+                window.location.pathname.split("/")[1]
+              }/wp-json/gplp/v2/leads`;
               //console.log(jQueryPostStr)
             }
-            jQuery.post(jQueryPostStr, this.formFields, (response) => {
-            // jQuery.post(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`, this.formFields, (response) => {
-              this.loading = false
-              this.counter++
-              this.dataLayer && this.dataLayer.push({
-                'event': 'petitionSignup',
-                'gGoal': 'Petition Signup',
-                'gConsent': this.formFields.consent.value ? 'optIn' : 'optOut',
-                'gPhone': this.formFields.phone.value ? 'withPhone' : 'withoutPhone'
-              });
+            jQuery
+              .post(jQueryPostStr, this.formFields, (response) => {
+                // jQuery.post(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`, this.formFields, (response) => {
+                this.loading = false;
+                this.counter++;
+                this.dataLayer &&
+                  this.dataLayer.push({
+                    event: "petitionSignup",
+                    gGoal: "Petition Signup",
+                    gConsent: this.formFields.consent.value
+                      ? "optIn"
+                      : "optOut",
+                    gPhone: this.formFields.phone.value
+                      ? "withPhone"
+                      : "withoutPhone",
+                  });
 
-              gsap.timeline({
-                onComplete: () => {
-                  jQuery.ajax({
-                    url: `${blockData.pluginUrl}bower_components/bodymovin/build/player/lottie_light.min.js`,
-                    dataType: "script",
-                  }).then(() => {
-                    this.showThankYouAnimation = true
-                    //window.scrollTo({ top: 0, behavior: 'smooth' })
-                    var blockID = jQuery('[id*="leads-form-block_"]').map(function(){return this.id}).get();
-                    document.querySelector('#'+blockID[0]).scrollIntoView();
-                    const a = lottie.loadAnimation({
-                      container: this.$refs.animation, // the dom element that will contain the animation
-                      renderer: 'svg',
-                      loop: false,
-                      autoplay: true,
-                      path: `${blockData.pluginUrl}public/json/thank-you.json`, // the path to the animation json
-                    })
-                    a.addEventListener('complete', () => {
-                      this.success = true
-                      this.showThankYouAnimation = false
-                      Vue.nextTick(() => {
-                        gsap.timeline({})
-                          .from(".leads-form__thank-you", { y: 100, opacity: 0, duration: this.animationSpeed })
-                          .from(".leads-form__counter", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
-                          .from(".leads-form__share", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
-                          .from(".leads-form__donate", { y: 100, opacity: 0, duration: this.animationSpeed, onComplete: this.addBlur() }, `-=${this.animationSpeed / 2}`)
-                      })
-
-                      const element = document.querySelector('#donate-container');
-                      const elementChildren = element.querySelectorAll('.donation-options');
-                      let firstElementChild = elementChildren[0].className.split(" ")[0];
-                      const donateBtn = document.getElementById("donate-button");
-                      // console.log(elementChildren);
-                      // console.log(firstElementChild);
-                      switch (firstElementChild) {
-                        case "ghost":
-                          // console.log("Pre-selected amount shown");
-                          this.dataLayer && this.dataLayer.push({
-                            'event': 'petitionThankYou',
-                            'donationOption': 'Pre-selected amount to donation'
+                gsap
+                  .timeline({
+                    onComplete: () => {
+                      jQuery
+                        .ajax({
+                          url: `${blockData.pluginUrl}bower_components/bodymovin/build/player/lottie_light.min.js`,
+                          dataType: "script",
+                        })
+                        .then(() => {
+                          this.showThankYouAnimation = true;
+                          //window.scrollTo({ top: 0, behavior: 'smooth' })
+                          var blockID = jQuery('[id*="leads-form-block_"]')
+                            .map(function () {
+                              return this.id;
+                            })
+                            .get();
+                          document
+                            .querySelector("#" + blockID[0])
+                            .scrollIntoView();
+                          const a = lottie.loadAnimation({
+                            container: this.$refs.animation, // the dom element that will contain the animation
+                            renderer: "svg",
+                            loop: false,
+                            autoplay: true,
+                            path: `${blockData.pluginUrl}public/json/thank-you.json`, // the path to the animation json
                           });
-
-                          donateBtn.addEventListener('click', () => {
-                            this.dataLayer && this.dataLayer.push({
-                              'event': 'petitionDonation',
-                              'PetitionDonationLink': 'Pre-selected amount to donation'
+                          a.addEventListener("complete", () => {
+                            this.success = true;
+                            this.showThankYouAnimation = false;
+                            Vue.nextTick(() => {
+                              gsap
+                                .timeline({})
+                                .from(".leads-form__thank-you", {
+                                  y: 100,
+                                  opacity: 0,
+                                  duration: this.animationSpeed,
+                                })
+                                .from(
+                                  ".leads-form__counter",
+                                  {
+                                    y: 100,
+                                    opacity: 0,
+                                    duration: this.animationSpeed,
+                                  },
+                                  `-=${this.animationSpeed / 2}`
+                                )
+                                .from(
+                                  ".leads-form__share",
+                                  {
+                                    y: 100,
+                                    opacity: 0,
+                                    duration: this.animationSpeed,
+                                  },
+                                  `-=${this.animationSpeed / 2}`
+                                )
+                                .from(
+                                  ".leads-form__donate",
+                                  {
+                                    y: 100,
+                                    opacity: 0,
+                                    duration: this.animationSpeed,
+                                    onComplete: this.addBlur(),
+                                  },
+                                  `-=${this.animationSpeed / 2}`
+                                );
                             });
-                          })
-                        break;
 
-                        case "button--submit":
-                          // console.log("Donation button only");
-                          this.dataLayer && this.dataLayer.push({
-                            'event': 'petitionThankYou',
-                            'donationOption': 'Direct link to choose amount'
+                            const element =
+                              document.querySelector("#donate-container");
+                            const elementChildren =
+                              element.querySelectorAll(".donation-options");
+                            let firstElementChild =
+                              elementChildren[0].className.split(" ")[0];
+                            const donateBtn =
+                              document.getElementById("donate-button");
+                            // console.log(elementChildren);
+                            // console.log(firstElementChild);
+                            switch (firstElementChild) {
+                              case "ghost":
+                                // console.log("Pre-selected amount shown");
+                                this.dataLayer &&
+                                  this.dataLayer.push({
+                                    event: "petitionThankYou",
+                                    donationOption:
+                                      "Pre-selected amount to donation",
+                                  });
+
+                                donateBtn.addEventListener("click", () => {
+                                  this.dataLayer &&
+                                    this.dataLayer.push({
+                                      event: "petitionDonation",
+                                      PetitionDonationLink:
+                                        "Pre-selected amount to donation",
+                                    });
+                                });
+                                break;
+
+                              case "button--submit":
+                                // console.log("Donation button only");
+                                this.dataLayer &&
+                                  this.dataLayer.push({
+                                    event: "petitionThankYou",
+                                    donationOption:
+                                      "Direct link to choose amount",
+                                  });
+
+                                donateBtn.addEventListener("click", () => {
+                                  this.dataLayer &&
+                                    this.dataLayer.push({
+                                      event: "petitionDonation",
+                                      PetitionDonationLink:
+                                        "Direct link to choose amount",
+                                    });
+                                });
+                                break;
+
+                              default:
+                                console.log("Nada.");
+                                break;
+                            }
+
+                            const fbShare = document.getElementById("facebook");
+                            fbShare.addEventListener("click", () => {
+                              this.dataLayer &&
+                                this.dataLayer.push({
+                                  event: "uaevent",
+                                  eventAction: "Facebook",
+                                  eventCategory: "Social Share",
+                                });
+                            });
+
+                            // Implementing the winning A/B test version
+                            const linkCopy =
+                              document.getElementById("copy-link");
+                            linkCopy.addEventListener("click", () => {
+                              let copyURL = document.createElement("input"),
+                                text = window.location.href,
+                                linkParam = "";
+
+                              if (window.location.href.indexOf("?") > -1) {
+                                linkParam = text + "&share=copy_link";
+                              } else {
+                                linkParam = text + "?share=copy_link";
+                              }
+
+                              let setLanguage =
+                                window.location.pathname.split("/")[1];
+                              let $linkCopied = "";
+
+                              switch (setLanguage) {
+                                case "denmark":
+                                  $linkCopied = "Link kopieret!";
+                                  break;
+                                case "finland":
+                                  $linkCopied = "Linkki kopioitu!";
+                                  break;
+                                case "norway":
+                                  $linkCopied = "Lenke kopiert!";
+                                  break;
+                                case "sweden":
+                                  $linkCopied = "Länk kopierad!";
+                                  break;
+                                default:
+                                  $linkCopied = "Link Copied!";
+                              }
+
+                              document.body.appendChild(copyURL);
+                              copyURL.value = linkParam;
+                              copyURL.select();
+                              document.execCommand("copy");
+                              document.body.removeChild(copyURL);
+                              document.querySelector("#copy-link").innerHTML =
+                                $linkCopied;
+                              console.log(copyURL);
+
+                              this.dataLayer &&
+                                this.dataLayer.push({
+                                  event: "uaevent",
+                                  eventAction: "Copy link",
+                                  eventCategory: "Social Share",
+                                });
+                            });
+
+                            // const twShare = document.getElementById("twitter");
+                            // twShare.addEventListener('click', () =>{
+                            //   this.dataLayer && this.dataLayer.push({
+                            //     'event': 'uaevent',
+                            //     'eventAction': 'Twitter',
+                            //     'eventCategory':'Social Share'
+                            //   });
+                            // });
+
+                            // const eShare = document.getElementById("email");
+                            // eShare.addEventListener('click', () =>{
+                            //   this.dataLayer && this.dataLayer.push({
+                            //     'event': 'uaevent',
+                            //     'eventAction': 'Email',
+                            //     'eventCategory':'Social Share'
+                            //   });
+                            // });
+
+                            // const waShare = document.getElementById("whatsapp");
+                            // waShare.addEventListener('click', () =>{
+                            //   this.dataLayer && this.dataLayer.push({
+                            //     'event': 'uaevent',
+                            //     'eventAction': 'Whatsapp',
+                            //     'eventCategory':'Social Share'
+                            //   });
+                            // });
                           });
-
-                          donateBtn.addEventListener('click', () => {
-                            this.dataLayer && this.dataLayer.push({
-                              'event': 'petitionDonation',
-                              'PetitionDonationLink': 'Direct link to choose amount'
-                            });
-                          })
-                          break;
-
-                        default:
-                        console.log("Nada.");
-                        break;
-                      }
-
-                      const fbShare = document.getElementById("facebook");
-                      fbShare.addEventListener('click', () =>{
-                        this.dataLayer && this.dataLayer.push({
-                          'event': 'uaevent',
-                          'eventAction': 'Facebook',
-                          'eventCategory':'Social Share'
                         });
-                      });
-
-                      // Implementing the winning A/B test version
-                      const linkCopy = document.getElementById("copy-link");
-                      linkCopy.addEventListener('click', () =>{
-                        let copyURL= document.createElement('input'),
-                        text = window.location.href,
-                        linkParam = "";
-
-                        if(window.location.href.indexOf("?") > -1){
-                            linkParam = text + '&share=copy_link';
-                        }else{
-                            linkParam = text + '?share=copy_link';
-                        }
-
-                        let setLanguage = window.location.pathname.split('/')[1];
-                        let $linkCopied = "";
-
-                        switch (setLanguage) {
-                          case "denmark":
-                            $linkCopied = "Link kopieret!";
-                          break;
-                          case "finland":
-                            $linkCopied = "Linkki kopioitu!";
-                          break;
-                          case "norway":
-                            $linkCopied = "Lenke kopiert!";
-                          break;
-                          case "sweden":
-                            $linkCopied = "Länk kopierad!";
-                          break;
-                          default:
-                            $linkCopied = "Link Copied!";
-                        }
-
-                        document.body.appendChild(copyURL);
-                        copyURL.value = linkParam;
-                        copyURL.select();
-                        document.execCommand('copy');
-                        document.body.removeChild(copyURL);
-                        document.querySelector('#copy-link').innerHTML = $linkCopied;
-                        console.log(copyURL);
-
-                        this.dataLayer && this.dataLayer.push({
-                          'event': 'uaevent',
-                          'eventAction': 'Copy link',
-                          'eventCategory':'Social Share'
-                        });
-                      });
-
-                      // const twShare = document.getElementById("twitter");
-                      // twShare.addEventListener('click', () =>{
-                      //   this.dataLayer && this.dataLayer.push({
-                      //     'event': 'uaevent',
-                      //     'eventAction': 'Twitter',
-                      //     'eventCategory':'Social Share'
-                      //   });
-                      // });
-
-                      // const eShare = document.getElementById("email");
-                      // eShare.addEventListener('click', () =>{
-                      //   this.dataLayer && this.dataLayer.push({
-                      //     'event': 'uaevent',
-                      //     'eventAction': 'Email',
-                      //     'eventCategory':'Social Share'
-                      //   });
-                      // });
-
-                      // const waShare = document.getElementById("whatsapp");
-                      // waShare.addEventListener('click', () =>{
-                      //   this.dataLayer && this.dataLayer.push({
-                      //     'event': 'uaevent',
-                      //     'eventAction': 'Whatsapp',
-                      //     'eventCategory':'Social Share'
-                      //   });
-                      // });
-
-                    })
+                    },
                   })
-                }
+                  .to(".leads-form__content", {
+                    y: 100,
+                    opacity: 0,
+                    duration: this.animationSpeed,
+                  })
+                  .to(
+                    ".leads-form__form",
+                    { y: 100, opacity: 0, duration: this.animationSpeed },
+                    `-=${this.animationSpeed / 2}`
+                  );
               })
-                .to(".leads-form__content", { y: 100, opacity: 0, duration: this.animationSpeed })
-                .to(".leads-form__form", { y: 100, opacity: 0, duration: this.animationSpeed }, `-=${this.animationSpeed / 2}`)
-            }).fail((error) => {
-              this.errors.push(error.responseJSON.message)
-              this.otherErrors.push(error.responseJSON.message)
-              this.loading = false
-              //console.log(error.responseJSON)
-            })
+              .fail((error) => {
+                this.errors.push(error.responseJSON.message);
+                this.otherErrors.push(error.responseJSON.message);
+                this.loading = false;
+                //console.log(error.responseJSON)
+              });
           }
-          return false
+          return false;
         },
         limitedText: function (text, open) {
           if (text.length >= this.textLimit && !open) {
-            return text.substring(0, this.textLimit) + "..."
+            return text.substring(0, this.textLimit) + "...";
           }
-          return text
+          return text;
         },
         lengthClass: function (title) {
           if (title.length < 10) {
-            return 'under-10'
+            return "under-10";
           }
           if (title.length < 20) {
-            return 'under-20'
+            return "under-20";
           }
           if (title.length < 25) {
-            return 'under-25'
+            return "under-25";
           }
           if (title.length < 30) {
-            return 'under-30'
+            return "under-30";
           }
           if (title.length < 35) {
-            return 'under-35'
+            return "under-35";
           }
           if (title.length < 45) {
-            return 'under-45'
+            return "under-45";
           }
           if (title.length < 60) {
-            return 'under-60'
+            return "under-60";
           }
           if (title.length < 85) {
-            return 'under-85'
+            return "under-85";
           }
           if (title.length > 95) {
-            return 'over-95'
+            return "over-95";
           }
-          return ''
+          return "";
         },
         toggleText: function () {
           let timeline = new gsap.timeline()
-            .to(this.$refs.heroDescription, { opacity: 0, duration: 0.2, onComplete: () => this.textOpen = !this.textOpen })
-            .to(this.$refs.heroDescription, { opacity: 1, duration: 0.25 })
-        }
-      }
-    })
-  }
+            .to(this.$refs.heroDescription, {
+              opacity: 0,
+              duration: 0.2,
+              onComplete: () => (this.textOpen = !this.textOpen),
+            })
+            .to(this.$refs.heroDescription, { opacity: 1, duration: 0.25 });
+        },
+      },
+    });
+  };
 
   // Initialize each block on page load (front end).
-  document.addEventListener('DOMContentLoaded', () => {
-    if (jQuery('.leads-form').length > 0) {
-      $('.leads-form').each((index, block) => {
-        initializeBlock($(block))
-      })
+  document.addEventListener("DOMContentLoaded", () => {
+    if (jQuery(".leads-form").length > 0) {
+      $(".leads-form").each((index, block) => {
+        initializeBlock($(block));
+      });
     }
-  })
+  });
 
   // Initialize dynamic block preview (editor).
   if (window.acf) {
-    window.acf.addAction('render_block_preview/type=leads-form', ($block) => {
-      window.setTimeout(initializeBlock($block), 2000)
-    })
+    window.acf.addAction("render_block_preview/type=leads-form", ($block) => {
+      window.setTimeout(initializeBlock($block), 2000);
+    });
   }
-
-})(jQuery)
+})(jQuery);
