@@ -246,12 +246,8 @@
             let jQueryPostStr = "";
             if ($(location).attr("hostname") === "www.planet4.test") {
               jQueryPostStr = `/wp-json/gplp/v2/leads`;
-              //console.log(jQueryPostStr)
             } else {
-              jQueryPostStr = `/${
-                window.location.pathname.split("/")[1]
-              }/wp-json/gplp/v2/leads`;
-              //console.log(jQueryPostStr)
+              jQueryPostStr = `${window.location.origin}/wp-json/gplp/v2/leads`;
             }
             jQuery
               .post(jQueryPostStr, this.formFields, (response) => {
@@ -345,11 +341,8 @@
                               elementChildren[0].className.split(" ")[0];
                             const donateBtn =
                               document.getElementById("donate-button");
-                            // console.log(elementChildren);
-                            // console.log(firstElementChild);
                             switch (firstElementChild) {
                               case "ghost":
-                                // console.log("Pre-selected amount shown");
                                 this.dataLayer &&
                                   this.dataLayer.push({
                                     event: "petitionThankYou",
@@ -368,7 +361,6 @@
                                 break;
 
                               case "button--submit":
-                                // console.log("Donation button only");
                                 this.dataLayer &&
                                   this.dataLayer.push({
                                     event: "petitionThankYou",
@@ -443,7 +435,6 @@
                               document.body.removeChild(copyURL);
                               document.querySelector("#copy-link").innerHTML =
                                 $linkCopied;
-                              console.log(copyURL);
 
                               this.dataLayer &&
                                 this.dataLayer.push({
@@ -498,7 +489,6 @@
                 this.errors.push(error.responseJSON.message);
                 this.otherErrors.push(error.responseJSON.message);
                 this.loading = false;
-                //console.log(error.responseJSON)
               });
           }
           return false;
