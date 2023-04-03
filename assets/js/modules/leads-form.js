@@ -50,6 +50,10 @@
         dataLayer: window.dataLayer,
         sourceCode: blockData.sourceCode,
         startedFilling: false,
+        // Multistep
+        multistepCount: blockData.multistepCount,
+        multistepActive: 0,
+        multistepCompleted: [],
       },
       computed: {
         percentReachedGoal: function () {
@@ -537,6 +541,18 @@
               onComplete: () => (this.textOpen = !this.textOpen),
             })
             .to(this.$refs.heroDescription, { opacity: 1, duration: 0.25 });
+        },
+        /**
+         * Multistep
+         */
+        wasCompleted(stepIndex) {
+          return this.multistepCompleted.includes(stepIndex);
+        },
+        wasSkipped(stepIndex) {
+          return (
+            stepIndex < this.multistepActive &&
+            !this.multistepCompleted.includes(stepIndex)
+          );
         },
       },
     });

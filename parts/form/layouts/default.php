@@ -14,7 +14,7 @@ GPPL4\get_partial("form/form", $formData);
 /**
  * Thank you
  */
-GPPL4\get_partial("form/thankyou", $thankYouData); 
+GPPL4\get_partial("form/thank_you", $thankYouData); 
 ?>
 
 <div v-show="success" class="leads-form__further-actions">

@@ -1,9 +1,13 @@
-<div v-show="success" class="leads-form__donate">
+<?php 
+$condition = $form_type === 'multistep' ? true : 'success';
+?>
+
+<div v-show="<?php echo $condition; ?>" class="leads-form__donate">
     <h4>
         <span class="leads-form__icon"><?php GPPL4\svg_icon('heart'); ?></span>
-        <?php echo $thank_you_settings['donate_headline']; ?>
+        <?php echo $headline; ?>
     </h4>
-    <?php echo $thank_you_settings['donate_description']; ?>
+    <?php echo $description; ?>
     <div id="donate-container" class="donate-container">
       <?php if ($thank_you_settings['enable_donation_amount']) : ?>
         <div id="donate-input-amount" class="input-container">
