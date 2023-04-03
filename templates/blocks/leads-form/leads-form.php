@@ -87,9 +87,11 @@ $url = get_the_permalink();
 $form_type = get_field('form_type', $form_id);
 // Multistep: steps
 $steps = get_field('steps', $form_id);
+$multistepCount = count($steps['step']) + 2;
 
 // Prepare data arrays for partials
 $contentData = array(
+    'form_type' => $form_type,
     'headline' => $hero_settings['headline'],
     'description' => $hero_description
 );
@@ -124,6 +126,7 @@ $donateData = array(
     'form_fields_translations' => $form_fields_translations
 );
 $finalData = array(
+    'multistepCount' => $multistepCount,
     'headline' => $steps['final_headline'],
     'description' => $steps['final_description'],
     'button_caption' => $steps['final_button_caption'],
@@ -150,7 +153,7 @@ $layoutsData = array(
 ?>
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
 
-    <div class="leads-form__grid">
+    <div class="leads-form__grid <?php if ($form_type === 'multistep') echo "leads-form__multistep"; ?> ">
         <?php
             if ($form_type === 'multistep') {
                 GPPL4\get_partial("form/layouts/multistep", $layoutsData); 
@@ -548,6 +551,6 @@ $layoutsData = array(
             format: '<?php echo $form_fields_translations['error_format']; ?>'
         },
         formType: '<?php echo $form_type; ?>',
-        multistepCount: <?php echo count($steps['step']) + 2; ?>
+        multistepCount: <?php echo $multistepCount; ?>
     };
 </script>
