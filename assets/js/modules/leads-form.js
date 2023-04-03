@@ -51,6 +51,7 @@
         sourceCode: blockData.sourceCode,
         startedFilling: false,
         // Multistep
+        formType: blockData.formType,
         multistepCount: blockData.multistepCount,
         multistepActive: 0,
         multistepCompleted: [],
@@ -271,173 +272,183 @@
                       : "withoutPhone",
                   });
 
-                gsap
-                  .timeline({
-                    onComplete: () => {
-                      jQuery
-                        .ajax({
-                          url: `${blockData.pluginUrl}bower_components/bodymovin/build/player/lottie_light.min.js`,
-                          dataType: "script",
-                        })
-                        .then(() => {
-                          this.showThankYouAnimation = true;
-                          //window.scrollTo({ top: 0, behavior: 'smooth' })
-                          var blockID = jQuery('[id*="leads-form-block_"]')
-                            .map(function () {
-                              return this.id;
-                            })
-                            .get();
-                          document
-                            .querySelector("#" + blockID[0])
-                            .scrollIntoView();
-                          const a = lottie.loadAnimation({
-                            container: this.$refs.animation, // the dom element that will contain the animation
-                            renderer: "svg",
-                            loop: false,
-                            autoplay: true,
-                            path: `${blockData.pluginUrl}public/json/thank-you.json`, // the path to the animation json
-                          });
-                          a.addEventListener("complete", () => {
-                            this.success = true;
-                            this.showThankYouAnimation = false;
-                            Vue.nextTick(() => {
-                              gsap
-                                .timeline({})
-                                .from(".leads-form__thank-you", {
-                                  y: 100,
-                                  opacity: 0,
-                                  duration: this.animationSpeed,
-                                })
-                                .from(
-                                  ".leads-form__counter",
-                                  {
-                                    y: 100,
-                                    opacity: 0,
-                                    duration: this.animationSpeed,
-                                  },
-                                  `-=${this.animationSpeed / 2}`
-                                )
-                                .from(
-                                  ".leads-form__share",
-                                  {
-                                    y: 100,
-                                    opacity: 0,
-                                    duration: this.animationSpeed,
-                                  },
-                                  `-=${this.animationSpeed / 2}`
-                                )
-                                .from(
-                                  ".leads-form__donate",
-                                  {
-                                    y: 100,
-                                    opacity: 0,
-                                    duration: this.animationSpeed,
-                                    onComplete: this.addBlur(),
-                                  },
-                                  `-=${this.animationSpeed / 2}`
-                                );
+                // For multistep
+                if (this.formType === "multistep") {
+                  this.success = true;
+                  this.completeMultistep(0);
+                }
+                // Regular
+                else {
+                  gsap
+                    .timeline({
+                      onComplete: () => {
+                        jQuery
+                          .ajax({
+                            url: `${blockData.pluginUrl}bower_components/bodymovin/build/player/lottie_light.min.js`,
+                            dataType: "script",
+                          })
+                          .then(() => {
+                            this.showThankYouAnimation = true;
+                            //window.scrollTo({ top: 0, behavior: 'smooth' })
+                            var blockID = jQuery('[id*="leads-form-block_"]')
+                              .map(function () {
+                                return this.id;
+                              })
+                              .get();
+                            document
+                              .querySelector("#" + blockID[0])
+                              .scrollIntoView();
+                            const a = lottie.loadAnimation({
+                              container: this.$refs.animation, // the dom element that will contain the animation
+                              renderer: "svg",
+                              loop: false,
+                              autoplay: true,
+                              path: `${blockData.pluginUrl}public/json/thank-you.json`, // the path to the animation json
                             });
+                            a.addEventListener("complete", () => {
+                              this.success = true;
+                              this.showThankYouAnimation = false;
 
-                            const element =
-                              document.querySelector("#donate-container");
-                            const elementChildren =
-                              element.querySelectorAll(".donation-options");
-                            let firstElementChild =
-                              elementChildren[0].className.split(" ")[0];
-                            const donateBtn =
-                              document.getElementById("donate-button");
-                            switch (firstElementChild) {
-                              case "ghost":
-                                this.dataLayer &&
-                                  this.dataLayer.push({
-                                    event: "petitionThankYou",
-                                    donationOption:
-                                      "Pre-selected amount to donation",
-                                  });
+                              Vue.nextTick(() => {
+                                gsap
+                                  .timeline({})
+                                  .from(".leads-form__thank-you", {
+                                    y: 100,
+                                    opacity: 0,
+                                    duration: this.animationSpeed,
+                                  })
+                                  .from(
+                                    ".leads-form__counter",
+                                    {
+                                      y: 100,
+                                      opacity: 0,
+                                      duration: this.animationSpeed,
+                                    },
+                                    `-=${this.animationSpeed / 2}`
+                                  )
+                                  .from(
+                                    ".leads-form__share",
+                                    {
+                                      y: 100,
+                                      opacity: 0,
+                                      duration: this.animationSpeed,
+                                    },
+                                    `-=${this.animationSpeed / 2}`
+                                  )
+                                  .from(
+                                    ".leads-form__donate",
+                                    {
+                                      y: 100,
+                                      opacity: 0,
+                                      duration: this.animationSpeed,
+                                      onComplete: this.addBlur(),
+                                    },
+                                    `-=${this.animationSpeed / 2}`
+                                  );
+                              });
 
-                                donateBtn.addEventListener("click", () => {
+                              const element =
+                                document.querySelector("#donate-container");
+                              const elementChildren =
+                                element.querySelectorAll(".donation-options");
+                              let firstElementChild =
+                                elementChildren[0].className.split(" ")[0];
+                              const donateBtn =
+                                document.getElementById("donate-button");
+                              switch (firstElementChild) {
+                                case "ghost":
                                   this.dataLayer &&
                                     this.dataLayer.push({
-                                      event: "petitionDonation",
-                                      PetitionDonationLink:
+                                      event: "petitionThankYou",
+                                      donationOption:
                                         "Pre-selected amount to donation",
                                     });
-                                });
-                                break;
 
-                              case "button--submit":
-                                this.dataLayer &&
-                                  this.dataLayer.push({
-                                    event: "petitionThankYou",
-                                    donationOption:
-                                      "Direct link to choose amount",
+                                  donateBtn.addEventListener("click", () => {
+                                    this.dataLayer &&
+                                      this.dataLayer.push({
+                                        event: "petitionDonation",
+                                        PetitionDonationLink:
+                                          "Pre-selected amount to donation",
+                                      });
                                   });
+                                  break;
 
-                                donateBtn.addEventListener("click", () => {
+                                case "button--submit":
                                   this.dataLayer &&
                                     this.dataLayer.push({
-                                      event: "petitionDonation",
-                                      PetitionDonationLink:
+                                      event: "petitionThankYou",
+                                      donationOption:
                                         "Direct link to choose amount",
                                     });
-                                });
-                                break;
 
-                              default:
-                                console.log("Nada.");
-                                break;
-                            }
+                                  donateBtn.addEventListener("click", () => {
+                                    this.dataLayer &&
+                                      this.dataLayer.push({
+                                        event: "petitionDonation",
+                                        PetitionDonationLink:
+                                          "Direct link to choose amount",
+                                      });
+                                  });
+                                  break;
 
-                            const fbShare = document.getElementById("facebook");
-                            fbShare.addEventListener("click", () => {
-                              this.dataLayer &&
-                                this.dataLayer.push({
-                                  event: "uaevent",
-                                  eventAction: "Facebook",
-                                  eventCategory: "Social Share",
-                                });
+                                default:
+                                  console.log("Nada.");
+                                  break;
+                              }
+
+                              const fbShare =
+                                document.getElementById("facebook");
+                              fbShare.addEventListener("click", () => {
+                                this.dataLayer &&
+                                  this.dataLayer.push({
+                                    event: "uaevent",
+                                    eventAction: "Facebook",
+                                    eventCategory: "Social Share",
+                                  });
+                              });
+
+                              // const twShare = document.getElementById("twitter");
+                              // twShare.addEventListener('click', () =>{
+                              //   this.dataLayer && this.dataLayer.push({
+                              //     'event': 'uaevent',
+                              //     'eventAction': 'Twitter',
+                              //     'eventCategory':'Social Share'
+                              //   });
+                              // });
+
+                              // const eShare = document.getElementById("email");
+                              // eShare.addEventListener('click', () =>{
+                              //   this.dataLayer && this.dataLayer.push({
+                              //     'event': 'uaevent',
+                              //     'eventAction': 'Email',
+                              //     'eventCategory':'Social Share'
+                              //   });
+                              // });
+
+                              // const waShare = document.getElementById("whatsapp");
+                              // waShare.addEventListener('click', () =>{
+                              //   this.dataLayer && this.dataLayer.push({
+                              //     'event': 'uaevent',
+                              //     'eventAction': 'Whatsapp',
+                              //     'eventCategory':'Social Share'
+                              //   });
+                              // });
                             });
-
-                            // const twShare = document.getElementById("twitter");
-                            // twShare.addEventListener('click', () =>{
-                            //   this.dataLayer && this.dataLayer.push({
-                            //     'event': 'uaevent',
-                            //     'eventAction': 'Twitter',
-                            //     'eventCategory':'Social Share'
-                            //   });
-                            // });
-
-                            // const eShare = document.getElementById("email");
-                            // eShare.addEventListener('click', () =>{
-                            //   this.dataLayer && this.dataLayer.push({
-                            //     'event': 'uaevent',
-                            //     'eventAction': 'Email',
-                            //     'eventCategory':'Social Share'
-                            //   });
-                            // });
-
-                            // const waShare = document.getElementById("whatsapp");
-                            // waShare.addEventListener('click', () =>{
-                            //   this.dataLayer && this.dataLayer.push({
-                            //     'event': 'uaevent',
-                            //     'eventAction': 'Whatsapp',
-                            //     'eventCategory':'Social Share'
-                            //   });
-                            // });
                           });
-                        });
-                    },
-                  })
-                  .to(".leads-form__content", {
-                    y: 100,
-                    opacity: 0,
-                    duration: this.animationSpeed,
-                  })
-                  .to(
-                    ".leads-form__form",
-                    { y: 100, opacity: 0, duration: this.animationSpeed },
-                    `-=${this.animationSpeed / 2}`
-                  );
+                      },
+                    })
+                    .to(".leads-form__content", {
+                      y: 100,
+                      opacity: 0,
+                      duration: this.animationSpeed,
+                    })
+                    .to(
+                      ".leads-form__form",
+                      { y: 100, opacity: 0, duration: this.animationSpeed },
+                      `-=${this.animationSpeed / 2}`
+                    );
+                }
               })
               .fail((error) => {
                 this.errors.push(error.responseJSON.message);
@@ -538,7 +549,10 @@
               eventCategory: "Social Share",
             });
 
-          if (stepIndex) this.completeMultistep(stepIndex);
+          if (stepIndex)
+            setTimeout(() => {
+              this.completeMultistep(stepIndex);
+            }, 1000);
         },
         /**
          * Multistep
@@ -567,17 +581,17 @@
           this.nextStep();
         },
         prevStep() {
-          if (this.multistepActive > 0) this.goToStep(this.multistepActive - 1);
+          if (this.multistepActive > 1) this.goToStep(this.multistepActive - 1);
         },
         nextStep() {
           if (this.multistepActive < this.multistepCount) {
             this.goToStep(this.multistepActive + 1);
           } else {
-            this.goToStep(this.multistepCount + 1);
+            this.goToStep(this.multistepCount);
           }
         },
         isFirst(stepIndex) {
-          return stepIndex <= 0;
+          return stepIndex <= 1;
         },
         isLast(stepIndex) {
           return stepIndex >= this.multistepCount;

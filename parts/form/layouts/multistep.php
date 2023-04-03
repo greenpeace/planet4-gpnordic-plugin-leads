@@ -7,12 +7,18 @@
   GPPL4\get_partial("form/bullet_navigation", array('steps' => $steps['step']));
 
   /**
+   * The form
+   */
+  GPPL4\get_partial("form/form", $formData);
+
+  /**
    * Thank you
    */
   GPPL4\get_partial("form/thank_you", $thankYouData); 
 
   foreach($steps['step'] as $key => $step) : 
-    $stepIndex = $key + 1;
+    // Increase by 2 to start navigation after Form and Thank you steps
+    $stepIndex = $key + 2;
   ?>
     <div v-show="multistepActive === <?php echo $stepIndex; ?>">
       <?php

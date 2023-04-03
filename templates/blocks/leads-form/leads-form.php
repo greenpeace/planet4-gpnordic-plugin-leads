@@ -94,17 +94,18 @@ $contentData = array(
     'description' => $hero_description
 );
 $formData = array(
+    'form_type' => $form_type,
     'form_settings' => $form_settings,
     'form_fields_translations' => $form_fields_translations,
     'form_status' => $form_status,
     'display' => $display
 );
 $thankYouData = array(
+    'form_type' => $form_type,
     'share_button_caption' => $steps['thank_you_share_button_caption'],
     'skip_button_caption' => $steps['thank_you_skip_button_caption'],
     'share_go_to_step' => $steps['thank_you_share_go_to_step'],
     'skip_go_to_step' => $steps['thank_you_skip_go_to_step'],
-    'form_type' => $form_type,
     'description' => $form_type === 'multistep' ? $steps['thank_you_description'] : $thank_you_settings['description'],
 );
 $counterData = array(
@@ -546,6 +547,7 @@ $layoutsData = array(
             required: '<?php echo $form_fields_translations['error_required']; ?>',
             format: '<?php echo $form_fields_translations['error_format']; ?>'
         },
-        multistepCount: <?php echo count($steps['step']); ?>
+        formType: '<?php echo $form_type; ?>',
+        multistepCount: <?php echo count($steps['step']) + 2; ?>
     };
 </script>
