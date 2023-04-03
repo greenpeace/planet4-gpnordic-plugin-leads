@@ -33,19 +33,19 @@ function get_form_settings()
             'layout' => 'block',
             'button_label' => 'Add step',
         ])
-        ->addSelect('step', [
-            'label' => 'Step',
-            'instructions' => 'Select the step',
-            'choices' => [
-                'share' => 'Share',
-                'custom_ask' => 'Custom Ask',
-                'donation' => 'Donation',
-            ],
-            'default_value' => 'petition',
-            'layout' => 'vertical',
-            'allow_null' => 0,
-            'return_format' => 'value',
-        ])
+            ->addSelect('select_step', [
+                'label' => 'Step',
+                'instructions' => 'Select the step',
+                'choices' => [
+                    'share' => 'Share',
+                    'custom_ask' => 'Custom Ask',
+                    'donation' => 'Donation',
+                ],
+                'default_value' => 'petition',
+                'layout' => 'vertical',
+                'allow_null' => 0,
+                'return_format' => 'value',
+            ])
         ->endRepeater()
         ->addTab('thank_you')
         ->addText('thank_you_headline')

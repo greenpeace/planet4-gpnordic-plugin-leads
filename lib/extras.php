@@ -1,6 +1,13 @@
 <?php
 namespace GPPL4;
 
+function print_a($string)
+{
+    print('<pre>');
+    print_r($string);
+    print('</pre>');
+}
+
 function get_partial($name, $data = [])
 {
     $path = __DIR__ . "/../parts/$name.php";

@@ -85,6 +85,8 @@ $url = get_the_permalink();
 
 // Form type 
 $form_type = get_field('form_type', $form_id);
+// Multistep: steps
+$steps = get_field('steps', $form_id);
 
 // Prepare data arrays for partials
 $contentData = array(
@@ -98,7 +100,8 @@ $formData = array(
     'display' => $display
 );
 $thankYouData = array(
-    'thank_you_settings' => $thank_you_settings
+        'form_type' => $form_type,
+        'description' => $form_type === 'multistep' ? $steps['thank_you_description'] : $thank_you_settings['description'],
 );
 $counterData = array(
     'form_settings' => $form_settings,
@@ -108,25 +111,44 @@ $shareData = array(
     'url' => $url,
 );
 $donateData = array(
+    'form_type' => $form_type,
+    'headline' => $form_type === 'multistep' ? $steps['donation_headline'] : $thank_you_settings['donate_headline'],
+    'description' => $form_type === 'multistep' ? $steps['donation_description'] : $thank_you_settings['donate_description'],
     'thank_you_settings' => $thank_you_settings,
     'form_fields_translations' => $form_fields_translations
 );
-
+$finalData = array(
+    'final_headline' => $steps['final_headline'],
+    'final_description' => $steps['final_description'],
+    'final_copy_url_button_caption' => $steps['final_copy_url_button_caption'],
+    'final_skip_button_url' => $steps['final_skip_button_url']
+);
+$customAskData = array(
+    'custom_ask_headline' => $steps['custom_ask_headline'],
+    'custom_ask_description' => $steps['custom_ask_description'],
+    'custom_ask_button_caption' => $steps['custom_ask_button_caption'],
+    'custom_ask_button_url' => $steps['custom_ask_button_url'],
+    'custom_ask_button_color' => $steps['custom_ask_button_color']
+);
 $layoutsData = array(
     'contentData' => $contentData, 
     'formData' => $formData, 
     'thankYouData' => $thankYouData, 
     'counterData' => $counterData, 
     'shareData' => $shareData, 
-    'donateData' => $donateData
+    'donateData' => $donateData,
+    'finalData' => $form_type === 'multistep' ? $finalData : false,
+    'customAskData' => $form_type ==='multistep'? $customAskData : false,
+    'steps' => $form_type === 'multistep' ? $steps : false
 );
 
 ?>
 <div id="<?php echo esc_attr($id); ?>" :class="'leads-form--mounted'" class="<?php echo esc_attr($className) . " " . $display .  " " . $align . " " . $theme ?>" data-block-id="<?php echo $block['id']; ?>" data-form-id="<?php echo $form_id; ?>">
+
     <div class="leads-form__grid">
         <?php
             if ($form_type === 'multistep') {
-                GPPL4\get_partial("form/layouts/default", $layoutsData); 
+                GPPL4\get_partial("form/layouts/multistep", $layoutsData); 
             } else {
                 GPPL4\get_partial("form/layouts/default", $layoutsData);  
             }
@@ -448,7 +470,7 @@ $layoutsData = array(
         // toggle donations amount
         donateAmount: <?php echo $thank_you_settings['donate_default_amount'] ? $thank_you_settings['donate_default_amount'] : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0); ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
-        thankYouTitle: '<?php echo addslashes($thank_you_settings['headline']); ?>',
+        thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? $steps['thank_you_headline'] : $thank_you_settings['headline']); ?>',
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
         //heroTitle trim slashes,remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
@@ -515,6 +537,7 @@ $layoutsData = array(
         errorMessages: {
             required: '<?php echo $form_fields_translations['error_required']; ?>',
             format: '<?php echo $form_fields_translations['error_format']; ?>'
-        }
+        },
+        multistepCount: <?php echo count($steps['step']); ?>
     };
 </script>
