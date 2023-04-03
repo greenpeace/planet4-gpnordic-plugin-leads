@@ -3,14 +3,12 @@
  * Introduction content
  */
 GPPL4\get_partial("form/content", $contentData); 
-?>
-<?php 
+
 /**
  * The form
  */
 GPPL4\get_partial("form/form", $formData); 
-?>
-<?php 
+
 /**
  * Thank you
  */

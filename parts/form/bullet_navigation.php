@@ -1,4 +1,4 @@
-<nav class="leads-form__bullet-navigation">
+<nav class="leads-form__bullet-navigation" v-show="multistepActive !== 0">
   <ul>
     <?php foreach($steps as $key => $step) : 
       $stepIndex = $key + 1;
