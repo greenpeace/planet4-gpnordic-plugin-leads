@@ -5,6 +5,11 @@ if ($form_type === 'multistep') : ?>
     <div class="leads-form__thank-you" v-show="multistepActive === 0">
         <h2 :class="lengthClass(thankYouTitle)" v-html="thankYouTitle"></h2>
         <div class="preamble"><?php echo stripslashes($description); ?></div>
+        <a class="button" @click="nextStep()">Of course!</a> 
+        <a class="button" @click="nextStep()">Heck no!</a> 
+
+         <?php 
+        ?>
     </div>
 <?php else : ?>
     <div class="leads-form__thank-you-animation" ref="animation" v-show="showThankYouAnimation"></div>
