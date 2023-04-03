@@ -275,7 +275,6 @@
                 // For multistep
                 if (this.formType === "multistep") {
                   this.success = true;
-                  this.completeMultistep(0);
                 }
                 // Regular
                 else {
@@ -586,15 +585,13 @@
         nextStep() {
           if (this.multistepActive < this.multistepCount) {
             this.goToStep(this.multistepActive + 1);
-          } else {
-            this.goToStep(this.multistepCount);
           }
         },
         isFirst(stepIndex) {
-          return stepIndex <= 1;
+          return stepIndex <= 0;
         },
         isLast(stepIndex) {
-          return stepIndex >= this.multistepCount;
+          return stepIndex >= this.multistepCount - 1;
         },
       },
     });

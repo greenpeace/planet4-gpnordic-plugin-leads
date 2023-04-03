@@ -1,5 +1,6 @@
-<nav class="leads-form__bullet-navigation" v-show="multistepActive !== 0">
+<nav class="leads-form__bullet-navigation" v-show="!isFirst(multistepActive)">
   <ul>
+    <li>0</li>
     <?php foreach($steps as $key => $step) : 
       $stepIndex = $key + 1;
       ?>
@@ -9,5 +10,6 @@
         { 'completed' : wasCompleted(<?php echo $stepIndex; ?>)}
       ]" @click="goToStep(<?php echo $stepIndex; ?>)"><?php echo $stepIndex; ?></button></li>
     <?php endforeach; ?>
+    <li><button @click="goToStep(multistepCount)">last</button></li>
   </ul>
 </nav>
