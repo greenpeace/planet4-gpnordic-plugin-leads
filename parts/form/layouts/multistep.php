@@ -47,6 +47,7 @@
   /**
    * Final
    */
+  $finalData['multistepCount'] = count($steps['step']);
   GPPL4\get_partial("form/final", $finalData); 
   ?>
 </div>

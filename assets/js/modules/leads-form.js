@@ -563,8 +563,8 @@
         completeMultistep(stepIndex) {
           if (!this.multistepCompleted.includes(stepIndex)) {
             this.multistepCompleted.push(stepIndex);
-            this.nextStep();
           }
+          this.nextStep();
         },
         prevStep() {
           if (this.multistepActive > 0) this.goToStep(this.multistepActive - 1);
