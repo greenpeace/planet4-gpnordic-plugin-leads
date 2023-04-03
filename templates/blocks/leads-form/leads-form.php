@@ -100,8 +100,12 @@ $formData = array(
     'display' => $display
 );
 $thankYouData = array(
-        'form_type' => $form_type,
-        'description' => $form_type === 'multistep' ? $steps['thank_you_description'] : $thank_you_settings['description'],
+    'share_button_caption' => $steps['thank_you_share_button_caption'],
+    'skip_button_caption' => $steps['thank_you_skip_button_caption'],
+    'share_go_to_step' => $steps['thank_you_share_go_to_step'],
+    'skip_go_to_step' => $steps['thank_you_skip_go_to_step'],
+    'form_type' => $form_type,
+    'description' => $form_type === 'multistep' ? $steps['thank_you_description'] : $thank_you_settings['description'],
 );
 $counterData = array(
     'form_settings' => $form_settings,
@@ -119,10 +123,10 @@ $donateData = array(
     'form_fields_translations' => $form_fields_translations
 );
 $finalData = array(
-    'final_headline' => $steps['final_headline'],
-    'final_description' => $steps['final_description'],
-    'final_copy_url_button_caption' => $steps['final_copy_url_button_caption'],
-    'final_skip_button_url' => $steps['final_skip_button_url']
+    'headline' => $steps['final_headline'],
+    'description' => $steps['final_description'],
+    'button_caption' => $steps['final_button_caption'],
+    'button_url' => $steps['final_button_url']
 );
 $customAskData = array(
     'headline' => $steps['custom_ask_headline'],
