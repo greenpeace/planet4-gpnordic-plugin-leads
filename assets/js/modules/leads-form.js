@@ -54,6 +54,7 @@
         multistepCount: blockData.multistepCount,
         multistepActive: 0,
         multistepCompleted: [],
+        multistepViewed: [],
       },
       computed: {
         percentReachedGoal: function () {
@@ -397,57 +398,6 @@
                                 });
                             });
 
-                            // Implementing the winning A/B test version
-                            const linkCopy =
-                              document.getElementById("copy-link");
-                            linkCopy.addEventListener("click", () => {
-                              let copyURL = document.createElement("input"),
-                                text = window.location.href,
-                                linkParam = "";
-
-                              if (window.location.href.indexOf("?") > -1) {
-                                linkParam = text + "&share=copy_link";
-                              } else {
-                                linkParam = text + "?share=copy_link";
-                              }
-
-                              let setLanguage =
-                                window.location.pathname.split("/")[1];
-                              let $linkCopied = "";
-
-                              switch (setLanguage) {
-                                case "denmark":
-                                  $linkCopied = "Link kopieret!";
-                                  break;
-                                case "finland":
-                                  $linkCopied = "Linkki kopioitu!";
-                                  break;
-                                case "norway":
-                                  $linkCopied = "Lenke kopiert!";
-                                  break;
-                                case "sweden":
-                                  $linkCopied = "Länk kopierad!";
-                                  break;
-                                default:
-                                  $linkCopied = "Link Copied!";
-                              }
-
-                              document.body.appendChild(copyURL);
-                              copyURL.value = linkParam;
-                              copyURL.select();
-                              document.execCommand("copy");
-                              document.body.removeChild(copyURL);
-                              document.querySelector("#copy-link").innerHTML =
-                                $linkCopied;
-
-                              this.dataLayer &&
-                                this.dataLayer.push({
-                                  event: "uaevent",
-                                  eventAction: "Copy link",
-                                  eventCategory: "Social Share",
-                                });
-                            });
-
                             // const twShare = document.getElementById("twitter");
                             // twShare.addEventListener('click', () =>{
                             //   this.dataLayer && this.dataLayer.push({
@@ -542,17 +492,95 @@
             })
             .to(this.$refs.heroDescription, { opacity: 1, duration: 0.25 });
         },
+        copyLink(stepIndex = undefined) {
+          // Implementing the winning A/B test version
+          let copyURL = document.createElement("input"),
+            text = window.location.href,
+            linkParam = "";
+
+          if (window.location.href.indexOf("?") > -1) {
+            linkParam = text + "&share=copy_link";
+          } else {
+            linkParam = text + "?share=copy_link";
+          }
+
+          let setLanguage = window.location.pathname.split("/")[1];
+          let $linkCopied = "";
+
+          switch (setLanguage) {
+            case "denmark":
+              $linkCopied = "Link kopieret!";
+              break;
+            case "finland":
+              $linkCopied = "Linkki kopioitu!";
+              break;
+            case "norway":
+              $linkCopied = "Lenke kopiert!";
+              break;
+            case "sweden":
+              $linkCopied = "Länk kopierad!";
+              break;
+            default:
+              $linkCopied = "Link Copied!";
+          }
+
+          document.body.appendChild(copyURL);
+          copyURL.value = linkParam;
+          copyURL.select();
+          document.execCommand("copy");
+          document.body.removeChild(copyURL);
+          document.querySelector("#copy-link").innerHTML = $linkCopied;
+
+          this.dataLayer &&
+            this.dataLayer.push({
+              event: "uaevent",
+              eventAction: "Copy link",
+              eventCategory: "Social Share",
+            });
+
+          if (stepIndex) this.completeMultistep(stepIndex);
+        },
         /**
          * Multistep
          */
+        goToStep(stepIndex) {
+          // Set step to active
+          this.multistepActive = stepIndex;
+          // Mark step as viewed
+          if (!this.multistepViewed.includes(stepIndex))
+            this.multistepViewed.push(stepIndex);
+        },
         wasCompleted(stepIndex) {
           return this.multistepCompleted.includes(stepIndex);
         },
         wasSkipped(stepIndex) {
           return (
-            stepIndex < this.multistepActive &&
-            !this.multistepCompleted.includes(stepIndex)
+            this.multistepViewed.includes(stepIndex) &&
+            !this.multistepCompleted.includes(stepIndex) &&
+            this.multistepActive !== stepIndex
           );
+        },
+        completeMultistep(stepIndex) {
+          if (!this.multistepCompleted.includes(stepIndex)) {
+            this.multistepCompleted.push(stepIndex);
+            this.nextStep();
+          }
+        },
+        prevStep() {
+          if (this.multistepActive > 0) this.goToStep(this.multistepActive - 1);
+        },
+        nextStep() {
+          if (this.multistepActive < this.multistepCount) {
+            this.goToStep(this.multistepActive + 1);
+          } else {
+            this.goToStep(this.multistepCount + 1);
+          }
+        },
+        isFirst(stepIndex) {
+          return stepIndex <= 0;
+        },
+        isLast(stepIndex) {
+          return stepIndex >= this.multistepCount;
         },
       },
     });

@@ -7,7 +7,7 @@
         { 'active' : multistepActive === <?php echo $stepIndex; ?>}, 
         { 'skipped' : wasSkipped(<?php echo $stepIndex; ?>)},
         { 'completed' : wasCompleted(<?php echo $stepIndex; ?>)}
-      ]" @click="multistepActive = <?php echo $stepIndex; ?>"><?php echo $stepIndex; ?></button></li>
+      ]" @click="goToStep(<?php echo $stepIndex; ?>)"><?php echo $stepIndex; ?></button></li>
     <?php endforeach; ?>
   </ul>
 </nav>

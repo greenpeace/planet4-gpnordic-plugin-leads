@@ -107,6 +107,7 @@ $counterData = array(
     'form_settings' => $form_settings,
 );
 $shareData = array(
+    'form_type' => $form_type,
     'thank_you_settings' => $thank_you_settings,
     'url' => $url,
 );
@@ -124,11 +125,10 @@ $finalData = array(
     'final_skip_button_url' => $steps['final_skip_button_url']
 );
 $customAskData = array(
-    'custom_ask_headline' => $steps['custom_ask_headline'],
-    'custom_ask_description' => $steps['custom_ask_description'],
-    'custom_ask_button_caption' => $steps['custom_ask_button_caption'],
-    'custom_ask_button_url' => $steps['custom_ask_button_url'],
-    'custom_ask_button_color' => $steps['custom_ask_button_color']
+    'headline' => $steps['custom_ask_headline'],
+    'description' => $steps['custom_ask_description'],
+    'button_caption' => $steps['custom_ask_button_caption'],
+    'button_url' => $steps['custom_ask_button_url'],
 );
 $layoutsData = array(
     'contentData' => $contentData, 
@@ -216,6 +216,10 @@ $layoutsData = array(
       min-width: 9rem;
       max-width: fit-content;
       max-height: 3.4rem;
+    }
+
+    #<?php echo $id . ' '; ?>.leads-form__custom-ask .button--share {
+        background-color: <?php echo $steps['custom_ask_button_color'];?>;
     }
 
     #<?php echo $id . ' '; ?>#facebook svg {

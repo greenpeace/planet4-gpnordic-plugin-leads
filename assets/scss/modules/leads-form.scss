@@ -269,106 +269,111 @@
     p {
       margin-bottom: 0;
     }
-    #{ $form }__icon {
-      border-radius: 100%;
-      width: 32px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 0.5rem;
+  }
+  &__multistep {
+    grid-column: 1/13;
+  }
+  &__icon {
+    border-radius: 100%;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem;
+  }
+  &__share,
+  &__donate {
+    width: calc(50% - 15px);
+    @media only screen and (max-width: $leads--medium) {
+      width: 100%;
     }
-    #{ $form }__share,
-    #{ $form }__donate {
-      width: calc(50% - 15px);
+  }
+  &__share {
+    color: white;
+    &__icons {
+      display: flex;
+      margin-top: 3rem;
       @media only screen and (max-width: $leads--medium) {
-        width: 100%;
+        margin-top: 2rem;
       }
-    }
-    #{ $form }__share {
-      color: white;
-      &__icons {
-        display: flex;
-        margin-top: 3rem;
-        @media only screen and (max-width: $leads--medium) {
-          margin-top: 2rem;
-        }
-        .button--share {
-          margin-right: 1rem;
-          &.email svg {
-            width: 28px;
-            height: 22px;
-            path {
-              stroke-width: 1.5px;
-            }
-          }
-        }
-      }
-    }
-    #{ $form }__donate {
-      color: white;
-      @media only screen and (max-width: $leads--medium) {
-        margin-top: 3rem;
-      }
-      .donate-container {
-        margin-top: 3rem;
-        display: flex;
-        align-items: flex-start;
-        .input-container {
-          width: auto;
-          border-radius: 3px;
-          margin-bottom: 0;
-          margin-right: 1rem;
-          @media only screen and (max-width: $leads--small) {
-            width: 40%;
-          }
-          input {
-            width: auto;
-            padding-right: 3.5rem;
-            max-width: 150px;
-            @media only screen and (max-width: $leads--small) {
-              width: 100%;
-              max-width: unset;
-              padding: 12px;
-            }
-          }
-          .currency {
-            position: absolute;
-            font-family: $body-font-family;
-            font-weight: bold;
-            font-size: 1.4rem;
-            right: 0;
-            height: 100%;
-            line-height: 100%;
-            padding: 1rem;
-            background: $white--opacity-20;
-            color: $white--opacity-80;
-          }
-        }
-        .button--submit {
-          display: inline;
-          color: white;
-          padding-left: 2rem;
-          padding-right: 2rem;
-          width: auto;
-          @media only screen and (max-width: $leads--small) {
-            padding-left: 0;
-            padding-right: 0;
-            width: 60%;
-          }
-          svg {
-            margin-bottom: 5px;
-            margin-right: 5px;
-            position: static;
-            path {
-              opacity: 0.9;
-            }
+      .button--share {
+        margin-right: 1rem;
+        &.email svg {
+          width: 28px;
+          height: 22px;
+          path {
+            stroke-width: 1.5px;
           }
         }
       }
     }
   }
-
+  &__donate {
+    color: white;
+    @media only screen and (max-width: $leads--medium) {
+      margin-top: 3rem;
+    }
+    .donate-container {
+      margin-top: 3rem;
+      display: flex;
+      align-items: flex-start;
+      .input-container {
+        width: auto;
+        border-radius: 3px;
+        margin-bottom: 0;
+        margin-right: 1rem;
+        @media only screen and (max-width: $leads--small) {
+          width: 40%;
+        }
+        input {
+          width: auto;
+          padding-right: 3.5rem;
+          max-width: 150px;
+          @media only screen and (max-width: $leads--small) {
+            width: 100%;
+            max-width: unset;
+            padding: 12px;
+          }
+        }
+        .currency {
+          position: absolute;
+          font-family: $body-font-family;
+          font-weight: bold;
+          font-size: 1.4rem;
+          right: 0;
+          height: 100%;
+          line-height: 100%;
+          padding: 1rem;
+          background: $white--opacity-20;
+          color: $white--opacity-80;
+        }
+      }
+      .button--submit {
+        display: inline;
+        color: white;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        width: auto;
+        @media only screen and (max-width: $leads--small) {
+          padding-left: 0;
+          padding-right: 0;
+          width: 60%;
+        }
+        svg {
+          margin-bottom: 5px;
+          margin-right: 5px;
+          position: static;
+          path {
+            opacity: 0.9;
+          }
+        }
+      }
+    }
+  }
+  &__custom-ask {
+    color: white;
+  }
   &__thank-you-animation {
     position: absolute;
     top: 0;
@@ -561,8 +566,21 @@
   }
   &__bullet-navigation {
     ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
       li {
         button {
+          border: none;
+          border-radius: 100%;
+          width: 2rem;
+          height: 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           &.active,
           &.completed {
             background-color: greenyellow;
@@ -570,6 +588,25 @@
           &.skipped {
             background-color: red;
           }
+        }
+      }
+    }
+  }
+  &__prev-next {
+    ul {
+      display: flex;
+      gap: 1rem;
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      justify-content: center;
+      padding: 1rem 0;
+      li {
+        button {
+          border: none;
+          background: transparent;
+          text-decoration: underline;
+          font-size: 0.75rem;
         }
       }
     }
