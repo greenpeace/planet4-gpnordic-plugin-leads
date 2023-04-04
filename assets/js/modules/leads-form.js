@@ -584,6 +584,7 @@
         },
         nextStep() {
           if (this.multistepActive < this.multistepCount) {
+            console.log(this.multistepActive + 1);
             this.goToStep(this.multistepActive + 1);
           }
         },
