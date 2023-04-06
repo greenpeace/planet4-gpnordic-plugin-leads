@@ -18,7 +18,9 @@ $onClick = $form_type === 'multistep' ? "completeMultistep($stepIndex)" : "";
         <a @click="<?php echo $onClick; ?>" id="donate-button" :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button--submit button donation-options" target="_blank"><?php GPPL4\svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
     </div>
     <?php 
-        $prevNextData = array('stepIndex' => $stepIndex);
-        GPPL4\get_partial("form/prev_next", $prevNextData);  
+        if ($form_type === 'multistep') :
+            $prevNextData = array('stepIndex' => $stepIndex);
+            GPPL4\get_partial("form/prev_next", $prevNextData);  
+        endif; 
       ?>
 </div>
