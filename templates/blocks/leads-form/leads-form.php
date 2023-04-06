@@ -129,6 +129,7 @@ $donateData = array(
     'form_type' => $form_type,
     'headline' => $has_multisteps ? $steps['donation_headline'] : $thank_you_settings['donate_headline'],
     'description' => $has_multisteps ? $steps['donation_description'] : $thank_you_settings['donate_description'],
+    'donate_preset_amounts' => $has_multisteps ? $steps['donate_preset_amounts'] : null,
     'thank_you_settings' => $thank_you_settings,
     'form_fields_translations' => $form_fields_translations
 );
@@ -206,11 +207,14 @@ $layoutsData = array(
     }
 
     /* Buttons */
-    #<?php echo $id . ' '; ?>.button,
+    #<?php echo $id . ' '; ?>.button:not(.button--ghost),
     #<?php echo $id . ' '; ?>.button--share {
         background: <?php echo $primary_color; ?>;
         color: <?php echo $cta_text_color; ?> !important;
         fill: <?php echo $cta_text_color; ?> !important;
+    }
+    #<?php echo $id . ' '; ?>.button--donate-preset:not(.button--ghost) {
+        border: 1px solid <?php echo $primary_color; ?>;
     }
 
     #<?php echo $id . ' '; ?>.button--share svg path {
@@ -229,7 +233,6 @@ $layoutsData = array(
       padding: 0.3rem 0.5rem;
       border-radius: 0.2rem;
       min-width: 9rem;
-      max-width: fit-content;
       max-height: 3.4rem;
     }
 
@@ -345,8 +348,6 @@ $layoutsData = array(
       align-items: center;
       text-align: center;
       cursor: pointer;
-      min-width: fit-content;
-      max-width: fit-content;
       width: fit-content;
       font-size: 1.4rem;
       line-height: 1.80rem;
@@ -383,7 +384,7 @@ $layoutsData = array(
         color: <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>a:not(.button--arrow):not(.button--submit) {
+    #<?php echo $id . ' '; ?>a:not(.button--arrow):not(.button--submit):not(.button--ghost) {
         color: <?php echo $primary_color; ?>;
     }
 

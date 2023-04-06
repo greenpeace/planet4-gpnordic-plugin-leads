@@ -296,6 +296,8 @@
       }
       .button--share {
         margin-right: 1rem;
+        min-width: fit-content;
+        max-width: fit-content;
         &.email svg {
           width: 28px;
           height: 22px;
@@ -331,6 +333,9 @@
             width: 100%;
             max-width: unset;
             padding: 12px;
+          }
+          &::placeholder {
+            opacity: 0.5;
           }
         }
         .currency {
@@ -576,6 +581,48 @@
     .leads-form__donate,
     .leads-form__share {
       width: 100%;
+      &__icons {
+        flex-direction: column;
+        gap: 0.75rem;
+        a,
+        button,
+        #copy-link,
+        .button--share {
+          max-width: 100%;
+          min-width: 100%;
+        }
+      }
+      .donate-container {
+        flex-direction: column;
+        gap: 0.75rem;
+        a,
+        .input-container {
+          width: 100%;
+          input {
+            max-width: unset;
+            width: 100%;
+          }
+        }
+        .donate-presets {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.75rem;
+          margin: 0;
+          padding: 0;
+          list-style: none;
+          width: 100%;
+          li {
+            a {
+              white-space: nowrap;
+              padding-left: 1.5rem;
+              padding-right: 1.5rem;
+              font-size: 1rem;
+              line-height: 1.25;
+              font-weight: 500;
+            }
+          }
+        }
+      }
     }
   }
   &__bullet-navigation {

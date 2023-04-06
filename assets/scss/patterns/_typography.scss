@@ -1,82 +1,84 @@
 @font-face {
   font-family: "DK Plakkaat";
   src: local("DK Plakkaat"), local("DK-Plakkaat"),
-  url("../../assets/fonts/Plakkaat.otf") format("opentype"), /* IE */
-  url("../../assets/fonts/Plakkaat.woff2") format("woff2"),  /* chrome、firefox */
-  url("../../assets/fonts/Plakkaat.woff") format("woff"),    /* chrome、firefox */
-  url("../../assets/fonts/Plakkaat.ttf") format("truetype"); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url("../../assets/fonts/Plakkaat.otf") format("opentype"),
+    /* IE */ url("../../assets/fonts/Plakkaat.woff2") format("woff2"),
+    /* chrome、firefox */ url("../../assets/fonts/Plakkaat.woff") format("woff"),
+    /* chrome、firefox */ url("../../assets/fonts/Plakkaat.ttf")
+      format("truetype"); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
   font-display: swap; //should prevent font flickering
 }
 
 /* Typefaces */
-$header-font-family: "DK Plakkaat", "Helvetica Now Display Bold", "Helvetica Neue", "Helvetica", sans-serif;
+$header-font-family: "DK Plakkaat", "Helvetica Now Display Bold",
+  "Helvetica Neue", "Helvetica", sans-serif;
 $body-font-family: "Helvetica Now Display Regular", "Helvetica", sans-serif;
 
 .leads-form {
   /* General styles */
   h2 {
-      font-family: $header-font-family !important;
-      font-size: 4rem;
-      line-height: 1.05em;
-      @media only screen and (max-width: $leads--large) {
-        font-size: 3rem;
-      }
-      &.under {
-        &-10 {
-          font-size: 5.5rem;
-          @media screen and (max-width: $leads--large) {
-            font-size: 4.125rem;
-          }
-        }
-        &-20 {
-          font-size: 5.5rem;
-          @media screen and (max-width: $leads--large) {
-            font-size: 4.125rem;
-          }
-        }
-        &-25 {
-          font-size: 4.75rem;
-          @media screen and (max-width: $leads--large) {
-            font-size: 3.6rem;
-          }
-        }
-        &-30 {
-          font-size: 4.5rem;
-          @media screen and (max-width: $leads--large) {
-            font-size: 3.375rem;
-          }
-        }
-        &-35 {
-          font-size: 4.25rem;
-          @media screen and (max-width: $leads--large) {
-            font-size: 3.2rem;
-          }
-        }
-        &-45 {
-          font-size: 4rem;
-          @media screen and (max-width: $leads--large) {
-            font-size: 3rem;
-          }
-        }
-        &-60 {
-          font-size: 3.5rem;
-          @media screen and (max-width: $leads--large) {
-            font-size: 2.6rem;
-          }
-        }
-        &-85 {
-          font-size: 3rem;
-          @media screen and (max-width: $leads--large) {
-            font-size: 2.25rem;
-          }
-        }
-      }
-      &.over-95 {
-        font-size: 2.5rem;
+    font-family: $header-font-family !important;
+    font-size: 4rem;
+    line-height: 1.05em;
+    @media only screen and (max-width: $leads--large) {
+      font-size: 3rem;
+    }
+    &.under {
+      &-10 {
+        font-size: 5.5rem;
         @media screen and (max-width: $leads--large) {
-          font-size: 1.875rem;
+          font-size: 4.125rem;
         }
       }
+      &-20 {
+        font-size: 5.5rem;
+        @media screen and (max-width: $leads--large) {
+          font-size: 4.125rem;
+        }
+      }
+      &-25 {
+        font-size: 4.75rem;
+        @media screen and (max-width: $leads--large) {
+          font-size: 3.6rem;
+        }
+      }
+      &-30 {
+        font-size: 4.5rem;
+        @media screen and (max-width: $leads--large) {
+          font-size: 3.375rem;
+        }
+      }
+      &-35 {
+        font-size: 4.25rem;
+        @media screen and (max-width: $leads--large) {
+          font-size: 3.2rem;
+        }
+      }
+      &-45 {
+        font-size: 4rem;
+        @media screen and (max-width: $leads--large) {
+          font-size: 3rem;
+        }
+      }
+      &-60 {
+        font-size: 3.5rem;
+        @media screen and (max-width: $leads--large) {
+          font-size: 2.6rem;
+        }
+      }
+      &-85 {
+        font-size: 3rem;
+        @media screen and (max-width: $leads--large) {
+          font-size: 2.25rem;
+        }
+      }
+    }
+    &.over-95 {
+      font-size: 2.5rem;
+      @media screen and (max-width: $leads--large) {
+        font-size: 1.875rem;
+      }
+    }
   }
   h3 {
     font-family: $body-font-family;
@@ -85,22 +87,22 @@ $body-font-family: "Helvetica Now Display Regular", "Helvetica", sans-serif;
     font-weight: bold;
   }
   h4 {
-      font-family: $body-font-family;
-      font-size: 1.5rem;
-      line-height: 2rem;
-      font-weight: bold;
+    font-family: $body-font-family;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: bold;
   }
   p {
-      font-family: $body-font-family;
-      font-size: 1rem;
-      line-height: 1.5rem;
-      font-weight: 400;
-      &.medium {
-        font-weight: 500;
-      }
-      &.bold {
-        font-weight: 700;
-      }
+    font-family: $body-font-family;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 400;
+    &.medium {
+      font-weight: 500;
+    }
+    &.bold {
+      font-weight: 700;
+    }
   }
 
   small,
@@ -124,5 +126,11 @@ $body-font-family: "Helvetica Now Display Regular", "Helvetica", sans-serif;
   /* Text decorations */
   div.leads-form__content div.description div.text {
     font-weight: 600;
+  }
+  &__multistep {
+    h4 {
+      font-size: 2rem;
+      line-height: 2.5rem;
+    }
   }
 }

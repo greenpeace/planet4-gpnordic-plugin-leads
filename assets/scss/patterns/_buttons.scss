@@ -38,6 +38,12 @@
     &:hover {
       text-decoration: none;
     }
+    &--ghost {
+      background-color: $white--opacity-10;
+      color: white;
+      font-weight: 500;
+      border: 1px solid $white--opacity-10;
+    }
   }
 
   a.button--arrow {
@@ -75,7 +81,5 @@
   #copy-link {
     font-family: $body-font-family;
     cursor: pointer;
-
   }
-
 }
