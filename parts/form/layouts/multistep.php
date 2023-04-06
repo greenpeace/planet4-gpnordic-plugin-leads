@@ -20,7 +20,7 @@ GPPL4\get_partial("form/form", $formData);
  */
 GPPL4\get_partial("form/thank_you", $thankYouData); 
 
-foreach($steps['step'] as $key => $step) : 
+if ($steps['step']) : foreach($steps['step'] as $key => $step) : 
   // Increase by 2 to start navigation after Form and Thank you steps
   $stepIndex = $key + 1;
 ?>
@@ -51,8 +51,8 @@ foreach($steps['step'] as $key => $step) :
     }
   ?>
   </div>
-<?php
-endforeach;
+<?php 
+endforeach; endif;
 
 /**
  * Final

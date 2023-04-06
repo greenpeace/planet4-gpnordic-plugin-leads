@@ -32,5 +32,10 @@
   },
   "require": {
     "stoutlogic/acf-builder": "^1.12"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
