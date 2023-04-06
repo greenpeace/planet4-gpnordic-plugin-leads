@@ -38,6 +38,16 @@ function get_appearance_settings()
             'instructions' => 'Applied to the text in the form and counter element.',
             'default_value' => '#ffffff',
         ])
+        ->addColorPicker('error', [
+            'label' => 'Error color',
+            'instructions' => 'Used for error messages and incomplete steps.',
+            'default_value' => '#FF785A',
+        ])
+        ->addColorPicker('success', [
+            'label' => 'Success color',
+            'instructions' => 'Used for complete steps.',
+            'default_value' => '#73BE1E',
+        ])
         ->endGroup();
 
     return $appearance;
