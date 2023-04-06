@@ -63,7 +63,7 @@ if (isset($form_styles['colors']['cta_background']) && $form_styles['colors']['c
 $theme_option = $form_styles['colors']['theme'];
 $theme = (isset($theme_option) && $theme_option != false) ? $theme_option : '';
 
-//CTA text color
+// CTA text color
 if (isset($form_styles['colors']['cta_text']) && $form_styles['colors']['cta_text'] != false) {
     $cta_text_color = $form_styles['colors']['cta_text'];
 } elseif ($theme_option == 'dark') {
@@ -71,6 +71,10 @@ if (isset($form_styles['colors']['cta_text']) && $form_styles['colors']['cta_tex
 } else {
     $cta_text_color = '#ffffff';
 }
+
+// Errors and successes color
+$error_color = isset($form_styles['colors']['error']) ? $form_styles['colors']['error'] : "#FF785A";
+$success_color = isset($form_styles['colors']['success']) ? $form_styles['colors']['success'] : "#73BE1E";
 
 
 // Opacity
@@ -447,6 +451,20 @@ $layoutsData = array(
         background-color: <?php echo $secondary_color; ?>;
     }
 
+     /* Errors */
+
+    #<?php echo $id; ?>.leads-form .input-container__error ul li {
+        color: <?php echo $error_color; ?>;
+        background-color: <?php echo GPPL4\hex2rgba($error_color, 0.1); ?>;
+    }
+    #<?php echo $id . ' '; ?>input.error {
+        border-color: <?php echo $error_color; ?>!important;
+    }
+    #<?php echo $id . ' '; ?>input.error~svg path {
+        stroke: <?php echo $error_color; ?>!important;
+    }
+ 
+
     /* Dark mode */
     #<?php echo $id; ?>.dark .leads-form__form {
         background-color: <?php echo $secondary_color; ?>;
@@ -493,16 +511,23 @@ $layoutsData = array(
         border-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
         color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active,
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.skipped,
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed {
-        border-color: <?php echo $primary_color; ?>;
-        color: white;
-    }
     #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active {
+        color: white;
+        border-color: <?php echo $primary_color; ?>;
         background-color: <?php echo $primary_color; ?>;
     }
-
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed {
+        border-color: <?php echo $success_color; ?>;
+    }
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed svg path {
+        fill: <?php echo $success_color; ?>;
+    }
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.skipped {
+        border-color: <?php echo $error_color; ?>;
+    }
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.skipped svg path {
+        fill: <?php echo $error_color; ?>;
+    }
 </style>
 
 <script>

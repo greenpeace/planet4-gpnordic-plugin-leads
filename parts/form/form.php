@@ -29,7 +29,7 @@ $condition = $form_type === 'multistep' ? '!success && multistepActive === 0' : 
         <?php endif; ?>
         <div>
             <div class="input-container">
-                <input @focus="hideInput = false; startedFilling = true" class="input--icon" type="email" name="email" placeholder="<?php echo $form_fields_translations['email']; ?>*" v-model="formFields.email.value" @keyup.enter="submit" />
+                <input @focus="hideInput = false; startedFilling = true" class="input--icon" :class="{ 'error' : emailErrors.length}" type="email" name="email" placeholder="<?php echo $form_fields_translations['email']; ?>*" v-model="formFields.email.value" @keyup.enter="submit" @keyup="emailErrors = []" />
                 <?php GPPL4\svg_icon('email'); ?>
             </div>
             <div v-if="hasFieldErrors(emailErrors)" class="input-container__error">
@@ -42,13 +42,13 @@ $condition = $form_type === 'multistep' ? '!success && multistepActive === 0' : 
             <div class="overflow-hidden">
                 <transition name="fade">
                     <div class="input-container name" v-show="!hideInput">
-                        <input class="fname input--icon" type="text" name="fname" placeholder="<?php echo $form_fields_translations['first_name']; ?>*" v-model="formFields.fname.value" @keyup.enter="submit" />
+                        <input class="fname input--icon" :class="{ 'error' : firstNameErrors.length}" type="text" name="fname" placeholder="<?php echo $form_fields_translations['first_name']; ?>*" v-model="formFields.fname.value" @keyup.enter="submit" @keyup="firstNameErrors = []" />
                         <?php GPPL4\svg_icon('user'); ?>
                     </div>
                 </transition>
                 <transition name="fade">
                     <div class="input-container name" v-show="!hideInput">
-                        <input class="lname" type="text" name="lname" placeholder="<?php echo $form_fields_translations['last_name']; ?>*" v-model="formFields.lname.value" @keyup.enter="submit" />
+                        <input class="lname" :class="{ 'error' : lastNameErrors.length}" type="text" name="lname" placeholder="<?php echo $form_fields_translations['last_name']; ?>*" v-model="formFields.lname.value" @keyup.enter="submit" @keyup="lastNameErrors = []" />
                     </div>
                 </transition>
             </div>
