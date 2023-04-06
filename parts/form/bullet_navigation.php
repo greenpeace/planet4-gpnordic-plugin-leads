@@ -7,7 +7,11 @@
         { 'active' : multistepActive === <?php echo $stepIndex; ?>}, 
         { 'skipped' : wasSkipped(<?php echo $stepIndex; ?>)},
         { 'completed' : wasCompleted(<?php echo $stepIndex; ?>)}
-      ]" @click="goToStep(<?php echo $stepIndex; ?>)"><?php echo $stepIndex; ?></button></li>
+      ]" @click="goToStep(<?php echo $stepIndex; ?>)">
+        <span v-if="wasSkipped(<?php echo $stepIndex; ?>)"><?php GPPL4\svg_icon('x'); ?></span>
+        <span v-else-if="wasCompleted(<?php echo $stepIndex; ?>)"><?php GPPL4\svg_icon('check'); ?></span>
+        <span v-else><?php echo $stepIndex; ?></span>
+      </button></li>
     <?php endforeach; endif; ?>
   </ul>
 </nav>

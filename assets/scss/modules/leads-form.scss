@@ -270,9 +270,6 @@
       margin-bottom: 0;
     }
   }
-  &__multistep {
-    grid-column: 1/13;
-  }
   &__icon {
     border-radius: 100%;
     width: 32px;
@@ -400,10 +397,7 @@
       }
     }
     #{ $form }__form,
-    #{ $form }__multistep__step,
-    #{ $form }__final,
-    #{ $form }__bullet-navigation,
-    #{ $form }__multistep .leads-form__thank-you {
+    #{ $form }__multistep__step {
       @media only screen and (min-width: $leads--large) {
         grid-column: 1/5;
       }
@@ -569,32 +563,59 @@
       }
     }
   }
+  /**
+  * Multistep styling
+  */
+  &__multistep {
+    grid-column: 1/13;
+    &__step {
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+    }
+    .leads-form__donate,
+    .leads-form__share {
+      // width: 100%;
+    }
+  }
   &__bullet-navigation {
+    margin-bottom: 1.5rem;
     ul {
       list-style: none;
       margin: 0;
       padding: 0;
       display: flex;
       gap: 1rem;
-      justify-content: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 0;
+      &:after {
+        content: "";
+        width: 100%;
+        height: 2px;
+        transform: translateY(-50%);
+        position: absolute;
+        top: 50%;
+        left: 0;
+        z-index: -1;
+        background-color: white;
+      }
       li {
         button {
           border: none;
           border-radius: 100%;
-          width: 2rem;
-          height: 2rem;
+          width: 1.5rem;
+          height: 1.5rem;
           display: flex;
           align-items: center;
           justify-content: center;
-          &.active {
-            background-color: white;
-            border: 2px solid red;
-          }
-          &.completed {
-            background-color: greenyellow;
-          }
-          &.skipped {
-            background-color: red;
+          font-size: 0.625rem;
+          background-color: transparent;
+          border: 2px solid white;
+          font-weight: 700;
+          svg {
+            max-width: 0.875rem;
+            max-height: 0.875rem;
           }
         }
       }

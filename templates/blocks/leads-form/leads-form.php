@@ -452,6 +452,10 @@ $layoutsData = array(
         background-color: <?php echo $secondary_color; ?>;
     }
 
+    #<?php echo $id; ?>.dark .leads-form__multistep__step {
+        background-color: <?php echo $secondary_color; ?>;
+    }
+
     #<?php echo $id; ?>.dark .checkbox .checkbox__box {
         border-color: <?php echo $primary_color; ?>;
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.2); ?>;
@@ -478,6 +482,27 @@ $layoutsData = array(
     #<?php echo $id; ?>.dark .leads-form__counter--success {
         background: rgba(255, 255, 255, 0.25);
     }
+
+    /* Multistep */
+
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul::after {
+        background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
+    }
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button {
+        background-color: <?php echo $secondary_color; ?>;
+        border-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
+        color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
+    }
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active,
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.skipped,
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed {
+        border-color: <?php echo $primary_color; ?>;
+        color: white;
+    }
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active {
+        background-color: <?php echo $primary_color; ?>;
+    }
+
 </style>
 
 <script>

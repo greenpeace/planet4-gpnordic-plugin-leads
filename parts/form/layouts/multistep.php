@@ -1,10 +1,4 @@
 <?php 
-
-/**
- * Navigation
- */
-GPPL4\get_partial("form/bullet_navigation", array('steps' => $steps['step']));
-
 /**
  * Introduction content
  */
@@ -18,14 +12,24 @@ GPPL4\get_partial("form/form", $formData);
 /**
  * Thank you
  */
-GPPL4\get_partial("form/thank_you", $thankYouData); 
+?>
+<div class="leads-form__multistep__step" v-show="multistepActive === 0 && success">
+  <?php GPPL4\get_partial("form/thank_you", $thankYouData); ?>
+</div>
+<?php
+if ($steps['step']) : 
 
-if ($steps['step']) : foreach($steps['step'] as $key => $step) : 
+  foreach($steps['step'] as $key => $step) : 
   // Increase by 2 to start navigation after Form and Thank you steps
   $stepIndex = $key + 1;
 ?>
   <div class="leads-form__multistep__step" v-show="multistepActive === <?php echo $stepIndex; ?>">
     <?php
+    /**
+     * Navigation
+     */
+    GPPL4\get_partial("form/bullet_navigation", array('steps' => $steps['step']));
+
     switch($step['select_step']) {
       case ('donation') :
         /**
@@ -57,5 +61,8 @@ endforeach; endif;
 /**
  * Final
  */
-GPPL4\get_partial("form/final", $finalData); 
 ?>
+<div class="leads-form__multistep__step" v-show="multistepActive === multistepCount - 1">
+  <?php GPPL4\get_partial("form/final", $finalData); ?>
+</div>
+
