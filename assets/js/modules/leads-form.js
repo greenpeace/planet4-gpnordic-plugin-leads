@@ -31,6 +31,7 @@
         goal: blockData.counterGoalValue,
         loading: false,
         donateAmount: blockData.donateAmount,
+        presetDonateAmount: 0,
         errors: [],
         emailErrors: [],
         firstNameErrors: [],
@@ -160,8 +161,16 @@
             },
           });
         }, 1000),
+        setPreset(amount) {
+          this.presetDonateAmount = amount;
+          this.donateAmount = null;
+        },
         getDonateUrl: function (url) {
-          return url.replace("%amount%", this.donateAmount);
+          const amount =
+            this.donateAmount && this.donateAmount > 0
+              ? this.donateAmount
+              : this.presetDonateAmount;
+          return url.replace("%amount%", amount);
         },
         hasFieldErrors: function (errorType) {
           return `${this.errorType}`.length > 0;

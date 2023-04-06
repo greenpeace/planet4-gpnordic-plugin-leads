@@ -28,7 +28,9 @@ $onClick = $form_type === 'multistep' ? "completeMultistep($stepIndex)" : "";
 
 <div class="leads-form__share">
     <h4>
-        <span class="leads-form__icon"><?php GPPL4\svg_icon('share'); ?></span>
+        <?php if ($form_type !== 'multistep') : ?>
+          <span class="leads-form__icon"><?php GPPL4\svg_icon('share'); ?></span>
+        <?php endif; ?>
         <?php echo $headline; ?>
     </h4>
     <?php echo $description; ?>
