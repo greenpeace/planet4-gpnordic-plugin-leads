@@ -511,11 +511,6 @@ $layoutsData = array(
         border-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
         color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active {
-        color: white;
-        border-color: <?php echo $primary_color; ?>;
-        background-color: <?php echo $primary_color; ?>;
-    }
     #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed {
         border-color: <?php echo $success_color; ?>;
     }
@@ -527,6 +522,14 @@ $layoutsData = array(
     }
     #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.skipped svg path {
         fill: <?php echo $error_color; ?>;
+    }
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active {
+        color: white;
+        border-color: <?php echo $primary_color; ?>;
+        background-color: <?php echo $primary_color; ?>;
+    }
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active svg path {
+        fill: white;
     }
 </style>
 
