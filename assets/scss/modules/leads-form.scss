@@ -617,7 +617,8 @@
     .leads-form__custom-ask,
     .leads-form__thank-you,
     .leads-form__donate,
-    .leads-form__share {
+    .leads-form__share,
+    .leads-form__final {
       color: black;
     }
     .leads-form__donate,
@@ -764,7 +765,8 @@
       .leads-form__donate,
       .leads-form__share,
       .leads-form__custom-ask,
-      .leads-form__thank-you {
+      .leads-form__thank-you,
+      .leads-form__final {
         color: white;
       }
     }
