@@ -581,6 +581,7 @@
     .leads-form__donate,
     .leads-form__share {
       width: 100%;
+      color: black;
       &__icons {
         flex-direction: column;
         gap: 0.75rem;
@@ -619,10 +620,14 @@
               font-size: 1rem;
               line-height: 1.25;
               font-weight: 500;
+              display: block;
             }
           }
         }
       }
+    }
+    .leads-form__custom-ask {
+      color: black;
     }
   }
   &__bullet-navigation {
@@ -683,6 +688,41 @@
           background: transparent;
           text-decoration: underline;
           font-size: 0.75rem;
+        }
+      }
+    }
+  }
+  &.dark {
+    #{ $form }__multistep {
+      .leads-form__donate,
+      .leads-form__share,
+      .leads-form__custom-ask {
+        color: white;
+      }
+    }
+  }
+  &:not(.dark) {
+    #{ $form }__multistep {
+      .leads-form__donate,
+      .leads-form__share,
+      .leads-form__custom-ask {
+        .donate-container {
+          .input-container {
+            input {
+              background-color: rgba(0, 0, 0, 0.05);
+              border-color: rgba(0, 0, 0, 0.05);
+              color: rgba(0, 0, 0, 0.6);
+            }
+            .currency {
+              background-color: rgba(0, 0, 0, 0.05);
+              color: rgba(0, 0, 0, 0.6);
+            }
+          }
+          .button--ghost {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.05);
+            color: rgba(0, 0, 0, 0.6);
+          }
         }
       }
     }

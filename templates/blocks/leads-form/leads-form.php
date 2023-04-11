@@ -503,7 +503,10 @@ $layoutsData = array(
     }
 
     /* Multistep */
-
+    #<?php echo $id; ?> .leads-form__multistep__step h2,
+    #<?php echo $id; ?> .leads-form__multistep__step h4 {
+        color: <?php echo $primary_color; ?>;
+    }
     #<?php echo $id; ?> .leads-form__bullet-navigation ul::after {
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
     }
