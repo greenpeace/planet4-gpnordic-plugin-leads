@@ -38,7 +38,7 @@
         lastNameErrors: [],
         phoneErrors: [],
         otherErrors: [],
-        success: false,
+        success: true,
         formFields: blockData.formFields,
         showThankYouAnimation: false,
         animationSpeed: 0.6,
