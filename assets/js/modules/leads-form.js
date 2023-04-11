@@ -38,7 +38,7 @@
         lastNameErrors: [],
         phoneErrors: [],
         otherErrors: [],
-        success: true,
+        success: false,
         formFields: blockData.formFields,
         showThankYouAnimation: false,
         animationSpeed: 0.6,
@@ -109,7 +109,7 @@
             duration: this.animationSpeed,
           })
           .from(
-            ".leads-form__form",
+            ".leads-form__main-container",
             { y: 100, opacity: 0, duration: this.animationSpeed },
             `-=${this.animationSpeed / 2}`
           );

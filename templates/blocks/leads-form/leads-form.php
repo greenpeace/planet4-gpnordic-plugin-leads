@@ -174,7 +174,7 @@ $layoutsData = array(
         <div ref="smallBkg" class="leads-form__bkg leads-form__bkg--small <?php echo $opacity; ?>" style="background-image: url(<?php echo $small_screen_image['url']; ?>);"></div>
     <?php endif; ?>
     <div ref="bkg" class="leads-form__bkg <?php echo $opacity; ?> <?php if ($small_screen_image) echo "leads-form__bkg--large" ?>" style="background-image: url(<?php echo $background_image; ?>);"></div>
-    <div v-if="!success" class="leads-form__bottom-label"><?php GPPL4\svg_icon('hero-bottom-label'); ?></div>
+    <div v-if="!success || formType === 'multistep'" class="leads-form__bottom-label"><?php GPPL4\svg_icon('hero-bottom-label'); ?></div>
 </div>
 
 <style>
