@@ -38,7 +38,7 @@
         lastNameErrors: [],
         phoneErrors: [],
         otherErrors: [],
-        success: true,
+        success: false,
         formFields: blockData.formFields,
         showThankYouAnimation: false,
         animationSpeed: 0.6,
@@ -170,7 +170,7 @@
           return url.replace("%amount%", amount);
         },
         hasFieldErrors: function (errorType) {
-          return `${this.errorType}`.length > 0;
+          return `${errorType}`.length > 0;
         },
         pushMessage: function (key, message) {
           if (key == "email") {
