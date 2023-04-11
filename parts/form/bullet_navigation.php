@@ -6,16 +6,16 @@
       </div>
     </li>
     <?php if ($steps) : foreach($steps as $key => $step) : 
-      $stepIndex = $key + 1;
+      $step_index = $key + 1;
       ?>
       <li><button :class="[
-        { 'active' : multistepActive === <?php echo $stepIndex; ?>}, 
-        { 'skipped' : wasSkipped(<?php echo $stepIndex; ?>)},
-        { 'completed' : wasCompleted(<?php echo $stepIndex; ?>)}
-      ]" @click="goToStep(<?php echo $stepIndex; ?>)">
-        <span v-if="wasSkipped(<?php echo $stepIndex; ?>)"><?php GPPL4\svg_icon('x'); ?></span>
-        <span v-else-if="wasCompleted(<?php echo $stepIndex; ?>)"><?php GPPL4\svg_icon('check'); ?></span>
-        <span v-else><?php echo $stepIndex + 1; ?></span>
+        { 'active' : multistepActive === <?php echo $step_index; ?>}, 
+        { 'skipped' : wasSkipped(<?php echo $step_index; ?>)},
+        { 'completed' : wasCompleted(<?php echo $step_index; ?>)}
+      ]" @click="goToStep(<?php echo $step_index; ?>)">
+        <span v-if="wasSkipped(<?php echo $step_index; ?>)"><?php GPPL4\svg_icon('x'); ?></span>
+        <span v-else-if="wasCompleted(<?php echo $step_index; ?>)"><?php GPPL4\svg_icon('check'); ?></span>
+        <span v-else><?php echo $step_index + 1; ?></span>
       </button></li>
     <?php endforeach; endif; ?>
   </ul>

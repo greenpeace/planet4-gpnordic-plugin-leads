@@ -9,8 +9,8 @@ if ($form_type === 'multistep') : ?>
             <a class="button button--secondary" @click="goToStep(<?php echo $skip_go_to_step; ?> - 1)"><?php echo $skip_button_caption; ?></a>
         </div> 
         <?php 
-            $prevNextData = array('stepIndex' => 0);
-            GPPL4\get_partial("form/prev_next", $prevNextData);  
+            $prev_next_data = array('step_index' => 0);
+            GPPL4\get_partial("form/prev_next", $prev_next_data);  
           ?>
     </div>
 <?php else : ?>
