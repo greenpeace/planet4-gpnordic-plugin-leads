@@ -207,7 +207,7 @@ $layoutsData = array(
     }
 
     /* Buttons */
-    #<?php echo $id . ' '; ?>.button:not(.button--ghost),
+    #<?php echo $id . ' '; ?>.button:not(.button--ghost):not(.button--secondary),
     #<?php echo $id . ' '; ?>.button--share {
         background: <?php echo $primary_color; ?>;
         color: <?php echo $cta_text_color; ?> !important;
@@ -524,6 +524,10 @@ $layoutsData = array(
     }
     #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active svg path {
         fill: white;
+    }
+    #<?php echo $id; ?> .leads-form__multistep .button--secondary {
+        background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
+        color: <?php echo $primary_color; ?>
     }
 </style>
 
