@@ -132,5 +132,14 @@ $body-font-family: "Helvetica Now Display Regular", "Helvetica", sans-serif;
       font-size: 2rem;
       line-height: 2.5rem;
     }
+    .leads-form__thank-you {
+      h2,
+      h2.under-20 {
+        font-family: $body-font-family !important;
+        margin-bottom: 0.5rem;
+        font-size: 2rem;
+        line-height: 2.5rem;
+      }
+    }
   }
 }
