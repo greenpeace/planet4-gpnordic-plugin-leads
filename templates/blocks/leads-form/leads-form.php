@@ -91,24 +91,24 @@ $url = get_the_permalink();
 $form_type = get_field('form_type', $form_id);
 // Multistep: steps
 $steps = get_field('steps', $form_id);
-$multistepCount = $steps && $steps['step'] ? count($steps['step']) + 2 : 0;
+$multistep_count = $steps && $steps['step'] ? count($steps['step']) + 2 : 0;
 
 $has_multisteps = $form_type === 'multistep';
 
 // Prepare data arrays for partials
-$contentData = array(
+$content_data = array(
     'form_type' => $form_type,
     'headline' => $hero_settings['headline'],
     'description' => $hero_description
 );
-$formData = array(
+$form_data = array(
     'form_type' => $form_type,
     'form_settings' => $form_settings,
     'form_fields_translations' => $form_fields_translations,
     'form_status' => $form_status,
     'display' => $display
 );
-$thankYouData = array(
+$thank_you_data = array(
     'form_type' => $form_type,
     'share_button_caption' => $has_multisteps ? $steps['thank_you_share_button_caption'] : null,
     'skip_button_caption' => $has_multisteps ? $steps['thank_you_skip_button_caption'] : null,
@@ -116,17 +116,17 @@ $thankYouData = array(
     'skip_go_to_step' => $has_multisteps ? $steps['thank_you_skip_go_to_step'] : null,
     'description' => $has_multisteps ? $steps['thank_you_description'] : $thank_you_settings['description'],
 );
-$counterData = array(
+$counter_data = array(
     'form_settings' => $form_settings,
 );
-$shareData = array(
+$share_data = array(
     'form_type' => $form_type,
     'headline' => $has_multisteps ? $steps['share_headline'] : $thank_you_settings['share_headline'],
     'description' => $has_multisteps ? $steps['share_description'] : $thank_you_settings['share_description'],
     'url' => $url,
     'copy_link_button_caption' => $has_multisteps? $steps['share_copy_link_button_caption'] : false
 );
-$donateData = array(
+$donate_data = array(
     'form_type' => $form_type,
     'headline' => $has_multisteps ? $steps['donation_headline'] : $thank_you_settings['donate_headline'],
     'description' => $has_multisteps ? $steps['donation_description'] : $thank_you_settings['donate_description'],
@@ -134,28 +134,28 @@ $donateData = array(
     'thank_you_settings' => $thank_you_settings,
     'form_fields_translations' => $form_fields_translations
 );
-$finalData = array(
-    'multistepCount' => $multistepCount,
+$final_data = array(
+    'multistep_count' => $multistep_count,
     'headline' => $has_multisteps ? $steps['final_headline'] : null,
     'description' => $has_multisteps ? $steps['final_description'] : null,
     'button_caption' => $has_multisteps ? $steps['final_button_caption'] : null,
     'button_url' => $has_multisteps ? $steps['final_button_url'] : null
 );
-$customAskData = array(
+$custom_ask_data = array(
     'headline' => $has_multisteps ? $steps['custom_ask_headline'] : null,
     'description' => $has_multisteps ? $steps['custom_ask_description'] : null,
     'button_caption' => $has_multisteps ? $steps['custom_ask_button_caption'] : null,
     'button_url' => $has_multisteps ? $steps['custom_ask_button_url'] : null,
 );
-$layoutsData = array(
-    'contentData' => $contentData, 
-    'formData' => $formData, 
-    'thankYouData' => $thankYouData, 
-    'counterData' => $counterData, 
-    'shareData' => $shareData, 
-    'donateData' => $donateData,
-    'finalData' => $form_type === 'multistep' ? $finalData : false,
-    'customAskData' => $form_type ==='multistep'? $customAskData : false,
+$layouts_data = array(
+    'content_data' => $content_data, 
+    'form_data' => $form_data, 
+    'thank_you_data' => $thank_you_data, 
+    'counter_data' => $counter_data, 
+    'share_data' => $share_data, 
+    'donate_data' => $donate_data,
+    'final_data' => $form_type === 'multistep' ? $final_data : false,
+    'custom_ask_data' => $form_type ==='multistep'? $custom_ask_data : false,
     'steps' => $form_type === 'multistep' ? $steps : false
 );
 
@@ -165,9 +165,9 @@ $layoutsData = array(
     <div class="leads-form__grid <?php if ($form_type === 'multistep') echo "leads-form__multistep"; ?> ">
         <?php
             if ($has_multisteps) {
-                GPPL4\get_partial("form/layouts/multistep", $layoutsData); 
+                GPPL4\get_partial("form/layouts/multistep", $layouts_data); 
             } else {
-                GPPL4\get_partial("form/layouts/default", $layoutsData);  
+                GPPL4\get_partial("form/layouts/default", $layouts_data);  
             }
         ?>
     </div>
@@ -605,6 +605,6 @@ $layoutsData = array(
             format: '<?php echo $form_fields_translations['error_format']; ?>'
         },
         formType: '<?php echo $form_type; ?>',
-        multistepCount: <?php echo $multistepCount; ?>
+        multistepCount: <?php echo $multistep_count; ?>
     };
 </script>

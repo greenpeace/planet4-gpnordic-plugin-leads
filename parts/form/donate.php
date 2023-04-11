@@ -1,6 +1,6 @@
 <?php 
 $condition = $form_type === 'multistep' ? true : 'success';
-$onClick = $form_type === 'multistep' ? "completeMultistep($stepIndex)" : "";
+$onClick = $form_type === 'multistep' ? "completeMultistep($step_index)" : "";
 ?>
 
 <div v-show="<?php echo $condition; ?>" class="leads-form__donate">
@@ -35,8 +35,8 @@ $onClick = $form_type === 'multistep' ? "completeMultistep($stepIndex)" : "";
     </div>
     <?php 
         if ($form_type === 'multistep') :
-            $prevNextData = array('stepIndex' => $stepIndex);
-            GPPL4\get_partial("form/prev_next", $prevNextData);  
+            $prev_next_data = array('step_index' => $step_index);
+            GPPL4\get_partial("form/prev_next", $prev_next_data);  
         endif; 
       ?>
 </div>
