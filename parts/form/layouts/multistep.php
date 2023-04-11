@@ -20,7 +20,7 @@ GPPL4\get_partial("form/content", $contentData);
     GPPL4\get_partial("form/bullet_navigation", array('steps' => $steps['step']));
     ?>
 
-    <div v-show="multistepActive === 0">
+    <div :class="{ 'active' : multistepActive === 0 }">
       <?php 
       /**
        * Thank you
@@ -32,10 +32,10 @@ GPPL4\get_partial("form/content", $contentData);
     if ($steps['step']) : 
 
       foreach($steps['step'] as $key => $step) : 
-      // Increase by 2 to accommodate for "thank you" fake step
+      // Increase by 1 to accommodate for "thank you" fake step
       $stepIndex = $key + 1;
     ?>
-      <div v-show="multistepActive === <?php echo $stepIndex; ?>">
+      <div :class="{ 'active' : multistepActive === <?php echo $stepIndex; ?>}">
         <?php
         switch($step['select_step']) {
           case ('donation') :
@@ -69,7 +69,7 @@ GPPL4\get_partial("form/content", $contentData);
      * Final
      */
     ?>
-    <div v-show="multistepActive === multistepCount - 1">
+    <div :class="{ 'active' : multistepActive === multistepCount - 1 }">
       <?php GPPL4\get_partial("form/final", $finalData); ?>
     </div>
   </div>

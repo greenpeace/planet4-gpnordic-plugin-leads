@@ -610,6 +610,20 @@
       background-color: white;
       border-radius: 0.5rem;
       padding: 1.5rem;
+      > div {
+        opacity: 0;
+        transition: opacity 0.35s ease-in-out;
+        height: 0;
+        overflow: hidden;
+        visibility: hidden;
+        pointer-events: none;
+        &.active {
+          opacity: 1;
+          height: auto;
+          visibility: visible;
+          pointer-events: auto;
+        }
+      }
     }
     .leads-form__thank-you {
       text-align: left;
@@ -629,6 +643,10 @@
     .leads-form__share,
     .leads-form__final {
       color: black;
+    }
+    .leads-form__donate,
+    .leads-form__thank-you {
+      margin-top: 0;
     }
     .leads-form__donate,
     .leads-form__share {
