@@ -594,6 +594,7 @@
         }
       }
       .donate-container {
+        margin-top: 2rem;
         flex-direction: column;
         gap: 0.75rem;
         a,
@@ -602,6 +603,12 @@
           input {
             max-width: unset;
             width: 100%;
+            font-size: 1rem;
+            line-height: 1.5rem;
+          }
+          .currency {
+            font-size: 1rem;
+            line-height: 1.25rem;
           }
         }
         .donate-presets {
@@ -615,8 +622,7 @@
           li {
             a {
               white-space: nowrap;
-              padding-left: 1.5rem;
-              padding-right: 1.5rem;
+              padding: 1rem 1.5rem;
               font-size: 1rem;
               line-height: 1.25;
               font-weight: 500;
@@ -628,6 +634,12 @@
     }
     .leads-form__custom-ask {
       color: black;
+    }
+    .button {
+      font-size: 1.25rem;
+      line-height: 2rem;
+      width: 100%;
+      display: inline-block;
     }
   }
   &__bullet-navigation {
