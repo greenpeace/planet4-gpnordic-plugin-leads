@@ -18,6 +18,7 @@ $body-font-family: "Helvetica Now Display Regular", "Helvetica", sans-serif;
   /* General styles */
   h2 {
     font-family: $header-font-family !important;
+    font-weight: 500;
     font-size: 4rem;
     line-height: 1.05em;
     @media only screen and (max-width: $leads--large) {
@@ -135,6 +136,7 @@ $body-font-family: "Helvetica Now Display Regular", "Helvetica", sans-serif;
     .leads-form__thank-you {
       h2,
       h2.under-20 {
+        font-weight: 700;
         font-family: $body-font-family !important;
         margin-bottom: 0.5rem;
         font-size: 2rem;
