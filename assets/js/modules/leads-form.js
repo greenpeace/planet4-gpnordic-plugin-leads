@@ -124,7 +124,6 @@
             jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${
               this.sourceCode
             }?v=${Date.now()}`;
-            //console.log(jQueryPostStrCounter)
           } else {
             jQueryPostStrCounter = `/${
               window.location.pathname.split("/")[1]
@@ -134,7 +133,6 @@
 
           jQuery.get(jQueryPostStrCounter, (count) => {
             // jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
-            //console.log(count,this.targetCounter)
             this.targetCounter = count.counter;
             this.blockData.counterApiEndpoints.forEach((e) => {
               if (e && jQuery.trim(e) !== "" && e !== undefined)
@@ -150,7 +148,6 @@
       },
       methods: {
         animateCounter: lodash.debounce(function (t = this) {
-          //console.log('Updating counter')
           var Cont = { val: t.counter },
             NewVal = t.targetCounter;
           TweenLite.to(Cont, 2, {
@@ -589,11 +586,10 @@
           this.nextStep();
         },
         prevStep() {
-          if (this.multistepActive > 1) this.goToStep(this.multistepActive - 1);
+          if (this.multistepActive > 0) this.goToStep(this.multistepActive - 1);
         },
         nextStep() {
           if (this.multistepActive < this.multistepCount) {
-            console.log(this.multistepActive + 1);
             this.goToStep(this.multistepActive + 1);
           }
         },

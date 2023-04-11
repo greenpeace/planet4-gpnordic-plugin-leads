@@ -306,6 +306,24 @@
           }
         }
       }
+      #copy-link {
+        border: none !important;
+        border-radius: 0.2rem;
+        padding: 0.3rem 1.6rem 0.1rem;
+        word-break: keep-all;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        cursor: pointer;
+        width: fit-content;
+        font-size: 1.4rem;
+        line-height: 1.8rem;
+        max-height: 3.4rem;
+        -webkit-transition: all 0.3s ease-in-out;
+        -moz-transition: all 0.3s ease-in-out;
+        -ms-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+      }
     }
   }
   &__donate {
@@ -376,6 +394,12 @@
   &__custom-ask,
   &__final {
     color: white;
+    p:last-of-type {
+      margin-bottom: 0;
+    }
+    .button {
+      margin-top: 2rem;
+    }
   }
   &__thank-you-animation {
     position: absolute;
@@ -578,10 +602,27 @@
       border-radius: 0.5rem;
       padding: 1.5rem;
     }
+    .leads-form__thank-you {
+      text-align: left;
+      margin-bottom: 0;
+      .button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      &__text {
+        margin-bottom: 2rem;
+      }
+    }
+    .leads-form__custom-ask,
+    .leads-form__thank-you,
+    .leads-form__donate,
+    .leads-form__share {
+      color: black;
+    }
     .leads-form__donate,
     .leads-form__share {
       width: 100%;
-      color: black;
       &__icons {
         flex-direction: column;
         gap: 0.75rem;
@@ -632,10 +673,17 @@
         }
       }
     }
-    .leads-form__custom-ask {
-      color: black;
+    .leads-form__share {
+      &__icons {
+        #copy-link {
+          padding: 0.75rem 1.5rem;
+          font-size: 1.25rem;
+          max-height: unset;
+        }
+      }
     }
-    .button {
+    .button,
+    .button.external-link {
       font-size: 1.25rem;
       line-height: 2rem;
       width: 100%;
@@ -665,7 +713,8 @@
         background-color: white;
       }
       li {
-        button {
+        button,
+        .mock-button {
           border: none;
           border-radius: 100%;
           width: 1.5rem;
@@ -677,6 +726,7 @@
           background-color: transparent;
           border: 2px solid white;
           font-weight: 700;
+          background-color: white;
           svg {
             max-width: 0.875rem;
             max-height: 0.875rem;
@@ -688,18 +738,23 @@
   &__prev-next {
     ul {
       display: flex;
+      justify-content: space-between;
       gap: 1rem;
       list-style-type: none;
       padding: 0;
       margin: 0;
-      justify-content: center;
-      padding: 1rem 0;
+      margin-top: 1.5rem;
+      align-items: center;
       li {
         button {
           border: none;
           background: transparent;
-          text-decoration: underline;
           font-size: 0.75rem;
+          opacity: 0.6;
+          font-weight: 600;
+        }
+        &:last-of-type {
+          margin-left: auto;
         }
       }
     }
@@ -708,8 +763,23 @@
     #{ $form }__multistep {
       .leads-form__donate,
       .leads-form__share,
-      .leads-form__custom-ask {
+      .leads-form__custom-ask,
+      .leads-form__thank-you {
         color: white;
+      }
+    }
+    #{ $form }__prev-next {
+      ul {
+        li {
+          button {
+            color: white;
+            svg {
+              path {
+                fill: white;
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -724,6 +794,9 @@
               background-color: rgba(0, 0, 0, 0.05);
               border-color: rgba(0, 0, 0, 0.05);
               color: rgba(0, 0, 0, 0.6);
+              &::placeholder {
+                color: rgba(0, 0, 0, 0.6);
+              }
             }
             .currency {
               background-color: rgba(0, 0, 0, 0.05);

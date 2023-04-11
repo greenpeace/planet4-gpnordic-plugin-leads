@@ -14,13 +14,19 @@ GPPL4\get_partial("form/form", $formData);
  */
 ?>
 <div class="leads-form__multistep__step" v-show="multistepActive === 0 && success">
-  <?php GPPL4\get_partial("form/thank_you", $thankYouData); ?>
+  <?php 
+  /**
+   * Navigation
+   */
+  GPPL4\get_partial("form/bullet_navigation", array('steps' => $steps['step']));
+  GPPL4\get_partial("form/thank_you", $thankYouData); 
+  ?>
 </div>
 <?php
 if ($steps['step']) : 
 
   foreach($steps['step'] as $key => $step) : 
-  // Increase by 2 to start navigation after Form and Thank you steps
+  // Increase by 2 to accommodate for "thank you" fake step
   $stepIndex = $key + 1;
 ?>
   <div class="leads-form__multistep__step" v-show="multistepActive === <?php echo $stepIndex; ?>">

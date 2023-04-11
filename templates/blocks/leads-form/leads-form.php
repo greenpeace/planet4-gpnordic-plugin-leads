@@ -340,22 +340,6 @@ $layoutsData = array(
     #<?php echo $id . ' '; ?>#copy-link {
       background: <?php echo $primary_color; ?>;
       color: <?php echo $cta_text_color; ?>;
-      border: none!important;
-      border-radius: 0.2rem;
-      padding: 0.3rem 1.6rem 0.1rem;
-      word-break: keep-all;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-      width: fit-content;
-      font-size: 1.4rem;
-      line-height: 1.80rem;
-      max-height: 3.4rem;
-      -webkit-transition: all 0.3s ease-in-out;
-      -moz-transition: all 0.3s ease-in-out;
-      -ms-transition: all 0.3s ease-in-out;
-      transition: all 0.3s ease-in-out;
     }
 
 
@@ -510,15 +494,21 @@ $layoutsData = array(
     #<?php echo $id; ?> .leads-form__bullet-navigation ul::after {
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button {
-        background-color: <?php echo $secondary_color; ?>;
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button,
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li .mock-button {
         border-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
         color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed {
+    #<?php echo $id; ?>.dark .leads-form__bullet-navigation ul li button,
+    #<?php echo $id; ?>.dark .leads-form__bullet-navigation ul li .mock-button {
+        background-color: <?php echo $secondary_color; ?>;
+    }
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed,
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li .mock-button.completed {
         border-color: <?php echo $success_color; ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed svg path {
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed svg path,
+    #<?php echo $id; ?> .leads-form__bullet-navigation ul li .mock-button.completed svg path {
         fill: <?php echo $success_color; ?>;
     }
     #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.skipped {
