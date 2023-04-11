@@ -236,10 +236,6 @@ $layoutsData = array(
       max-height: 3.4rem;
     }
 
-    #<?php echo $id . ' '; ?>.leads-form__custom-ask .button--share {
-        background-color: <?php echo $steps['custom_ask_button_color'];?>;
-    }
-
     #<?php echo $id . ' '; ?>#facebook svg {
       padding-bottom: 0.2rem;
     }
@@ -528,6 +524,9 @@ $layoutsData = array(
     #<?php echo $id; ?> .leads-form__multistep .button--secondary {
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
         color: <?php echo $primary_color; ?>
+    }
+    #<?php echo $id . ' '; ?>.leads-form__custom-ask .button--share {
+        background-color: <?php echo $steps['custom_ask_button_color'];?>!important;
     }
 </style>
 
