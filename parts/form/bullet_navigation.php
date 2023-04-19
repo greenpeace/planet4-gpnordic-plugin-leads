@@ -1,9 +1,7 @@
 <nav class="leads-form__bullet-navigation">
   <ul>
     <li>
-      <div class="mock-button completed">
-        <span><?php GPPL4\svg_icon('check'); ?></span>
-      </div>
+      <button @click="goToStep(0)" class="completed"><span><?php GPPL4\svg_icon('check'); ?></span></button>
     </li>
     <?php if ($steps) : foreach($steps as $key => $step) : 
       $step_index = $key + 1;
