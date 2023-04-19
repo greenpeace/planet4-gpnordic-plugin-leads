@@ -38,7 +38,7 @@
         lastNameErrors: [],
         phoneErrors: [],
         otherErrors: [],
-        success: false,
+        success: true,
         formFields: blockData.formFields,
         showThankYouAnimation: false,
         animationSpeed: 0.6,
@@ -280,7 +280,19 @@
 
                 // For multistep
                 if (this.formType === "multistep") {
-                  this.success = true;
+                  gsap
+                    .timeline({})
+                    .to(".leads-form__multistep__container", {
+                      y: 100,
+                      opacity: 0,
+                      duration: this.animationSpeed,
+                      onComplete: () => (this.success = true),
+                    })
+                    .to(".leads-form__multistep__container", {
+                      y: 0,
+                      opacity: 1,
+                      duration: this.animationSpeed,
+                    });
                 }
                 // Regular
                 else {

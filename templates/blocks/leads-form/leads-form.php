@@ -224,7 +224,7 @@ $layouts_data = array(
 
     /* implementing the winnig A/B test */
     #<?php echo $id . ' '; ?>#facebook.button--share {
-      background-color : <?php echo $primary_color; ?>;
+      background-color : #4267B2;
       box-shadow: 0 0 0 0 <?php echo GPPL4\hex2rgba($primary_color, 0.5); ?> !important;
       cursor: pointer;
       -webkit-animation: pulse 1.5s infinite;
@@ -242,7 +242,7 @@ $layouts_data = array(
     }
 
     #<?php echo $id . ' '; ?>#facebook svg path {
-      fill: <?php echo $cta_text_color; ?>;
+      fill: white;
     }
 
     #<?php echo $id . ' '; ?>#facebook.button--share:hover {
