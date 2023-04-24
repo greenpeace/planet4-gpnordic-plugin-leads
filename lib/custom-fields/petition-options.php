@@ -28,7 +28,7 @@ $petition_options->setLocation('options_page', '==', 'acf-options-leads-form')
     ->addTextarea('ssl_certificate', [
         'label' => 'SSL Certificate',
         'instructions' => 'The SSL certificate used to connect to the database.',
-        'required' => true,
+        'required' => false,
     ])
     ->addTab('form_settings', [
         'placement' => 'top',
