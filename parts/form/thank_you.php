@@ -5,8 +5,8 @@ if ($form_type === 'multistep') : ?>
         <h2 :class="lengthClass(thankYouTitle)" v-html="thankYouTitle"></h2>
         <div class="leads-form__thank-you__text"><?php echo stripslashes($description); ?></div>
         <div class="button-container">
-            <a class="button button--primary" @click="goToStep(<?php echo $share_go_to_step; ?> - 1)"><?php echo $share_button_caption; ?></a> 
-            <a class="button button--secondary" @click="goToStep(<?php echo $skip_go_to_step; ?> - 1)"><?php echo $skip_button_caption; ?></a>
+            <a class="button button--primary" @click="goToStep(<?php echo $share_go_to_step; ?>)"><?php echo $share_button_caption; ?></a> 
+            <a class="button button--secondary" @click="goToStep(<?php echo $skip_go_to_step; ?>)"><?php echo $skip_button_caption; ?></a>
         </div> 
         <?php 
             $prev_next_data = array('step_index' => 0);
