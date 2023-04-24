@@ -28,15 +28,14 @@
     "type": "git",
     "url": "https://github.com/bodymovin/bodymovin.git"
   },
-  "version": "5.7.6",
-  "_release": "5.7.6",
+  "version": "5.11.0",
+  "_release": "5.11.0",
   "_resolution": {
     "type": "version",
-    "tag": "v5.7.6",
-    "commit": "bca52f81bee9bd99458242d59ec05d6197bb1cad"
+    "tag": "v5.11.0",
+    "commit": "eaa4d8306c721214e60f4eaaef91449580ab9c3a"
   },
   "_source": "https://github.com/bodymovin/bodymovin.git",
   "_target": "^5.7.6",
-  "_originalSource": "bodymovin",
-  "_direct": true
+  "_originalSource": "bodymovin"
 }
