@@ -37,11 +37,9 @@ if (!defined('GPLP_PLUGIN_ROOT_URI')) {
 	define('GPLP_PLUGIN_ROOT_URI', plugin_dir_path(__FILE__));
 }
 
-file_exists(dirname(WP_CONTENT_DIR, 2) . '/vendor/autoload.php')
-    ? require_once dirname(WP_CONTENT_DIR, 2) . '/vendor/autoload.php'
-    : require_once 'vendor/autoload.php';
 
 $roots_includes = array(
+	'vendor/autoload.php',
 	'lib/blocks/leads-form.php',
 	'lib/acf.php',
 	'lib/options.php',
