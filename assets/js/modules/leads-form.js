@@ -259,7 +259,7 @@
             if ($(location).attr("hostname") === "www.planet4.test") {
               jQueryPostStr = `/wp-json/gplp/v2/leads`;
             } else {
-              jQueryPostStr = `${window.location.origin}/wp-json/gplp/v2/leads`;
+              jQueryPostStr = `${window.location.origin}/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`;
             }
             jQuery
               .post(jQueryPostStr, this.formFields, (response) => {
