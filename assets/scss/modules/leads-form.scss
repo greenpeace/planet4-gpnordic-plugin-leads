@@ -402,6 +402,11 @@
       margin-bottom: 0;
     }
   }
+  &__final {
+    .button {
+      margin-top: 2rem;
+    }
+  }
   &__custom-ask {
     .button-container {
       margin-top: 2rem;

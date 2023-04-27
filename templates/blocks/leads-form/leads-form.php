@@ -135,10 +135,14 @@ $donate_data = array(
 );
 $final_data = array(
     'multistep_count' => $multistep_count,
-    'headline' => $has_multisteps ? $steps['final_headline'] : null,
-    'description' => $has_multisteps ? $steps['final_description'] : null,
-    'button_caption' => $has_multisteps ? $steps['final_button_caption'] : null,
-    'button_url' => $has_multisteps ? $steps['final_button_url'] : null
+    'final_all_completed_headline' => $has_multisteps ? $steps['final_all_completed_headline'] : null,
+    'final_all_completed_description' => $has_multisteps ? $steps['final_all_completed_description'] : null,
+    'final_all_completed_button_caption' => $has_multisteps ? $steps['final_all_completed_button_caption'] : null,
+    'final_all_completed_button_url' => $has_multisteps ? $steps['final_all_completed_button_url'] : null,
+    'final_incomplete_headline' => $has_multisteps ? $steps['final_incomplete_headline'] : null,
+    'final_incomplete_description' => $has_multisteps ? $steps['final_incomplete_description'] : null,
+    'final_incomplete_button_caption' => $has_multisteps ? $steps['final_incomplete_button_caption'] : null,
+    'final_incomplete_button_url' => $has_multisteps ? $steps['final_incomplete_button_url'] : null
 );
 $custom_ask_data = array(
     'headline' => $has_multisteps ? $steps['custom_ask_headline'] : null,
@@ -600,6 +604,7 @@ $layouts_data = array(
             format: '<?php echo $form_fields_translations['error_format']; ?>'
         },
         formType: '<?php echo $form_type; ?>',
-        multistepCount: <?php echo $multistep_count; ?>
+        multistepCount: <?php echo $multistep_count; ?>,
+        finalData: <?php echo json_encode($final_data);?>
     };
 </script>
