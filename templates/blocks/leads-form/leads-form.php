@@ -242,7 +242,7 @@ $layouts_data = array(
     }
 
     #<?php echo $id . ' '; ?>#facebook svg path {
-      fill: white;
+      fill: white!important;
     }
 
     #<?php echo $id . ' '; ?>#facebook.button--share:hover {
