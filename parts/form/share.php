@@ -4,25 +4,23 @@ $checkLanguage = $_SERVER['REQUEST_URI'];
 $checkLanguage = explode('/', $checkLanguage);
 $checkLanguage = $checkLanguage[1];
 
-if (!$copy_link_button_caption) {
-  $copy_link_button_caption = "";
+$copy_link_button_caption = "";
 
-  switch ($checkLanguage) {
-    case "denmark":
-      $copy_link_button_caption = "Kopier link";
-    break;
-    case "finland":
-      $copy_link_button_caption = "Kopioi linkki";
-    break;
-    case "norway":
-      $copy_link_button_caption = "Kopier lenke";
-    break;
-    case "sweden":
-      $copy_link_button_caption = "Kopiera länk";
-    break;
-    default:
-      $copy_link_button_caption = "Copy link";
-  }
+switch ($checkLanguage) {
+  case "denmark":
+    $copy_link_button_caption = "Kopier link";
+  break;
+  case "finland":
+    $copy_link_button_caption = "Kopioi linkki";
+  break;
+  case "norway":
+    $copy_link_button_caption = "Kopier lenke";
+  break;
+  case "sweden":
+    $copy_link_button_caption = "Kopiera länk";
+  break;
+  default:
+    $copy_link_button_caption = "Copy link";
 }
 
 $onClick = $form_type === 'multistep' ? "completeMultistep($step_index)" : "";
