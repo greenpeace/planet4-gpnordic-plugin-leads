@@ -123,8 +123,7 @@ $share_data = array(
     'form_type' => $form_type,
     'headline' => $has_multisteps ? $steps['share_headline'] : $thank_you_settings['share_headline'],
     'description' => $has_multisteps ? $steps['share_description'] : $thank_you_settings['share_description'],
-    'url' => $url,
-    'copy_link_button_caption' => $has_multisteps? $steps['share_copy_link_button_caption'] : false
+    'url' => $url
 );
 $donate_data = array(
     'form_type' => $form_type,
