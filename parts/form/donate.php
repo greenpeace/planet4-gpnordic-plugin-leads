@@ -12,21 +12,21 @@ $onClick = $form_type === 'multistep' ? "completeMultistep($step_index)" : "";
     </h4>
     <?php echo $description; ?>
     <div id="donate-container" class="donate-container">
-        <?php if ($donate_preset_amounts) : ?>
-            <ul class="donate-presets">
-                <?php foreach ($donate_preset_amounts as $preset) : ?>
-                    <li>
-                        <a class="button button--donate-preset" @click="setPreset(<?php echo $preset['amount']; ?>)" :class="{ 'button--ghost' : presetDonateAmount !== <?php echo $preset['amount']; ?>}">
-                            <?php 
-                                echo $preset['amount']; 
-                                echo " " . $form_fields_translations['donate_currency']; 
-                            ?>
-                        </a>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php endif; ?>
         <?php if ($thank_you_settings['enable_donation_amount']) : ?>
+            <?php if ($donate_preset_amounts) : ?>
+                <ul class="donate-presets">
+                    <?php foreach ($donate_preset_amounts as $preset) : ?>
+                        <li>
+                            <a class="button button--donate-preset" @click="setPreset(<?php echo $preset['amount']; ?>)" :class="{ 'button--ghost' : presetDonateAmount !== <?php echo $preset['amount']; ?>}">
+                                <?php 
+                                    echo $preset['amount']; 
+                                    echo " " . $form_fields_translations['donate_currency']; 
+                                ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
             <div id="donate-input-amount" class="input-container">
                 <input placeholder="Custom amount" id="ghost" class="ghost donation-options" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" value="donateAmount" @keypress="numbersOnly($event), presetDonateAmount = 0" @keyup="setDonateAmount($event)" @change="checkMinVal($event), presetDonateAmount = 0, setDonateAmount($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
             </div>
