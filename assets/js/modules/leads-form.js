@@ -57,6 +57,7 @@
         multistepActive: 0,
         multistepCompleted: [],
         multistepViewed: [],
+        finalData: blockData.finalData,
       },
       computed: {
         percentReachedGoal: function () {
@@ -86,6 +87,9 @@
         showReadMore: function () {
           return this.heroDescription.length >= this.textLimit;
         },
+        completedAllAsks() {
+          return this.multistepCompleted.length === this.multistepCount - 2;
+        },
       },
       watch: {
         startedFilling: function () {
@@ -96,6 +100,7 @@
         },
       },
       mounted: function () {
+        console.log(this.finalData);
         this.dataLayer &&
           this.dataLayer.push({
             sourceCode: this.sourceCode,
