@@ -112,6 +112,9 @@ $petition_options->setLocation('options_page', '==', 'acf-options-leads-form')
         'label' => 'Error (Format)',
         'instructions' => 'The variable ${fieldName} inserts the field name.',
         'default_value' => 'Field "${fieldName}" has wrong format.',
-    ]);
+    ])
+    ->addText('multistep_skip_step')
+    ->addText('multistep_go_back_step')
+    ;
 
 acf_add_local_field_group($petition_options->build());
