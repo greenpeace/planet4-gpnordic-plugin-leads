@@ -143,8 +143,7 @@ $final_data = array(
 $custom_ask_data = array(
     'headline' => $has_multisteps ? $steps['custom_ask_headline'] : null,
     'description' => $has_multisteps ? $steps['custom_ask_description'] : null,
-    'button_caption' => $has_multisteps ? $steps['custom_ask_button_caption'] : null,
-    'button_url' => $has_multisteps ? $steps['custom_ask_button_url'] : null,
+    'buttons' => $has_multisteps? $steps['custom_ask_buttons'] : null
 );
 $layouts_data = array(
     'content_data' => $content_data, 
@@ -524,9 +523,6 @@ $layouts_data = array(
     #<?php echo $id; ?> .leads-form__multistep .button--secondary {
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
         color: <?php echo $primary_color; ?>
-    }
-    #<?php echo $id . ' '; ?>.leads-form__custom-ask .button--share {
-        background-color: <?php echo $steps['custom_ask_button_color'];?>!important;
     }
 </style>
 
