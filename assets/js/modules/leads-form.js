@@ -584,6 +584,12 @@
           if (!this.multistepViewed.includes(stepIndex))
             this.multistepViewed.push(stepIndex);
         },
+        disagreeToShare(skipIndex, goToIndex) {
+          // Mark share step as viewed, so that it will be displayed as skipped
+          this.multistepViewed.push(skipIndex);
+          // Set step to active
+          this.multistepActive = goToIndex;
+        },
         wasCompleted(stepIndex) {
           return this.multistepCompleted.includes(stepIndex);
         },
