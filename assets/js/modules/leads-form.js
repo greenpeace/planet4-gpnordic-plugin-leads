@@ -38,7 +38,7 @@
         lastNameErrors: [],
         phoneErrors: [],
         otherErrors: [],
-        success: false,
+        success: true,
         formFields: blockData.formFields,
         showThankYouAnimation: false,
         animationSpeed: 0.6,
@@ -161,6 +161,9 @@
         setPreset(amount) {
           this.presetDonateAmount = amount;
           this.donateAmount = null;
+        },
+        setDonateAmount(event) {
+          this.donateAmount = event.target.value;
         },
         getDonateUrl: function (url) {
           const amount =
