@@ -39,7 +39,7 @@ $share_url_facebook = "$url?utm_source=facebook.com&utm_medium=share_button";
     <?php echo $description; ?>
     <div class="leads-form__share__icons">
         <a @click="<?php echo $onCopyClick; ?>" id="facebook" class="button button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url_facebook; ?>" target="_blank"><?php GPPL4\svg_icon('facebook'); ?></a>
-        <button @click="copyLink(<?php if ($form_type === 'multistep') echo $step_index; ?>, '<?php echo $share_url_copy_link; ?>'), pushDataLayer('action_share', 'Facebook')" id="copy-link" class="button button--share"><?php GPPL4\svg_icon('link'); ?><?php echo $copy_link_button_caption; ?></button>
+        <button @click="copyLink(`<?php echo $share_url_copy_link; ?>` <?php if ($form_type === 'multistep') echo ", $step_index"; ?>), pushDataLayer('action_share', 'Facebook')" id="copy-link" class="button button--share"><?php GPPL4\svg_icon('link'); ?><?php echo $copy_link_button_caption; ?></button>
     </div>
     <?php 
       if ($form_type === 'multistep') :
