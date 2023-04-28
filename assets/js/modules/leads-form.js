@@ -528,17 +528,9 @@
             })
             .to(this.$refs.heroDescription, { opacity: 1, duration: 0.25 });
         },
-        copyLink(stepIndex = undefined, url) {
+        copyLink(url, stepIndex = undefined) {
           // Implementing the winning A/B test version
           let copyURL = document.createElement("input");
-          // let text = window.location.href
-          // let linkParam = "";
-
-          // if (window.location.href.indexOf("?") > -1) {
-          //   linkParam = text + "&share=copy_link";
-          // } else {
-          //   linkParam = text + "?share=copy_link";
-          // }
 
           let setLanguage = window.location.pathname.split("/")[1];
           let $linkCopied = "";
