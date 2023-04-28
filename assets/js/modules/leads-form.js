@@ -389,7 +389,7 @@
                                   this.dataLayer &&
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
-                                      sourceCode: "FROC20SXXWBLGA1PT",
+                                      sourceCode: this.sourceCode,
                                       stepName: "intro",
                                     });
 
@@ -583,7 +583,7 @@
               this.completeMultistep(stepIndex);
             }, 1000);
         },
-        pushDataLayer(key) {
+        pushDataLayer(key, dynamicValue) {
           if (!key) return;
           let dataObj = {};
           switch (key) {
@@ -602,51 +602,61 @@
             case "share":
               dataObj = {
                 event: "petitionThankYou",
-                sourceCode: "FROC20SXXWBLGA1PT",
+                sourceCode: this.sourceCode,
                 stepName: "share",
               };
               break;
             case "action_share":
               dataObj = {
                 event: "uaEvent",
-                eventAction: "Copy link",
+                eventAction: dynamicValue,
                 eventCategory: "Social share",
               };
               break;
             case "donation":
               dataObj = {
                 event: "petitionThankYou",
-                sourceCode: "FROC20SXXWBLGA1PT",
+                sourceCode: this.sourceCode,
                 stepName: "donationOptions",
               };
               break;
             case "action_donation":
+              const donateOption =
+                this.donateAmount && this.donateAmount > 0
+                  ? "custom amount to donation"
+                  : "predefined amount to donation";
+              const amount =
+                this.donateAmount && this.donateAmount > 0
+                  ? this.donateAmount
+                  : this.presetDonateAmount;
               dataObj = {
                 event: "petitionDonation",
-                PetitionDonationLink: "predefined amount to donation",
-                amount: 150,
+                PetitionDonationLink: donateOption,
+                amount: amount,
               };
               break;
             case "custom_ask":
               dataObj = {
                 event: "petitionThankYou",
-                sourceCode: "FROC20SXXWBLGA1PT",
+                sourceCode: this.sourceCode,
                 stepName: "custom step",
-                stepText: "{custom-ask-value}",
+                stepText: `{${this.toKebabCase(dynamicValue)}}`,
               };
               break;
             case "action_custom_ask":
               dataObj = {
                 event: "customAsk",
-                label: "Mail to the president!",
+                label: dynamicValue,
               };
               break;
             case "final":
               dataObj = {
                 event: "petitionThankYou",
-                sourceCode: "FROC20SXXWBLGA1PT",
+                sourceCode: this.sourceCode,
                 stepName: "finalStep",
-                stepCompleted: "3/3",
+                stepCompleted: `${this.multistepCompleted.length + 1}/${
+                  this.multistepCount - 1
+                }`,
               };
               break;
             case "action_final":
@@ -661,6 +671,7 @@
               break;
           }
           this.dataLayer && this.dataLayer.push(dataObj);
+          console.log(dataObj);
         },
         /**
          * Multistep
@@ -670,12 +681,16 @@
           this.multistepActive = stepIndex;
 
           // Get type of active step for dataLayer
-          const activeStepType = this.steps[this.multistepActive - 1]
-            ? this.steps[this.multistepActive - 1].select_step
-            : this.multistepActive === this.steps.length + 1
-            ? "final"
-            : null;
-          this.pushDataLayer(activeStepType);
+          const activeStepType =
+            this.steps.step && this.steps.step[this.multistepActive - 1]
+              ? this.steps.step[this.multistepActive - 1].select_step
+              : this.multistepActive === this.steps.step.length + 1
+              ? "final"
+              : null;
+          let dynamicValue = null;
+          if (activeStepType === "custom_ask")
+            dynamicValue = this.steps.custom_ask_headline;
+          this.pushDataLayer(activeStepType, dynamicValue);
 
           // Mark step as viewed
           if (!this.multistepViewed.includes(stepIndex))
@@ -716,6 +731,17 @@
         },
         isLast(stepIndex) {
           return stepIndex >= this.multistepCount - 1;
+        },
+        toKebabCase(str) {
+          return (
+            str &&
+            str
+              .match(
+                /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+              )
+              .map((x) => x.toLowerCase())
+              .join("-")
+          );
         },
       },
     });
