@@ -101,10 +101,6 @@
         },
       },
       mounted: function () {
-        if (this.formType !== "multistep") {
-          console.log(this.donateAmount, this.presetDonateAmount);
-          this.donateAmount = this.presetDonateAmount;
-        }
         this.dataLayer &&
           this.dataLayer.push({
             sourceCode: this.sourceCode,
@@ -671,7 +667,7 @@
               break;
           }
           this.dataLayer && this.dataLayer.push(dataObj);
-          console.log(dataObj);
+          // console.log(dataObj);
         },
         /**
          * Multistep
