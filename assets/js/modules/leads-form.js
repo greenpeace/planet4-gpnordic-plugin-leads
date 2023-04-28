@@ -58,6 +58,7 @@
         multistepCompleted: [],
         multistepViewed: [],
         finalData: blockData.finalData,
+        steps: blockData.steps,
       },
       computed: {
         percentReachedGoal: function () {
@@ -388,8 +389,8 @@
                                   this.dataLayer &&
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
-                                      donationOption:
-                                        "Pre-selected amount to donation",
+                                      sourceCode: "FROC20SXXWBLGA1PT",
+                                      stepName: "intro",
                                     });
 
                                   donateBtn.addEventListener("click", () => {
@@ -582,12 +583,100 @@
               this.completeMultistep(stepIndex);
             }, 1000);
         },
+        pushDataLayer(key) {
+          if (!key) return;
+          let dataObj = {};
+          switch (key) {
+            case "thank_you_yes":
+              dataObj = {
+                event: "petitionTYButton",
+                buttonName: "yes",
+              };
+              break;
+            case "thank_you_no":
+              dataObj = {
+                event: "petitionTYButton",
+                buttonName: "no",
+              };
+              break;
+            case "share":
+              dataObj = {
+                event: "petitionThankYou",
+                sourceCode: "FROC20SXXWBLGA1PT",
+                stepName: "share",
+              };
+              break;
+            case "action_share":
+              dataObj = {
+                event: "uaEvent",
+                eventAction: "Copy link",
+                eventCategory: "Social share",
+              };
+              break;
+            case "donation":
+              dataObj = {
+                event: "petitionThankYou",
+                sourceCode: "FROC20SXXWBLGA1PT",
+                stepName: "donationOptions",
+              };
+              break;
+            case "action_donation":
+              dataObj = {
+                event: "petitionDonation",
+                PetitionDonationLink: "predefined amount to donation",
+                amount: 150,
+              };
+              break;
+            case "custom_ask":
+              dataObj = {
+                event: "petitionThankYou",
+                sourceCode: "FROC20SXXWBLGA1PT",
+                stepName: "custom step",
+                stepText: "{custom-ask-value}",
+              };
+              break;
+            case "action_custom_ask":
+              dataObj = {
+                event: "customAsk",
+                label: "Mail to the president!",
+              };
+              break;
+            case "final":
+              dataObj = {
+                event: "petitionThankYou",
+                sourceCode: "FROC20SXXWBLGA1PT",
+                stepName: "finalStep",
+                stepCompleted: "3/3",
+              };
+              break;
+            case "action_final":
+              dataObj = {
+                event: "checkCampaigns",
+              };
+              break;
+            case "skip_step":
+              dataObj = {
+                event: "skipStep",
+              };
+              break;
+          }
+          this.dataLayer && this.dataLayer.push(dataObj);
+        },
         /**
          * Multistep
          */
         goToStep(stepIndex) {
           // Set step to active
           this.multistepActive = stepIndex;
+
+          // Get type of active step for dataLayer
+          const activeStepType = this.steps[this.multistepActive - 1]
+            ? this.steps[this.multistepActive - 1].select_step
+            : this.multistepActive === this.steps.length + 1
+            ? "final"
+            : null;
+          this.pushDataLayer(activeStepType);
+
           // Mark step as viewed
           if (!this.multistepViewed.includes(stepIndex))
             this.multistepViewed.push(stepIndex);
