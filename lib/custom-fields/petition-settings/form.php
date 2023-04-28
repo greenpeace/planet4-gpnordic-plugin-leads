@@ -2,6 +2,8 @@
 // Returns the "Form Settings" field group
 function get_form_settings()
 {
+    $shared_donate_fields = get_shared_donate_fields();
+
     $form_settings = new StoutLogic\AcfBuilder\FieldsBuilder('form_settings');
     $form_settings
         ->addSelect('form_type', [
@@ -69,9 +71,21 @@ function get_form_settings()
         ->addTab('donation')
         ->addText('donation_headline')
         ->addWysiwyg('donation_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
-        ->addRepeater('donate_preset_amounts', ['instructions' => 'Fill in preset amounts if desired.'])
+        ->addNumber('donate_default_amount', $shared_donate_fields['donate_default_amount'])
+         ->addTrueFalse('enable_donation_amount', $shared_donate_fields['enable_donation_amount'])
+        ->addRepeater('donate_preset_amounts', ['instructions' => 'Fill in preset amounts if desired.', 'conditional_logic' => [
+                [
+                    [
+                        'field' => 'enable_donation_amount',
+                        'operator' => '==',
+                        'value' => '1',
+                    ],
+                ],
+            ]])
             ->addNumber('amount')
         ->endRepeater()
+        ->addText('donate_cta', $shared_donate_fields['donate_cta'])
+        ->addText('donate_url', $shared_donate_fields['donate_url'])
         ->addTab('final')
         ->addText('final_all_completed_headline')
         ->addWysiwyg('final_all_completed_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])

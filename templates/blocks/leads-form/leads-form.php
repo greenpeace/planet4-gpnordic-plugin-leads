@@ -131,6 +131,9 @@ $donate_data = array(
     'description' => $has_multisteps ? $steps['donation_description'] : $thank_you_settings['donate_description'],
     'donate_preset_amounts' => $has_multisteps ? $steps['donate_preset_amounts'] : null,
     'thank_you_settings' => $thank_you_settings,
+    'enable_donation_amount' => $has_multisteps? $steps['enable_donation_amount'] : $thank_you_settings['enable_donation_amount'],
+    'donate_url' => $has_multisteps? $steps['donate_url'] : $thank_you_settings['donate_url'],
+    'donate_cta' => $has_multisteps? $steps['donate_cta'] : $thank_you_settings['donate_cta'],
     'form_fields_translations' => $form_fields_translations
 );
 $final_data = array(
@@ -530,10 +533,14 @@ $layouts_data = array(
     }
 </style>
 
+<?php 
+$donate_amount_default = $form_type === 'multistep' ? $steps['donate_default_amount'] : $thank_you_settings['donate_default_amount'];
+$donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0);
+?>
 <script>
     window['leads_form_<?php echo $block['id']; ?>'] = {
         // toggle donations amount
-        donateAmount: <?php echo $thank_you_settings['donate_default_amount'] ? $thank_you_settings['donate_default_amount'] : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0); ?>,
+        donateAmount: <?php echo $donate_amount; ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
         thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? $steps['thank_you_headline'] : $thank_you_settings['headline']); ?>',
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
