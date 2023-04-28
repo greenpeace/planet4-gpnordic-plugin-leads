@@ -12,7 +12,7 @@ $onClick = $form_type === 'multistep' ? "completeMultistep($step_index)" : "";
     </h4>
     <?php echo $description; ?>
     <div id="donate-container" class="donate-container">
-        <?php if ($thank_you_settings['enable_donation_amount']) : ?>
+        <?php if ($enable_donation_amount) : ?>
             <?php if ($donate_preset_amounts) : ?>
                 <ul class="donate-presets">
                     <?php foreach ($donate_preset_amounts as $preset) : ?>
@@ -28,10 +28,10 @@ $onClick = $form_type === 'multistep' ? "completeMultistep($step_index)" : "";
                 </ul>
             <?php endif; ?>
             <div id="donate-input-amount" class="input-container">
-                <input placeholder="Custom amount" id="ghost" class="ghost donation-options" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" value="donateAmount" @keypress="numbersOnly($event), presetDonateAmount = 0" @keyup="setDonateAmount($event)" @change="checkMinVal($event), presetDonateAmount = 0, setDonateAmount($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
+                <input placeholder="Custom amount" id="ghost" class="ghost donation-options" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" :value="donateAmount" @keypress="numbersOnly($event), presetDonateAmount = 0" @keyup="setDonateAmount($event)" @change="checkMinVal($event), presetDonateAmount = 0, setDonateAmount($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
             </div>
         <?php endif; ?>
-        <a @click="<?php echo $onClick; ?>" id="donate-button" :href="getDonateUrl(`<?php echo $thank_you_settings['donate_url']; ?>`)" class="button--submit button donation-options" target="_blank"><?php GPPL4\svg_icon('gift'); ?><?php echo $thank_you_settings['donate_cta']; ?></a>
+        <a @click="<?php echo $onClick; ?>" id="donate-button" :href="getDonateUrl(`<?php echo $donate_url; ?>`)" class="button--submit button donation-options" target="_blank"><?php GPPL4\svg_icon('gift'); ?><?php echo $donate_cta; ?></a>
     </div>
     <?php 
         if ($form_type === 'multistep') :

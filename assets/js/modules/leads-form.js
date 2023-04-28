@@ -100,7 +100,10 @@
         },
       },
       mounted: function () {
-        console.log(this.finalData);
+        if (this.formType !== "multistep") {
+          console.log(this.donateAmount, this.presetDonateAmount);
+          this.donateAmount = this.presetDonateAmount;
+        }
         this.dataLayer &&
           this.dataLayer.push({
             sourceCode: this.sourceCode,
