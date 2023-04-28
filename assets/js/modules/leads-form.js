@@ -31,6 +31,7 @@
         goal: blockData.counterGoalValue,
         loading: false,
         donateAmount: blockData.donateAmount,
+        donateAmountInputValue: null,
         presetDonateAmount: 0,
         errors: [],
         emailErrors: [],
@@ -101,6 +102,9 @@
         },
       },
       mounted: function () {
+        if (this.formType !== "multistep")
+          this.donateAmountInputValue = this.donateAmount;
+
         this.dataLayer &&
           this.dataLayer.push({
             sourceCode: this.sourceCode,
@@ -166,8 +170,10 @@
         setPreset(amount) {
           this.presetDonateAmount = amount;
           this.donateAmount = null;
+          this.donateAmountInputValue = null;
         },
         setDonateAmount(event) {
+          this.donateAmountInputValue = event.target.value;
           this.donateAmount = event.target.value;
         },
         getDonateUrl: function (url) {
