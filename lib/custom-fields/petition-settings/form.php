@@ -2,6 +2,8 @@
 // Returns the "Form Settings" field group
 function get_form_settings()
 {
+    $shared_donate_fields = get_shared_donate_fields();
+
     $form_settings = new StoutLogic\AcfBuilder\FieldsBuilder('form_settings');
     $form_settings
         ->addSelect('form_type', [
@@ -57,24 +59,42 @@ function get_form_settings()
         ->addTab('share')
         ->addText('share_headline')
         ->addWysiwyg('share_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
-        ->addText('share_copy_link_button_caption', ['default_value' => 'Copy link'])
         ->addTab('custom_ask')
         ->addText('custom_ask_headline')
         ->addWysiwyg('custom_ask_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
-        ->addText('custom_ask_button_caption')
-        ->addUrl('custom_ask_button_url')
-        ->addColorPicker('custom_ask_button_color', ['default_value' => '#000000'])
+        ->addRepeater('custom_ask_buttons', ['max' => 2, 'layout' => 'block'])
+            ->addText('button_caption')
+            ->addUrl('button_url')
+            ->addColorPicker('button_color', ['default_value' => '#000000'])
+            ->addColorPicker('button_text_color', ['default_value' => '#FFFFFF'])
+        ->endRepeater()
         ->addTab('donation')
         ->addText('donation_headline')
         ->addWysiwyg('donation_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
-        ->addRepeater('donate_preset_amounts', ['instructions' => 'Fill in preset amounts if desired.'])
+        ->addNumber('donate_default_amount', $shared_donate_fields['donate_default_amount'])
+         ->addTrueFalse('enable_donation_amount', $shared_donate_fields['enable_donation_amount'])
+        ->addRepeater('donate_preset_amounts', ['instructions' => 'Fill in preset amounts if desired.', 'conditional_logic' => [
+                [
+                    [
+                        'field' => 'enable_donation_amount',
+                        'operator' => '==',
+                        'value' => '1',
+                    ],
+                ],
+            ]])
             ->addNumber('amount')
         ->endRepeater()
+        ->addText('donate_cta', $shared_donate_fields['donate_cta'])
+        ->addText('donate_url', $shared_donate_fields['donate_url'])
         ->addTab('final')
-        ->addText('final_headline')
-        ->addWysiwyg('final_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
-        ->addText('final_button_caption')
-        ->addUrl('final_button_url')
+        ->addText('final_all_completed_headline')
+        ->addWysiwyg('final_all_completed_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
+        ->addText('final_all_completed_button_caption')
+        ->addUrl('final_all_completed_button_url')
+        ->addText('final_incomplete_headline')
+        ->addWysiwyg('final_incomplete_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
+        ->addText('final_incomplete_button_caption')
+        ->addUrl('final_incomplete_button_url')
         ->endGroup()
         ->addGroup('form_settings')
         ->addText('source_code', [

@@ -38,7 +38,7 @@
         lastNameErrors: [],
         phoneErrors: [],
         otherErrors: [],
-        success: false,
+        success: true,
         formFields: blockData.formFields,
         showThankYouAnimation: false,
         animationSpeed: 0.6,
@@ -57,6 +57,7 @@
         multistepActive: 0,
         multistepCompleted: [],
         multistepViewed: [],
+        finalData: blockData.finalData,
       },
       computed: {
         percentReachedGoal: function () {
@@ -86,6 +87,9 @@
         showReadMore: function () {
           return this.heroDescription.length >= this.textLimit;
         },
+        completedAllAsks() {
+          return this.multistepCompleted.length === this.multistepCount - 2;
+        },
       },
       watch: {
         startedFilling: function () {
@@ -96,6 +100,10 @@
         },
       },
       mounted: function () {
+        if (this.formType !== "multistep") {
+          console.log(this.donateAmount, this.presetDonateAmount);
+          this.donateAmount = this.presetDonateAmount;
+        }
         this.dataLayer &&
           this.dataLayer.push({
             sourceCode: this.sourceCode,
@@ -161,6 +169,9 @@
         setPreset(amount) {
           this.presetDonateAmount = amount;
           this.donateAmount = null;
+        },
+        setDonateAmount(event) {
+          this.donateAmount = event.target.value;
         },
         getDonateUrl: function (url) {
           const amount =
@@ -580,6 +591,12 @@
           // Mark step as viewed
           if (!this.multistepViewed.includes(stepIndex))
             this.multistepViewed.push(stepIndex);
+        },
+        disagreeToShare(skipIndex, goToIndex) {
+          // Mark share step as viewed, so that it will be displayed as skipped
+          this.multistepViewed.push(skipIndex);
+          // Set step to active
+          this.multistepActive = goToIndex;
         },
         wasCompleted(stepIndex) {
           return this.multistepCompleted.includes(stepIndex);

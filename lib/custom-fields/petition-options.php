@@ -28,7 +28,6 @@ $petition_options->setLocation('options_page', '==', 'acf-options-leads-form')
     ->addTextarea('ssl_certificate', [
         'label' => 'SSL Certificate',
         'instructions' => 'The SSL certificate used to connect to the database.',
-        'required' => false,
     ])
     ->addTab('form_settings', [
         'placement' => 'top',
@@ -113,6 +112,9 @@ $petition_options->setLocation('options_page', '==', 'acf-options-leads-form')
         'label' => 'Error (Format)',
         'instructions' => 'The variable ${fieldName} inserts the field name.',
         'default_value' => 'Field "${fieldName}" has wrong format.',
-    ]);
+    ])
+    ->addText('multistep_skip_step')
+    ->addText('multistep_go_back_step')
+    ;
 
 acf_add_local_field_group($petition_options->build());

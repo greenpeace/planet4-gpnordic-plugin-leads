@@ -1,4 +1,5 @@
 <?php
+include_once('petition-settings/donate.php');
 include_once('petition-settings/thank-you.php');
 include_once('petition-settings/hero.php');
 include_once('petition-settings/form.php');
