@@ -16,7 +16,7 @@ $back_caption = $form_fields_translations['multistep_go_back_step'] ?: 'Go back'
         </button>
       </li>
       <li v-show="!wasCompleted(<?php echo $step_index; ?>) && !isLast(<?php echo $step_index; ?>)">
-        <button @click="nextStep()">
+        <button @click="nextStep(), pushDataLayer('skip_step')">
           <?php echo $skip_caption; ?>
           <?php GPPL4\svg_icon('chevron--right'); ?>
         </button>

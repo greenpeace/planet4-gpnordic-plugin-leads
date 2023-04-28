@@ -1,6 +1,6 @@
 <?php 
 $condition = $form_type === 'multistep' ? true : 'success';
-$onClick = $form_type === 'multistep' ? "completeMultistep($step_index)" : "";
+$onClick = $form_type === 'multistep' ? "completeMultistep($step_index), pushDataLayer('action_donation')" : "";
 ?>
 
 <div v-show="<?php echo $condition; ?>" class="leads-form__donate">
