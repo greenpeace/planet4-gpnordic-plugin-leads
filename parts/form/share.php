@@ -24,6 +24,9 @@ switch ($checkLanguage) {
 }
 
 $onClick = $form_type === 'multistep' ? "completeMultistep($step_index), pushDataLayer('action_share')" : "";
+
+$share_url_copy_link = "$url?utm_source=copy_link&utm_medium=share_button";
+$share_url_facebook = "$url?utm_source=facebook.com&utm_medium=share_button";
 ?>
 
 <div class="leads-form__share">
@@ -35,8 +38,8 @@ $onClick = $form_type === 'multistep' ? "completeMultistep($step_index), pushDat
     </h4>
     <?php echo $description; ?>
     <div class="leads-form__share__icons">
-        <a @click="<?php echo $onClick; ?>" id="facebook" class="button button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url; ?>?<?php echo "share=facebook"; ?>" target="_blank"><?php GPPL4\svg_icon('facebook'); ?></a>
-        <button @click="copyLink(<?php if ($form_type === 'multistep') echo $step_index; ?>), pushDataLayer('action_share')" id="copy-link" class="button button--share"><?php GPPL4\svg_icon('link'); ?><?php echo $copy_link_button_caption; ?></button>
+        <a @click="<?php echo $onClick; ?>" id="facebook" class="button button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url_facebook; ?>" target="_blank"><?php GPPL4\svg_icon('facebook'); ?></a>
+        <button @click="copyLink(<?php if ($form_type === 'multistep') echo $step_index; ?>, '<?php echo $share_url_copy_link; ?>'), pushDataLayer('action_share')" id="copy-link" class="button button--share"><?php GPPL4\svg_icon('link'); ?><?php echo $copy_link_button_caption; ?></button>
     </div>
     <?php 
       if ($form_type === 'multistep') :

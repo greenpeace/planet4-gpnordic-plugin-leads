@@ -532,17 +532,17 @@
             })
             .to(this.$refs.heroDescription, { opacity: 1, duration: 0.25 });
         },
-        copyLink(stepIndex = undefined) {
+        copyLink(stepIndex = undefined, url) {
           // Implementing the winning A/B test version
-          let copyURL = document.createElement("input"),
-            text = window.location.href,
-            linkParam = "";
+          let copyURL = document.createElement("input");
+          // let text = window.location.href
+          // let linkParam = "";
 
-          if (window.location.href.indexOf("?") > -1) {
-            linkParam = text + "&share=copy_link";
-          } else {
-            linkParam = text + "?share=copy_link";
-          }
+          // if (window.location.href.indexOf("?") > -1) {
+          //   linkParam = text + "&share=copy_link";
+          // } else {
+          //   linkParam = text + "?share=copy_link";
+          // }
 
           let setLanguage = window.location.pathname.split("/")[1];
           let $linkCopied = "";
@@ -565,7 +565,7 @@
           }
 
           document.body.appendChild(copyURL);
-          copyURL.value = linkParam;
+          copyURL.value = url;
           copyURL.select();
           document.execCommand("copy");
           document.body.removeChild(copyURL);
