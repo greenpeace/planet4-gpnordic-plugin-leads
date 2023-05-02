@@ -2,6 +2,7 @@
 include_once('petition-settings/donate.php');
 include_once('petition-settings/thank-you.php');
 include_once('petition-settings/hero.php');
+include_once('petition-settings/multistep.php');
 include_once('petition-settings/form.php');
 include_once('petition-settings/appearance.php');
 
@@ -19,6 +20,10 @@ $option_fields->addFields($form_settings);
 // Add fields to the "Hero Settings" group
 $hero_settings = get_hero_settings();
 $option_fields->addFields($hero_settings);
+
+// Add fields to the "Multisteps" group
+$multistep_settings = get_multistep_settings();
+$option_fields->addFields($multistep_settings);
 
 // Add fields to the "Thank You Settings" group
 $thank_you_settings = get_thank_you_settings();

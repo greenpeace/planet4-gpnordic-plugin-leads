@@ -4,7 +4,7 @@
   <?php if ($buttons) : ?>
     <div class="button-container">
       <?php foreach ($buttons as $button) : ?>
-        <a @click="completeMultistep(<?php echo $step_index; ?>)" class="button button--share" href="<?php echo $button['button_url']; ?>" style="background-color: <?php echo $button['button_color']; ?>!important; color: <?php echo $button['button_text_color']; ?>!important;" target="_blank"><?php echo $button['button_caption']; ?></a>
+        <a @click="completeMultistep(<?php echo $step_index; ?>), pushDataLayer('action_custom_ask', `<?php echo $button['button_caption']; ?>`)" class="button button--share" href="<?php echo $button['button_url']; ?>" style="background-color: <?php echo $button['button_color']; ?>!important; color: <?php echo $button['button_text_color']; ?>!important;" target="_blank"><?php echo $button['button_caption']; ?></a>
       <?php endforeach; ?>
     </div>
   <?php endif; ?> 

@@ -31,6 +31,7 @@
         goal: blockData.counterGoalValue,
         loading: false,
         donateAmount: blockData.donateAmount,
+        donateAmountInputValue: null,
         presetDonateAmount: 0,
         errors: [],
         emailErrors: [],
@@ -58,6 +59,7 @@
         multistepCompleted: [],
         multistepViewed: [],
         finalData: blockData.finalData,
+        steps: blockData.steps,
       },
       computed: {
         percentReachedGoal: function () {
@@ -100,10 +102,9 @@
         },
       },
       mounted: function () {
-        if (this.formType !== "multistep") {
-          console.log(this.donateAmount, this.presetDonateAmount);
-          this.donateAmount = this.presetDonateAmount;
-        }
+        if (this.formType !== "multistep")
+          this.donateAmountInputValue = this.donateAmount;
+
         this.dataLayer &&
           this.dataLayer.push({
             sourceCode: this.sourceCode,
@@ -169,8 +170,10 @@
         setPreset(amount) {
           this.presetDonateAmount = amount;
           this.donateAmount = null;
+          this.donateAmountInputValue = null;
         },
         setDonateAmount(event) {
+          this.donateAmountInputValue = event.target.value;
           this.donateAmount = event.target.value;
         },
         getDonateUrl: function (url) {
@@ -388,8 +391,8 @@
                                   this.dataLayer &&
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
-                                      donationOption:
-                                        "Pre-selected amount to donation",
+                                      sourceCode: this.sourceCode,
+                                      stepName: "intro",
                                     });
 
                                   donateBtn.addEventListener("click", () => {
@@ -531,17 +534,9 @@
             })
             .to(this.$refs.heroDescription, { opacity: 1, duration: 0.25 });
         },
-        copyLink(stepIndex = undefined) {
+        copyLink(url, stepIndex = undefined) {
           // Implementing the winning A/B test version
-          let copyURL = document.createElement("input"),
-            text = window.location.href,
-            linkParam = "";
-
-          if (window.location.href.indexOf("?") > -1) {
-            linkParam = text + "&share=copy_link";
-          } else {
-            linkParam = text + "?share=copy_link";
-          }
+          let copyURL = document.createElement("input");
 
           let setLanguage = window.location.pathname.split("/")[1];
           let $linkCopied = "";
@@ -564,7 +559,7 @@
           }
 
           document.body.appendChild(copyURL);
-          copyURL.value = linkParam;
+          copyURL.value = url;
           copyURL.select();
           document.execCommand("copy");
           document.body.removeChild(copyURL);
@@ -582,12 +577,115 @@
               this.completeMultistep(stepIndex);
             }, 1000);
         },
+        pushDataLayer(key, dynamicValue) {
+          if (!key) return;
+          let dataObj = {};
+          switch (key) {
+            case "thank_you_yes":
+              dataObj = {
+                event: "petitionTYButton",
+                buttonName: "yes",
+              };
+              break;
+            case "thank_you_no":
+              dataObj = {
+                event: "petitionTYButton",
+                buttonName: "no",
+              };
+              break;
+            case "share":
+              dataObj = {
+                event: "petitionThankYou",
+                sourceCode: this.sourceCode,
+                stepName: "share",
+              };
+              break;
+            case "action_share":
+              dataObj = {
+                event: "uaEvent",
+                eventAction: dynamicValue,
+                eventCategory: "Social share",
+              };
+              break;
+            case "donation":
+              dataObj = {
+                event: "petitionThankYou",
+                sourceCode: this.sourceCode,
+                stepName: "donationOptions",
+              };
+              break;
+            case "action_donation":
+              const donateOption =
+                this.donateAmount && this.donateAmount > 0
+                  ? "custom amount to donation"
+                  : "predefined amount to donation";
+              const amount =
+                this.donateAmount && this.donateAmount > 0
+                  ? this.donateAmount
+                  : this.presetDonateAmount;
+              dataObj = {
+                event: "petitionDonation",
+                PetitionDonationLink: donateOption,
+                amount: amount,
+              };
+              break;
+            case "custom_ask":
+              dataObj = {
+                event: "petitionThankYou",
+                sourceCode: this.sourceCode,
+                stepName: "custom step",
+                stepText: `{${this.toKebabCase(dynamicValue)}}`,
+              };
+              break;
+            case "action_custom_ask":
+              dataObj = {
+                event: "customAsk",
+                label: dynamicValue,
+              };
+              break;
+            case "final":
+              dataObj = {
+                event: "petitionThankYou",
+                sourceCode: this.sourceCode,
+                stepName: "finalStep",
+                stepCompleted: `${this.multistepCompleted.length + 1}/${
+                  this.multistepCount - 1
+                }`,
+              };
+              break;
+            case "action_final":
+              dataObj = {
+                event: "checkCampaigns",
+              };
+              break;
+            case "skip_step":
+              dataObj = {
+                event: "skipStep",
+              };
+              break;
+          }
+          this.dataLayer && this.dataLayer.push(dataObj);
+          // console.log(dataObj);
+        },
         /**
          * Multistep
          */
         goToStep(stepIndex) {
           // Set step to active
           this.multistepActive = stepIndex;
+
+          // Get type of active step for dataLayer
+          const activeStepType =
+            this.steps.step && this.steps.step[this.multistepActive - 1]
+              ? this.steps.step[this.multistepActive - 1].select_step
+              : this.multistepActive === this.steps.step.length + 1
+              ? "final"
+              : null;
+          let dynamicValue = null;
+          if (activeStepType === "custom_ask")
+            dynamicValue = this.steps.custom_ask_headline;
+          this.pushDataLayer(activeStepType, dynamicValue);
+
           // Mark step as viewed
           if (!this.multistepViewed.includes(stepIndex))
             this.multistepViewed.push(stepIndex);
@@ -627,6 +725,17 @@
         },
         isLast(stepIndex) {
           return stepIndex >= this.multistepCount - 1;
+        },
+        toKebabCase(str) {
+          return (
+            str &&
+            str
+              .match(
+                /[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g
+              )
+              .map((x) => x.toLowerCase())
+              .join("-")
+          );
         },
       },
     });

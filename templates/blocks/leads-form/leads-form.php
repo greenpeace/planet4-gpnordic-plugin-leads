@@ -612,6 +612,7 @@ $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields
         },
         formType: '<?php echo $form_type; ?>',
         multistepCount: <?php echo $multistep_count; ?>,
-        finalData: <?php echo json_encode($final_data);?>
+        finalData: <?php echo json_encode($final_data);?>,
+        steps: <?php echo json_encode($steps);?>
     };
 </script>
