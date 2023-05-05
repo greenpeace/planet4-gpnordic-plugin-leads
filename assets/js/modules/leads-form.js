@@ -307,6 +307,7 @@
                       opacity: 1,
                       duration: this.animationSpeed,
                     });
+                  this.pushDataLayer("thank_you");
                 }
                 // Regular
                 else {
@@ -565,12 +566,7 @@
           document.body.removeChild(copyURL);
           document.querySelector("#copy-link").innerHTML = $linkCopied;
 
-          this.dataLayer &&
-            this.dataLayer.push({
-              event: "uaevent",
-              eventAction: "Copy link",
-              eventCategory: "Social Share",
-            });
+          this.pushDataLayer("action_share", "Copy link");
 
           if (stepIndex)
             setTimeout(() => {
@@ -581,6 +577,13 @@
           if (!key) return;
           let dataObj = {};
           switch (key) {
+            case "thank_you":
+              dataObj = {
+                event: "petitionThankYou",
+                sourceCode: this.sourceCode,
+                stepName: "intro",
+              };
+              break;
             case "thank_you_yes":
               dataObj = {
                 event: "petitionTYButton",
@@ -665,7 +668,7 @@
               break;
           }
           this.dataLayer && this.dataLayer.push(dataObj);
-          // console.log(dataObj);
+          console.log(dataObj);
         },
         /**
          * Multistep
