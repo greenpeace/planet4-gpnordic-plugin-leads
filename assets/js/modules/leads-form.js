@@ -668,7 +668,6 @@
               break;
           }
           this.dataLayer && this.dataLayer.push(dataObj);
-          console.log(dataObj);
         },
         /**
          * Multistep
