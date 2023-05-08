@@ -23,6 +23,7 @@ function get_multistep_settings()
                 'instructions' => 'Add the steps for the multi-step form (first and last step is not editable)',
                 'layout' => 'block',
                 'button_label' => 'Add step',
+                'max' => 3,
             ])
                 ->addSelect('select_step', [
                     'label' => 'Step',
