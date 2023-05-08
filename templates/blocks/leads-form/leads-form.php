@@ -112,8 +112,8 @@ $thank_you_data = array(
     'form_type' => $form_type,
     'share_button_caption' => $has_multisteps ? $steps['thank_you_share_button_caption'] : null,
     'skip_button_caption' => $has_multisteps ? $steps['thank_you_skip_button_caption'] : null,
-    'share_go_to_step' => $has_multisteps ? $steps['thank_you_share_go_to_step'] : null,
-    'skip_go_to_step' => $has_multisteps ? $steps['thank_you_skip_go_to_step'] : null,
+    'share_go_to_step' => $has_multisteps ? 1 : null,
+    'skip_go_to_step' => $has_multisteps ? 2 : null,
     'description' => $has_multisteps ? $steps['thank_you_description'] : $thank_you_settings['description'],
 );
 $counter_data = array(
