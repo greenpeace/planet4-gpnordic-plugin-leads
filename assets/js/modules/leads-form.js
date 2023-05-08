@@ -620,7 +620,9 @@
             case "action_donation":
               const donateOption =
                 this.donateAmount && this.donateAmount > 0
-                  ? "custom amount to donation"
+                  ? this.donateAmountInputValue === null
+                    ? "direct link to donation"
+                    : "custom amount to donation"
                   : "predefined amount to donation";
               const amount =
                 this.donateAmount && this.donateAmount > 0
