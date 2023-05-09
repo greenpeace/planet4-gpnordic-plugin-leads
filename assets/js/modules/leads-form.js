@@ -688,6 +688,7 @@
           let dynamicValue = null;
           if (activeStepType === "custom_ask")
             dynamicValue = this.steps.custom_ask_headline;
+          console.log(activeStepType, dynamicValue);
           this.pushDataLayer(activeStepType, dynamicValue);
 
           // Mark step as viewed
@@ -698,7 +699,7 @@
           // Mark share step as viewed, so that it will be displayed as skipped
           this.multistepViewed.push(skipIndex);
           // Set step to active
-          this.multistepActive = goToIndex;
+          this.goToStep(goToIndex);
         },
         wasCompleted(stepIndex) {
           return this.multistepCompleted.includes(stepIndex);
