@@ -39,7 +39,7 @@
         lastNameErrors: [],
         phoneErrors: [],
         otherErrors: [],
-        success: true,
+        success: false,
         formFields: blockData.formFields,
         showThankYouAnimation: false,
         animationSpeed: 0.6,
@@ -670,6 +670,7 @@
               break;
           }
           this.dataLayer && this.dataLayer.push(dataObj);
+          // console.log(dataObj);
         },
         /**
          * Multistep
@@ -688,7 +689,6 @@
           let dynamicValue = null;
           if (activeStepType === "custom_ask")
             dynamicValue = this.steps.custom_ask_headline;
-          console.log(activeStepType, dynamicValue);
           this.pushDataLayer(activeStepType, dynamicValue);
 
           // Mark step as viewed
