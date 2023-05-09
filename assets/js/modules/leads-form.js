@@ -39,7 +39,7 @@
         lastNameErrors: [],
         phoneErrors: [],
         otherErrors: [],
-        success: true,
+        success: false,
         formFields: blockData.formFields,
         showThankYouAnimation: false,
         animationSpeed: 0.6,
@@ -670,6 +670,7 @@
               break;
           }
           this.dataLayer && this.dataLayer.push(dataObj);
+          // console.log(dataObj);
         },
         /**
          * Multistep
@@ -698,7 +699,7 @@
           // Mark share step as viewed, so that it will be displayed as skipped
           this.multistepViewed.push(skipIndex);
           // Set step to active
-          this.multistepActive = goToIndex;
+          this.goToStep(goToIndex);
         },
         wasCompleted(stepIndex) {
           return this.multistepCompleted.includes(stepIndex);
