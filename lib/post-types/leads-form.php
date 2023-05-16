@@ -89,4 +89,3 @@ function leads_custom_column($column, $post_id)
 add_action('manage_leads-form_posts_custom_column', __NAMESPACE__ . '\\leads_custom_column', 10, 2);
 
 
-// add_action('save_post', __NAMESPACE__ . '\\check_petitions_publish_locations', 10, 3);

@@ -86,7 +86,10 @@ function fb_label_render_field($field)
 // Apply to field named "share_description".
 add_action('acf/render_field/name=share_description', 'fb_label_render_field');
 
-// Get Petition publish locations
+/**
+ * Functions related to getting Petition publish locations 
+ */
+
 add_action('wp_ajax_get_petition_publish_locations', 'get_petition_publish_locations');
 
 function get_petition_publish_locations() {
@@ -95,3 +98,27 @@ function get_petition_publish_locations() {
 	wp_send_json_success(['status' => 'success', 'message' => $message], 200);
 	wp_die();
 }
+
+add_action('save_post', __NAMESPACE__ . '\\update_petition_locations_transient', 10, 3);
+
+function update_petition_locations_transient( $page_id ) {
+
+	$petition_ids = GPLP\Controllers\PetitionController::get_petition_ids_by_page($page_id);
+	// GPPL4\debug_log("petition_ids: $petition_ids");
+
+	if ($petition_ids) {
+		foreach ($petition_ids as $petition_id) {
+			$transient_key = "petition_locations_$petition_id";
+			$transient_value = get_transient($transient_key) ?: array();
+
+			$new_transient_values = array_merge($transient_value, array($page_id));
+			$new_transient_values = array_unique($new_transient_values);
+
+			set_transient($transient_key, $new_transient_values);
+
+			GPPL4\debug_log("transient: $new_transient_values");
+		}
+	}
+
+}
+

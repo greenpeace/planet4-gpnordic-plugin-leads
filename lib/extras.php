@@ -103,3 +103,28 @@ function hex2rgba($color, $opacity = false) {
         return $output;
 }
 
+function debug_log($output, $label = 'Debug')
+{
+    
+        // Exit if WP_DEBUG not set or false
+        if (!defined('WP_DEBUG') || false === WP_DEBUG) {
+                return;
+        }
+
+        if (is_wp_error($output)) {
+                // var_dump($output);
+                // var_dump(is_wp_error($output));
+                error_log("[$label] WP_Error: " . $output->get_error_message());
+                return;
+        } else if (is_iterable($output)) {
+                // Log array or object
+                error_log("[$label]");
+                error_log(print_r($output, true));
+        } else if (is_string($output) || is_int($output)) {
+                // Log string or integer
+                error_log("[$label] $output");
+        } else {
+                // Log other
+                error_log("[$label] " . var_export($output, true));
+        }
+}
