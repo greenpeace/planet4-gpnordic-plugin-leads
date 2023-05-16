@@ -1,0 +1,1 @@
+"use strict";var petitionLocations=function(o){console.log("petitionLocations");var t={},i=gplp_leads_ajax.ajaxurl;return console.log(i),t.update_locations=function(t){o.ajax({method:"POST",url:i,dataType:"json",data:{action:"get_petition_publish_locations"}})},{init:function(){t.update_locations()}}}(jQuery);jQuery(function(t){petitionLocations.init()});

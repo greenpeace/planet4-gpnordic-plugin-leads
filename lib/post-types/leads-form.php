@@ -82,4 +82,4 @@ function leads_custom_column($column, $post_id)
     break;
   }
 }
-add_action('manage_leads-form_posts_custom_column', __NAMESPACE__ . '\\leads_custom_column', 10, 2);
+// add_action('manage_leads-form_posts_custom_column', __NAMESPACE__ . '\\leads_custom_column', 10, 2);

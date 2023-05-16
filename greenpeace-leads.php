@@ -58,8 +58,20 @@ function gplp_enqueue_scripts()
 	wp_enqueue_script('jquery');
 	wp_localize_script('jquery', 'gplp', array('plugin_uri' => plugin_dir_url(__FILE__)));
 }
+function gplp_enqueue_admin_scripts()
+{
+	$version = get_plugin_data(__FILE__)['Version'];
+	wp_enqueue_script('jquery');
+	wp_localize_script('jquery', 'gplp', array('plugin_uri' => plugin_dir_url(__FILE__)));
+	// Petition location
+	wp_enqueue_script('petition-location', plugin_dir_url(__FILE__) . '/assets/js/petition-locations.js', ['jquery'], $version, true);
+
+	wp_localize_script('petition-location', 'gplp_leads_ajax', array(
+			'ajaxurl' => admin_url('admin-ajax.php'),
+	));
+}
 add_action('wp_enqueue_scripts', 'gplp_enqueue_scripts');
-add_action('admin_enqueue_scripts', 'gplp_enqueue_scripts');
+add_action('admin_enqueue_scripts', 'gplp_enqueue_admin_scripts');
 
 //Adding label for FB shares
 function fb_label_render_field($field)
