@@ -20,6 +20,7 @@ const petitionLocations = (function ($) {
     for (const id of ids) {
       try {
         const result = await getPetitionPublishLocation(id);
+        if (result && result.data.message) console.log(result.data.message);
         if (result && result.data.message)
           document.getElementById(id).innerHTML = result.data.message;
       } catch (error) {

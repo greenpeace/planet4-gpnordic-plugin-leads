@@ -4,7 +4,6 @@ namespace GPLP\Controllers;
 
 class PetitionController {
   public static function get_petition_publish_locations($petition_id) {
-    // return "I'll get the publish locations for $post_id";
     $transient_key = "petition_locations_$petition_id";
     $transient_value = get_transient($transient_key);
     return $transient_value ? json_encode($transient_value) : "";
@@ -44,6 +43,21 @@ class PetitionController {
       acf_reset_meta($block['attrs']['name']);
       return $modified_block;
     }
+  }
+
+  public static function get_pages_by_transient_values($ids) {
+    $posts = new \WP_Query([
+        'post_type' => 'page',
+        'posts_per_page' => -1,
+        'post_status' => 'any',
+        'post__in' => $ids,
+    ]);
+    if ($posts->have_posts()) {
+      return array_map(function($post) {
+        return array('title' => $post->post_title, 'permalink' => get_the_permalink($post->ID));
+      }, $posts->get_posts());
+    }
+    return [];
   }
 
   public static function register_api_routes()

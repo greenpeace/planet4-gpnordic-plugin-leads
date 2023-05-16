@@ -109,12 +109,27 @@ function update_petition_locations_transient( $page_id ) {
 	if ($petition_ids) {
 		foreach ($petition_ids as $petition_id) {
 			$transient_key = "petition_locations_$petition_id";
-			$transient_value = get_transient($transient_key) ?: array();
+			$transient = get_transient($transient_key);
+			$transient_value = $transient ?: array();
 
-			$new_transient_values = array_merge($transient_value, array($page_id));
+			if (gettype($transient_value) == 'array') {
+				$new_transient_values = array_merge($transient_value, array($page_id));
+			} else {
+				$new_transient_values = array($transient_value, $page_id);
+			}
 			$new_transient_values = array_unique($new_transient_values);
 
-			set_transient($transient_key, $new_transient_values);
+			$transient_pages = GPLP\Controllers\PetitionController::get_pages_by_transient_values($new_transient_values);
+
+			$markup = array_map(function($page) {
+				$permalink = $page['permalink'];
+				$title = $page['title'];
+				return "<a href='$permalink'>$title</a>";
+			}, $transient_pages);
+
+			$markup = join("<br />", $markup);
+
+			set_transient($transient_key, $markup);
 
 			GPPL4\debug_log("transient: $new_transient_values");
 		}
