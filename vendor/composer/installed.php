@@ -3,7 +3,7 @@
         'name' => 'greenpeace/planet4-gpnordic-plugin-leads',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '8ae2545c06b5ca88dd3b3626d15754396e78c675',
+        'reference' => '9901ee8a815a92fa51d46deaabb68d771256bcb1',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'greenpeace/planet4-gpnordic-plugin-leads' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '8ae2545c06b5ca88dd3b3626d15754396e78c675',
+            'reference' => '9901ee8a815a92fa51d46deaabb68d771256bcb1',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
