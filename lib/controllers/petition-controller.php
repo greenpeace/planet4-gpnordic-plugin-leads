@@ -3,8 +3,8 @@
 namespace GPLP\Controllers;
 
 class PetitionController {
-  public static function get_petition_publish_locations() {
-    return "get_petition_publish_locations trigger";
+  public static function get_petition_publish_locations($post_id) {
+    return "I'll get the publish locations for $post_id";
   }
 
   public static function register_api_routes()

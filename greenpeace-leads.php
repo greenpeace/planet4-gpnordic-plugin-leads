@@ -90,8 +90,8 @@ add_action('acf/render_field/name=share_description', 'fb_label_render_field');
 add_action('wp_ajax_get_petition_publish_locations', 'get_petition_publish_locations');
 
 function get_petition_publish_locations() {
-	$message = GPLP\Controllers\PetitionController::get_petition_publish_locations();
-
+	$id = $_POST['id'];
+	$message = GPLP\Controllers\PetitionController::get_petition_publish_locations($id);
 	wp_send_json_success(['status' => 'success', 'message' => $message], 200);
 	wp_die();
 }

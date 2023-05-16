@@ -84,5 +84,15 @@ function leads_custom_column($column, $post_id)
 }
 // add_action('manage_leads-form_posts_custom_column', __NAMESPACE__ . '\\leads_custom_column', 10, 2);
 
+// Add a placeholder element to petition column so it can be accessed with JS
+function leads_custom_column_placeholder($column, $post_id) {
+  switch($column) {
+    case "included" : echo "<div class='petition-custom-column-placeholder' id='$post_id'></div>";
+  }
+}
+
+
+add_action('manage_leads-form_posts_custom_column', __NAMESPACE__ . '\\leads_custom_column_placeholder', 10, 2);
+
 
 // add_action('save_post', __NAMESPACE__ . '\\check_petitions_publish_locations', 10, 3);
