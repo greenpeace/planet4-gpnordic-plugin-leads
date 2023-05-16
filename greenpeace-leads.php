@@ -45,6 +45,7 @@ $roots_includes = array(
 	'lib/options.php',
 	'lib/extras.php',
 	'lib/controllers/leads-form-controller.php',
+	'lib/controllers/petition-controller.php',
 	'lib/post-types/leads-form.php',
 );
 
@@ -58,20 +59,23 @@ function gplp_enqueue_scripts()
 	wp_enqueue_script('jquery');
 	wp_localize_script('jquery', 'gplp', array('plugin_uri' => plugin_dir_url(__FILE__)));
 }
-function gplp_enqueue_admin_scripts()
+function gplp_enqueue_admin_scripts($hook)
 {
 	$version = get_plugin_data(__FILE__)['Version'];
 	wp_enqueue_script('jquery');
 	wp_localize_script('jquery', 'gplp', array('plugin_uri' => plugin_dir_url(__FILE__)));
-	// Petition location
-	wp_enqueue_script('petition-location', plugin_dir_url(__FILE__) . '/assets/js/petition-locations.js', ['jquery'], $version, true);
-
-	wp_localize_script('petition-location', 'gplp_leads_ajax', array(
-			'ajaxurl' => admin_url('admin-ajax.php'),
-	));
+	// Petition location scripts (only for Petitions tab)
+	if ($hook === "edit.php" && isset($_GET['post_type']) && $_GET['post_type'] === 'leads-form') {
+		wp_enqueue_script('petition-location', plugin_dir_url(__FILE__) . '/assets/js/petition-locations.js', ['jquery'], $version, true);
+		wp_localize_script('petition-location', 'gplp_leads_ajax', array(
+				'ajaxurl' => admin_url('admin-ajax.php'),
+		));
+	}
 }
 add_action('wp_enqueue_scripts', 'gplp_enqueue_scripts');
 add_action('admin_enqueue_scripts', 'gplp_enqueue_admin_scripts');
+
+
 
 //Adding label for FB shares
 function fb_label_render_field($field)
@@ -81,3 +85,13 @@ function fb_label_render_field($field)
 
 // Apply to field named "share_description".
 add_action('acf/render_field/name=share_description', 'fb_label_render_field');
+
+// Get Petition publish locations
+add_action('wp_ajax_get_petition_publish_locations', 'get_petition_publish_locations');
+
+function get_petition_publish_locations() {
+	$message = GPLP\Controllers\PetitionController::get_petition_publish_locations();
+
+	wp_send_json_success(['status' => 'success', 'message' => $message], 200);
+	wp_die();
+}
