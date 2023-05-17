@@ -27,7 +27,7 @@ class PetitionController {
     return count($petition_ids) ? array_values($petition_ids) : null;
   }
 
-  public static function get_pages_by_petition_id($petition_id) {
+  public static function get_page_links_by_petition_id($petition_id) {
     global $wpdb;
 
     try {
@@ -35,25 +35,36 @@ class PetitionController {
       $pages = array();
       $message = "";
       //iterrating obver the results and assigning values for each page to variables
-      $encoded_result = json_encode($results);
-      \GPPL4\debug_log("results: $encoded_result");
 
       foreach($results as $page) {
         $page_id = $page->ID;
         $page_title = $page->post_title;
         $page_content = $page->post_content;
-        $page_status = $page->post_status;
-        //getting the permalink and the meta of the page and filetring the content
         $page_permalink = get_permalink($page_id);
-        $page_meta = get_post_meta($page_id);
-        $page_content = apply_filters('the_content', $page_content);
-        //assigning the custom styles of the page statuses
-        $page_status = $status_labels[$page_status] ?? '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>';
-        //regular expression to search for a match in the first param within the string provided in the second param by returning a number if match is found
-        preg_match('/data-form-id="(.*?)"/', $page_content, $form_id);
-        //if there is a match with the data attibute and a form ID then output a link to the page
-        if(isset($form_id[1]) && $form_id[1] == $petition_id) {
-            $message .= '<a href="' . $page_permalink . '" target="_blank">' . $page_title . '</a>' . $page_status . '<br>';
+        $page_meta = get_post_meta($page_id);   
+        // Get blocks from page content
+        $blocks = array_map(function($block) {
+          return PetitionController::get_block_data($block);
+        }, parse_blocks($page_content));
+        // Filter out null values
+        $blocks = array_filter($blocks, function($block) {
+          return $block !== null && isset($block['data']) && isset($block['data']['form']);
+        });
+        // Get petition form ids from blocks
+        $petition_ids = array_map(function($block) {
+          return $block['data']['form'];
+        }, $blocks);
+
+        // Debug
+        $encoded_ids = json_encode($petition_ids);
+        \GPPL4\debug_log("petition_ids : $encoded_ids, page: $page_title");
+
+        if (count($petition_ids) > 0) {
+          foreach($petition_ids as $id) {
+            if ($id == $petition_id) {
+              $message .= '<a href="' . $page_permalink . '" target="_blank">' . $page_title . '</a>' . $page_status . '<br>';
+            }
+          } 
         }
       }
       return $message;

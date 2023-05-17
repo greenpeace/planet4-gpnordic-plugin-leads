@@ -96,15 +96,17 @@ add_action('wp_ajax_get_or_set_petition_publish_locations', 'get_or_set_petition
 function get_or_set_petition_publish_locations() {
 	$petition_id = $_POST['id'];
 	$transient_key = "petition_locations_$petition_id";
+
 	$transient = get_transient($transient_key);
 
+	\GPPL4\debug_log("transient: $transient");
+
 	if (!$transient) {
-		$message = GPLP\Controllers\PetitionController::get_pages_by_petition_id($petition_id);
+		$message = GPLP\Controllers\PetitionController::get_page_links_by_petition_id($petition_id);
 		set_transient($transient_key, $message);
 	} 
-	$new_transient = get_transient($transient_key);
 
-	wp_send_json_success(['status' => 'success', 'message' => $new_transient], 200);
+	wp_send_json_success(['status' => 'success', 'message' => $transient], 200);
 	wp_die();
 }
 
@@ -112,6 +114,11 @@ add_action('save_post', __NAMESPACE__ . '\\reset_petition_locations_transient', 
 
 function reset_petition_locations_transient( $page_id ) {
 	$petition_ids = GPLP\Controllers\PetitionController::get_petition_ids_by_page($page_id);
+
+	$title = get_the_title($page_id);
+	$encoded_ids = json_encode($petition_ids);
+	\GPPL4\debug_log("petition_ids for $title: $encoded_ids");
+
 
 	if ($petition_ids) {
 		foreach ($petition_ids as $petition_id) {
