@@ -6,7 +6,7 @@ class PetitionController {
   public static function get_petition_publish_locations($petition_id) {
     $transient_key = "petition_locations_$petition_id";
     $transient_value = get_transient($transient_key);
-    return $transient_value ? json_encode($transient_value) : "";
+    return $transient_value;
   }
 
   public static function get_petition_ids_by_page($page_id) {
