@@ -37,7 +37,7 @@ const petitionLocations = (function ($) {
         url: ajaxurl,
         dataType: "json",
         data: {
-          action: "get_petition_publish_locations",
+          action: "get_or_set_petition_publish_locations",
           id: id,
         },
         success: function (response) {

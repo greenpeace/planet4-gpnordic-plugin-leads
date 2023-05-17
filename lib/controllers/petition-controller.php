@@ -27,6 +27,41 @@ class PetitionController {
     return count($petition_ids) ? array_values($petition_ids) : null;
   }
 
+  public static function get_pages_by_petition_id($petition_id) {
+    global $wpdb;
+
+    try {
+      $results = $wpdb->get_results( "SELECT ID, post_title, post_content, post_status FROM $wpdb->posts WHERE post_content LIKE '%wp:acf/leads-form%'AND post_status IN ('publish','draft','auto-draft','pending','future','private')" );
+      $pages = array();
+      $message = "";
+      //iterrating obver the results and assigning values for each page to variables
+      $encoded_result = json_encode($results);
+      \GPPL4\debug_log("results: $encoded_result");
+
+      foreach($results as $page) {
+        $page_id = $page->ID;
+        $page_title = $page->post_title;
+        $page_content = $page->post_content;
+        $page_status = $page->post_status;
+        //getting the permalink and the meta of the page and filetring the content
+        $page_permalink = get_permalink($page_id);
+        $page_meta = get_post_meta($page_id);
+        $page_content = apply_filters('the_content', $page_content);
+        //assigning the custom styles of the page statuses
+        $page_status = $status_labels[$page_status] ?? '<span style="padding-left:0.2rem;color:darkorange;"><small> (Draft) </small></span>';
+        //regular expression to search for a match in the first param within the string provided in the second param by returning a number if match is found
+        preg_match('/data-form-id="(.*?)"/', $page_content, $form_id);
+        //if there is a match with the data attibute and a form ID then output a link to the page
+        if(isset($form_id[1]) && $form_id[1] == $petition_id) {
+            $message .= '<a href="' . $page_permalink . '" target="_blank">' . $page_title . '</a>' . $page_status . '<br>';
+        }
+      }
+      return $message;
+    } catch (exception $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
+  }
+
   public static function get_block_data($block) {
     if (
         isset($block['attrs']) &&

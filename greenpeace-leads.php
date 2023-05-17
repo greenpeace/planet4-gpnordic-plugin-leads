@@ -86,59 +86,39 @@ function fb_label_render_field($field)
 // Apply to field named "share_description".
 add_action('acf/render_field/name=share_description', 'fb_label_render_field');
 
+
 /**
  * Functions related to getting Petition publish locations 
  */
 
-add_action('wp_ajax_get_petition_publish_locations', 'get_petition_publish_locations');
+add_action('wp_ajax_get_or_set_petition_publish_locations', 'get_or_set_petition_publish_locations');
 
-function get_petition_publish_locations() {
-	$id = $_POST['id'];
-	$message = GPLP\Controllers\PetitionController::get_petition_publish_locations($id);
-	wp_send_json_success(['status' => 'success', 'message' => $message], 200);
+function get_or_set_petition_publish_locations() {
+	$petition_id = $_POST['id'];
+	$transient_key = "petition_locations_$petition_id";
+	$transient = get_transient($transient_key);
+
+	if (!$transient) {
+		$message = GPLP\Controllers\PetitionController::get_pages_by_petition_id($petition_id);
+		set_transient($transient_key, $message);
+	} 
+	$new_transient = get_transient($transient_key);
+
+	wp_send_json_success(['status' => 'success', 'message' => $new_transient], 200);
 	wp_die();
 }
 
-add_action('save_post', __NAMESPACE__ . '\\update_petition_locations_transient', 10, 3);
+add_action('save_post', __NAMESPACE__ . '\\reset_petition_locations_transient', 10, 3);
 
-function update_petition_locations_transient( $page_id ) {
-
+function reset_petition_locations_transient( $page_id ) {
 	$petition_ids = GPLP\Controllers\PetitionController::get_petition_ids_by_page($page_id);
-	// GPPL4\debug_log("petition_ids: $petition_ids");
 
 	if ($petition_ids) {
 		foreach ($petition_ids as $petition_id) {
 			$transient_key = "petition_locations_$petition_id";
-			$transient = get_transient($transient_key);
 
-			$transient_value = $transient ?: array();
-
-			if (gettype($transient_value) == 'array') {
-				$new_transient_values = array_merge($transient_value, array($page_id));
-			} else {
-				$new_transient_values = array($transient_value, $page_id);
-			}
-			// $markup .= $new_transient_values.join(",");
-
-			// $new_transient_values = array_unique($new_transient_values);
-
-			// $transient_pages = GPLP\Controllers\PetitionController::get_pages_by_transient_values($new_transient_values);
-
-			// $markup = array_map(function($page) {
-			// 	$permalink = $page['permalink'];
-			// 	$title = $page['title'];
-			// 	return "<a href='$permalink'>$title</a>";
-			// }, $transient_pages);
-
-			// $markup = join("<br />", $markup);
-
-			// set_transient($transient_key, []);
-
-			set_transient($transient_key, $new_transient_values);
-
-			GPPL4\debug_log("transient: $new_transient_values");
+			// Reset transient 
+			set_transient($transient_key, null);
 		}
 	}
-
 }
-
