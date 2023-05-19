@@ -571,6 +571,12 @@ $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields
                 required: false,
                 regex: ''
             },
+            docref: {
+                value: document.referrer, //Capture the referrer URL and populate the hidden input field
+                fieldName: 'Referrer',
+                required: false,
+                regex: ''
+            },
             fname: {
                 value: '',
                 id: 'fname',
