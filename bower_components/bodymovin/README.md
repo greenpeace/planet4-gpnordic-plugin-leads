@@ -1,12 +1,12 @@
 # Lottie for Web, [Android](https://github.com/airbnb/lottie-android), [iOS](https://github.com/airbnb/lottie-ios), [React Native](https://github.com/airbnb/lottie-react-native), and [Windows](https://aka.ms/lottie)
 
-Lottie is a mobile library for Web,  and iOS that parses [Adobe After Effects](http://www.adobe.com/products/aftereffects.html) animations exported as json with [Bodymovin](https://github.com/airbnb/lottie-web) and renders them natively on mobile!
+Lottie is a mobile library for Web,  and iOS that parses [Adobe After Effects](https://www.adobe.com/products/aftereffects.html) animations exported as json with [Bodymovin](https://github.com/airbnb/lottie-web) and renders them natively on mobile!
 
 For the first time, designers can create **and ship** beautiful animations without an engineer painstakingly recreating it by hand. They say a picture is worth 1,000 words so here are 13,000:
 
 
 
-# View documentation, FAQ, help, examples, and more at [airbnb.io/lottie](http://airbnb.io/lottie/)
+# View documentation, FAQ, help, examples, and more at [airbnb.io/lottie](https://airbnb.io/lottie/)
 
 
 
@@ -29,11 +29,11 @@ For the first time, designers can create **and ship** beautiful animations witho
 
 ### Option 1 (Recommended):
 **Download it from from aescripts + aeplugins:**
-http://aescripts.com/bodymovin/
+https://aescripts.com/bodymovin/
 
 ### Option 2:
 **Or get it from the adobe store**
-https://creative.adobe.com/addons/products/12557
+https://exchange.adobe.com/creativecloud.details.12557.html
 CC 2014 and up.
 
 ## Other installation options:
@@ -41,7 +41,7 @@ CC 2014 and up.
 ### Option 3:
 - download the ZIP from the repo.
 - Extract content and get the .zxp file from '/build/extension'
-- Use the [ZXP installer](http://aescripts.com/learn/zxp-installer/) from aescripts.com.
+- Use the [ZXP installer](https://aescripts.com/learn/zxp-installer/) from aescripts.com.
 
 ### Option 4:
 - Close After Effects<br/>
@@ -71,7 +71,7 @@ Skip directly to "Install third-party extensions"
 
 ### Option 6:
 
-Install with [Homebrew](http://brew.sh)-[adobe](https://github.com/danielbayley/homebrew-adobe):
+Install with [Homebrew](https://brew.sh)-[adobe](https://github.com/danielbayley/homebrew-adobe):
 ```bash
 brew tap danielbayley/adobe
 brew cask install lottie
@@ -101,7 +101,7 @@ Or get it directly from the AE plugin clicking on Get Player
 [See a basic implementation here.](https://codepen.io/airnan/project/editor/ZeNONO/) <br/>
 
 # Examples
-[See examples on codepen.](http://codepen.io/collection/nVYWZR/) <br/>
+[See examples on codepen.](https://codepen.io/collection/nVYWZR/) <br/>
 
 ## How it works
 [Here's](https://www.youtube.com/watch?v=5XMUJdjI0L8) a video tutorial explaining how to export a basic animation and load it in an html page <br />
@@ -121,7 +121,7 @@ Or get it directly from the AE plugin clicking on Get Player
 ```
 You can call lottie.loadAnimation() to start an animation.
 It takes an object as a unique param with:
-- animationData: an Object with the exported animation data.
+- animationData: an Object with the exported animation data. **Note:** If your animation contains repeaters and you plan to call loadAnimation multiple times with the same animation, please deep clone the object before passing it (see [#1159](https://github.com/airbnb/lottie-web/issues/1159) and [#2151](https://github.com/airbnb/lottie-web/issues/2151).)
 - path: the relative path to the animation object. (animationData and path are mutually exclusive)
 - loop: true / false / number
 - autoplay: true / false it will start playing as soon as it is ready
@@ -189,7 +189,7 @@ Animation instances have these main methods:
 ***
 
 ### Additional methods:
-- updateTextDocumentData -- updates a text layer's data
+- updateDocumentData -- updates a text layer's data
 [More Info](https://github.com/airbnb/lottie-web/wiki/TextLayer.updateDocumentData)
 ***
 
@@ -220,6 +220,7 @@ Animation instances have these main methods:
 you can also use addEventListener with the following events:
 - complete
 - loopComplete
+- drawnFrame
 - enterFrame
 - segmentStart
 - config_ready (when initial config is done)
@@ -238,6 +239,8 @@ lottie.loadAnimation({
   loop: true,
   autoplay: true,
   animationData: animationData, // the animation data
+  // ...or if your animation contains repeaters:
+  // animationData: cloneDeep(animationData), // e.g. lodash.clonedeep
   rendererSettings: {
     context: canvasContext, // the canvas context, only support "2d" context
     preserveAspectRatio: 'xMinYMin slice', // Supports the same options as the svg element's preserveAspectRatio property
@@ -309,7 +312,7 @@ my email is **hernantorrisi@gmail.com**
 
 ## Notes
 - If you want to modify the parser or the player, there are some gulp commands that can simplify the task
-- look at the great animations exported on codepen [See examples on codepen.](http://codepen.io/collection/nVYWZR/)
+- look at the great animations exported on codepen [See examples on codepen.](https://codepen.io/collection/nVYWZR/)
 - gzipping the animation jsons and the player have a huge reduction on the filesize. I recommend doing it if you use it for a project.
 
 ## Issues
@@ -320,27 +323,27 @@ my email is **hernantorrisi@gmail.com**
 ### Code Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="https://github.com/airbnb/lottie-web/graphs/contributors"><img src="https://opencollective.com/lottie-web/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/airbnb/lottie-web/graphs/contributors"><img src="https://opencollective.com/lottie/contributors.svg?width=890&button=false" /></a>
 
 ### Financial Contributors
 
-Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/lottie-web/contribute)]
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/lottie/contribute)]
 
 #### Individuals
 
-<a href="https://opencollective.com/lottie-web"><img src="https://opencollective.com/lottie-web/individuals.svg?width=890"></a>
+<a href="https://opencollective.com/lottie"><img src="https://opencollective.com/lottie/individuals.svg?width=890"></a>
 
 #### Organizations
 
-Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/lottie-web/contribute)]
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/lottie/contribute)]
 
-<a href="https://opencollective.com/lottie-web/organization/0/website"><img src="https://opencollective.com/lottie-web/organization/0/avatar.svg"></a>
-<a href="https://opencollective.com/lottie-web/organization/1/website"><img src="https://opencollective.com/lottie-web/organization/1/avatar.svg"></a>
-<a href="https://opencollective.com/lottie-web/organization/2/website"><img src="https://opencollective.com/lottie-web/organization/2/avatar.svg"></a>
-<a href="https://opencollective.com/lottie-web/organization/3/website"><img src="https://opencollective.com/lottie-web/organization/3/avatar.svg"></a>
-<a href="https://opencollective.com/lottie-web/organization/4/website"><img src="https://opencollective.com/lottie-web/organization/4/avatar.svg"></a>
-<a href="https://opencollective.com/lottie-web/organization/5/website"><img src="https://opencollective.com/lottie-web/organization/5/avatar.svg"></a>
-<a href="https://opencollective.com/lottie-web/organization/6/website"><img src="https://opencollective.com/lottie-web/organization/6/avatar.svg"></a>
-<a href="https://opencollective.com/lottie-web/organization/7/website"><img src="https://opencollective.com/lottie-web/organization/7/avatar.svg"></a>
-<a href="https://opencollective.com/lottie-web/organization/8/website"><img src="https://opencollective.com/lottie-web/organization/8/avatar.svg"></a>
-<a href="https://opencollective.com/lottie-web/organization/9/website"><img src="https://opencollective.com/lottie-web/organization/9/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/0/website"><img src="https://opencollective.com/lottie/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/1/website"><img src="https://opencollective.com/lottie/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/2/website"><img src="https://opencollective.com/lottie/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/3/website"><img src="https://opencollective.com/lottie/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/4/website"><img src="https://opencollective.com/lottie/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/5/website"><img src="https://opencollective.com/lottie/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/6/website"><img src="https://opencollective.com/lottie/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/7/website"><img src="https://opencollective.com/lottie/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/8/website"><img src="https://opencollective.com/lottie/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/lottie/organization/9/website"><img src="https://opencollective.com/lottie/organization/9/avatar.svg"></a>

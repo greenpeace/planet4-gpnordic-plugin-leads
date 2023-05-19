@@ -1,3 +1,126 @@
+## V 5.11.0
+- FEATURE: Essential Graphics support
+- FEATURE: slots support
+- FIX: update data when updateDocumentData is called
+- FIX: using unregistered renderer or missing path
+- FIX: added destroy null check
+- FEATURE: Implement setLoop in Web Worker
+
+## V 5.10.2
+- FEATURE: add setLoop method
+- FEATURE: support for all matte masks in canvas
+- FEATURE: support for alpha matte in canvas worker
+- FEATURE: support for canvas renderer in Safari
+- FEATURE: add DOM loaded event for canvas worker
+- FIX: tint effect opacity
+
+## V 5.10.1
+- FIX: track matte masks transform fix
+
+## V 5.10.0
+- FIX: light versions referencing expressions interfaces
+- FEATURE: Add support for new track masks by layer index
+- FEATURE: Add support for zigzag (thanks @mbasaglia)
+- FEATURE: Add support for offset path (thanks @mbasaglia)
+- FEATURE: Customizable canvas renderer width and height
+- FIX: Workaround for banner validation
+
+## V 5.9.6
+- FIX: Bodymovin export missing comps
+- FIX: Disambiguate bevelEmboss properties (thanks @mbasaglia)
+- FEATURE: Add support for image export individual settings via annotations
+
+## V 5.9.5
+- FIX: Expand the hybrid shape bounding box on stroke (thanks @mbasaglia)
+- FEATURE: support filter size on drop shadow property
+- FIX: canvas worker - handle destroying animation instance before data is loaded
+- FIX: canvas worker = pass own canvas fix (thanks @knenkne)
+- FIX: bodymovin extension out of storage
+- FEATURE: integration with canilottie
+
+## V 5.9.4
+- FIX: support for all marker definitions
+- FIX: improve composable filters
+- FIX: strokes with correct width on fonts
+
+## V 5.9.3
+- FEATURE: Add support for isPaused property on lottie worker
+- FEATURE: Adds support for changing volume based on the audio layer data
+- FEATURE: add support for removeEventListener on worker
+- FEATURE: add support for updateDocumentData on worker
+- FEATURE: add text as font support on worker
+- FIX: avoid crash when script does not have src
+
+## V 5.9.2
+- FEATURE: add support for playsegments and blend mode on lottie worker
+- FIX: Fix ts typing for loadAnimation parameter
+- FEATURE: allows to set width and height of svg from config
+- FIX: Fix getMarkerData bug
+- FEATURE: Add type for goToAndPlay & goToAndStop
+- FIX: add time to list of code for preventing removal
+- FIX: glyphs removed from DOM before reloading
+
+## V 5.9.1
+- FIX: navigator validation for SSR
+
+## V 5.9.0
+- FEATURE: Added support for using shapes as animated characters
+- FIX: added methods used by expressions to an array to prevent treeshaking
+- DEV: Migrated code to imports
+- DEV: Use Rollup for build process
+
+## V 5.8.1
+- FEATURE: added more methods available for the lottie worker player
+
+## V 5.8.0
+- FEATURE: lottie player as a worker support
+- FEATURE: added content-visibility prop support
+- FEATURE: added header check for json type (improves initial parsing specially on large files)
+- FEATURE: added lottie.useWebWorker method to support loading file on a separate web worker (different than the first feature)
+- FEATURE: added frame rate to comp on export (not supported by payers yet)
+- FIX: random seed expression fix
+
+## V 5.7.14
+- FEATURE: added support for Smoothness property on animated texts
+- FEATURE: added support for animated text path properties
+- FEATURE: added support for exporting source names as ids
+- FEATURE: added clear cache button
+- FIX: fixed importer with last keyframe
+
+## V 5.7.13
+- FEATURE: added support for emoji modifiers and sequences
+- FEATURE: added support for metadata export on json files
+
+## V 5.7.12
+- FEATURE: added support for masked strokes line cap and line join
+- FIX: callbacks list executing beyond index list
+- FIX: missing TextExpressionSelectorPropFactor
+- FEATURE: exporter improvements
+
+## V 5.7.11
+- FIX: another exporter fix
+
+## V 5.7.10
+- FIX: exporter fix
+
+## V 5.7.9
+- FEATURE: added support for prefixig ids
+- FEATURE: security updates
+- FIX: fix image sequencing preloading
+- FEATURE: added support for gradient fill expressions
+
+## V 5.7.8
+- FIX: disable screen reader visibility of created font-nodes (thanks @)
+- FEATURE: added FootageElement that supports json data layer types with expressions
+
+## V 5.7.7
+- FIX: xhr open order
+- FEATURE: added markers support
+- FIX: repeaters with reduced copies
+- FIX: unintentional stroke clipping on shapes with large stroke-width (thanks Manan Jadhav)
+- FIX: ie11 append missing
+- FIX: repeater calling trim twice
+
 ## V 5.7.6
 - FIX: es6 support on export
 - IMPROVEMENT: added linting rules

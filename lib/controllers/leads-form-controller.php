@@ -45,6 +45,8 @@ class FormController
 
       $date = date('Y-m-d');
       $utm = $args['utm']['value'];
+      // Capture referrer from the form data
+      $referrer = $args['docref']['value'];
       $source_code = get_field('form_settings', $form_id)['source_code'];
       $dbname = get_field('database_name', 'options');
       $username = get_field(
@@ -57,7 +59,7 @@ class FormController
       $count = 0;
       if (!strpos(get_site_url(), '.develop') && get_post_status($form_id) == 'publish') {
         $remote_db = new \wpdb($username, $password, $dbname, $hostname);
-        $results = $remote_db->get_results("INSERT INTO LEADS VALUES (null, '$email', '$firstname', '$lastname', '$date', $approved_terms, '$source_code', '$country_iso', '$phone', '$utm', CURRENT_TIMESTAMP);");
+        $results = $remote_db->get_results("INSERT INTO LEADS VALUES (null, '$email', '$firstname', '$lastname', '$date', $approved_terms, '$source_code', '$country_iso', '$phone', '$utm', '$referrer',  CURRENT_TIMESTAMP);");
         $remote_db->close();
       }
       // Update counter
