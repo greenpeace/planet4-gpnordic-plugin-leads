@@ -5,7 +5,6 @@ jQuery(function ($) {
     new Vue({
       el: el,
       data: {
-        message: "Hello Vue!",
         id: el.dataset.petitionId,
         loading: true,
         pages: [],
