@@ -68,7 +68,7 @@ function gplp_enqueue_admin_scripts($hook)
 	if ($hook === "edit.php" && isset($_GET['post_type']) && $_GET['post_type'] === 'leads-form') {
 		wp_enqueue_script('petition-location', plugin_dir_url(__FILE__) . '/assets/js/petition-locations.js', ['jquery'], $version, true);
 		wp_localize_script('petition-location', 'gplp_leads_ajax', array(
-				'ajaxurl' => admin_url('admin-ajax.php'),
+			'ajaxurl' => admin_url('admin-ajax.php'),
 		));
 	}
 }
@@ -85,47 +85,3 @@ function fb_label_render_field($field)
 
 // Apply to field named "share_description".
 add_action('acf/render_field/name=share_description', 'fb_label_render_field');
-
-
-/**
- * Functions related to getting Petition publish locations 
- */
-
-add_action('wp_ajax_get_or_set_petition_publish_locations', 'get_or_set_petition_publish_locations');
-
-function get_or_set_petition_publish_locations() {
-	$petition_id = $_POST['id'];
-	$transient_key = "petition_locations_$petition_id";
-
-	$transient = get_transient($transient_key);
-
-	\GPPL4\debug_log("transient: $transient");
-
-	if (!$transient) {
-		$message = GPLP\Controllers\PetitionController::get_page_links_by_petition_id($petition_id);
-		set_transient($transient_key, $message);
-	} 
-
-	wp_send_json_success(['status' => 'success', 'message' => $transient], 200);
-	wp_die();
-}
-
-add_action('save_post', __NAMESPACE__ . '\\reset_petition_locations_transient', 10, 3);
-
-function reset_petition_locations_transient( $page_id ) {
-	$petition_ids = GPLP\Controllers\PetitionController::get_petition_ids_by_page($page_id);
-
-	$title = get_the_title($page_id);
-	$encoded_ids = json_encode($petition_ids);
-	\GPPL4\debug_log("petition_ids for $title: $encoded_ids");
-
-
-	if ($petition_ids) {
-		foreach ($petition_ids as $petition_id) {
-			$transient_key = "petition_locations_$petition_id";
-
-			// Reset transient 
-			set_transient($transient_key, null);
-		}
-	}
-}
