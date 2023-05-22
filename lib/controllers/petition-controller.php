@@ -28,9 +28,6 @@ class PetitionController
     global $wpdb;
     $page_ids = $wpdb->get_col($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_content LIKE '%%<!-- wp:acf/leads-form {%\"form\": %d,%} /-->%%' AND post_status IN ('publish','draft','auto-draft','pending','future','private');", $id));
     // Set transient for 1 hour
-    error_log("*****");
-    error_log(json_encode($page_ids));
-    error_log("*****");
     $response = array_map("self::parse_page", $page_ids);
     set_transient($transient_name, $response, 60 * 60);
     return $response;
