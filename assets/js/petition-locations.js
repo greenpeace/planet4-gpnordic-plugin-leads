@@ -1,13 +1,14 @@
 const petitionLocations = (function ($) {
   const _petitionLocations = {};
+  let ids = [];
 
   // Find placeholder elements in wp admin, petitions list
   const columnPlaceholders = Array.from(
     document.querySelectorAll(".petition-custom-column-placeholder")
   );
-  let ids = [];
+
   if (columnPlaceholders.length) {
-    ids = columnPlaceholders.map((ph) => ph.getAttribute("id"));
+    ids = columnPlaceholders.map((ph) => ph.dataset.petitionId);
   }
 
   // Function that runs on init
@@ -19,10 +20,10 @@ const petitionLocations = (function ($) {
   async function processIds(ids) {
     for (const id of ids) {
       try {
-        const result = await getPetitionPublishLocation(id);
-        if (result && result.data.message) console.log(result.data.message);
-        if (result && result.data.message)
-          document.getElementById(id).innerHTML = result.data.message;
+        const { data } = await getPetitionPublishLocation(id);
+        console.log("result", data);
+        if (data.message) console.log(data.message);
+        document.getElementById(`petition-${id}`).innerHTML = data.message;
       } catch (error) {
         console.log(error);
       }
