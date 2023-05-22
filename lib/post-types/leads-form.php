@@ -44,8 +44,9 @@ function leads_custom_column($column, $post_id)
       echo get_post_status($post_id) == 'publish' ? '<span style="color:green;">Yes</span>' : '<span style="color:darkorange;">No</span>';
       break;
     case "included":
-      echo "<div class='petition-custom-column-placeholder' id=\"petition-$post_id\" data-petition-id='$post_id'></div>"; // Add a placeholder element to petition column so it can be accessed with JS
+      include(plugin_dir_path(__FILE__) . '../../templates/blocks/leads-form/leads-admin-locations.php');
       break;
   }
 }
+
 add_action('manage_leads-form_posts_custom_column', __NAMESPACE__ . '\\leads_custom_column', 10, 2);
