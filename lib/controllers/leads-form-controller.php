@@ -59,7 +59,7 @@ class FormController
       $count = 0;
       if (!strpos(get_site_url(), '.develop') && get_post_status($form_id) == 'publish') {
         $remote_db = new \wpdb($username, $password, $dbname, $hostname);
-        $results = $remote_db->get_results("INSERT INTO LEADS VALUES (null, '$email', '$firstname', '$lastname', '$date', $approved_terms, '$source_code', '$country_iso', '$phone', '$utm', '$referrer',  CURRENT_TIMESTAMP);");
+        $results = $remote_db->get_results("INSERT INTO LEADS VALUES (null, '$email', '$firstname', '$lastname', '$date', '$approved_terms', '$source_code', '$country_iso', '$phone', '$utm', CURRENT_TIMESTAMP, '$referrer');");
         $remote_db->close();
       }
       // Update counter
