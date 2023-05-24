@@ -26,6 +26,13 @@ jQuery(function ($) {
           },
         });
       },
+      methods: {
+        getColorByStatus(status) {
+          if (status === "draft") return "orange";
+          if (status === "publish") return "green";
+          return "black";
+        },
+      },
     });
   });
 });

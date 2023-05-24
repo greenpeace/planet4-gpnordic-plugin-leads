@@ -11,6 +11,7 @@ class PetitionController
     return array(
       'title' => get_the_title($page_id),
       'url' => get_edit_post_link($page_id),
+      'post_status' => get_post_status($page_id),
     );
   }
 
