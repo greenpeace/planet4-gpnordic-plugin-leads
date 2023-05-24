@@ -538,6 +538,7 @@ $donate_amount_default = $form_type === 'multistep' ? $steps['donate_default_amo
 $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0);
 ?>
 <script>
+
     window['leads_form_<?php echo $block['id']; ?>'] = {
         // toggle donations amount
         donateAmount: <?php echo $donate_amount; ?>,
@@ -572,7 +573,11 @@ $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields
                 regex: ''
             },
             docref: {
-                value: document.referrer || '', //Capture the referrer URL and populate the hidden input field
+                value: (!document.referrer || document.referrer.indexOf('greenpeace.org') !== -1)
+                        ? (console.log('Referrer is null or contains greenpeace.org, not setting cookie'), sessionStorage.getItem('lead_referrer'))
+                        : ((sessionStorage.getItem('lead_referrer') !== null)
+                        ? (console.log('Cookie already exists for the current session, not setting cookie'), sessionStorage.getItem('lead_referrer'))
+                        : (sessionStorage.setItem('lead_referrer', document.referrer), console.log('Cookie set with referrer value for the current session'), document.referrer)),
                 fieldName: 'Referrer',
                 required: false,
                 regex: ''
