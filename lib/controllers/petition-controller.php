@@ -9,7 +9,7 @@ class PetitionController
   static function parse_page($page_id)
   {
     return array(
-      'title' => get_the_title($page_id),
+      'title' => html_entity_decode(get_the_title($page_id)),
       'url' => get_edit_post_link($page_id),
       'post_status' => get_post_status($page_id),
     );
