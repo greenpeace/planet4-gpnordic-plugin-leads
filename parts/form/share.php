@@ -26,7 +26,7 @@ switch ($checkLanguage) {
 $onFbClick = $form_type === 'multistep' ? "completeMultistep($step_index), pushDataLayer('action_share', 'Facebook')" : "";
 
 $share_url_copy_link = "$url?utm_source=copy_link&utm_medium=share_button";
-$share_url_facebook = "$url?utm_source=facebook.com&utm_medium=share_button";
+$share_url_facebook = "$url?utm_source=facebook.com%26utm_medium=share_button";
 ?>
 
 <div class="leads-form__share">
