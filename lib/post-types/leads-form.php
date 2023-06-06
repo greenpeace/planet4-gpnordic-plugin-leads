@@ -15,7 +15,7 @@ function create_leads_post_type()
       'public' => true,
       'has_archive' => false,
       'publicly_queryable' => false,
-      'supports' => array('title', 'thumbnail'),
+      'supports' => array('title', 'thumbnail', 'revisions'),
       'menu_icon' => 'dashicons-welcome-write-blog',
     )
   );
