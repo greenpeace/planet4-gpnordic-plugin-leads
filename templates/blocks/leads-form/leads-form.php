@@ -131,9 +131,9 @@ $donate_data = array(
     'description' => $has_multisteps ? $steps['donation_description'] : $thank_you_settings['donate_description'],
     'donate_preset_amounts' => $has_multisteps ? $steps['donate_preset_amounts'] : null,
     'thank_you_settings' => $thank_you_settings,
-    'enable_donation_amount' => $has_multisteps? $steps['enable_donation_amount'] : $thank_you_settings['enable_donation_amount'],
-    'donate_url' => $has_multisteps? $steps['donate_url'] : $thank_you_settings['donate_url'],
-    'donate_cta' => $has_multisteps? $steps['donate_cta'] : $thank_you_settings['donate_cta'],
+    'enable_donation_amount' => $has_multisteps ? $steps['enable_donation_amount'] : $thank_you_settings['enable_donation_amount'],
+    'donate_url' => $has_multisteps ? $steps['donate_url'] : $thank_you_settings['donate_url'],
+    'donate_cta' => $has_multisteps ? $steps['donate_cta'] : $thank_you_settings['donate_cta'],
     'form_fields_translations' => $form_fields_translations
 );
 $final_data = array(
@@ -150,17 +150,17 @@ $final_data = array(
 $custom_ask_data = array(
     'headline' => $has_multisteps ? $steps['custom_ask_headline'] : null,
     'description' => $has_multisteps ? $steps['custom_ask_description'] : null,
-    'buttons' => $has_multisteps? $steps['custom_ask_buttons'] : null
+    'buttons' => $has_multisteps ? $steps['custom_ask_buttons'] : null
 );
 $layouts_data = array(
-    'content_data' => $content_data, 
-    'form_data' => $form_data, 
-    'thank_you_data' => $thank_you_data, 
-    'counter_data' => $counter_data, 
-    'share_data' => $share_data, 
+    'content_data' => $content_data,
+    'form_data' => $form_data,
+    'thank_you_data' => $thank_you_data,
+    'counter_data' => $counter_data,
+    'share_data' => $share_data,
     'donate_data' => $donate_data,
     'final_data' => $form_type === 'multistep' ? $final_data : false,
-    'custom_ask_data' => $form_type ==='multistep'? $custom_ask_data : false,
+    'custom_ask_data' => $form_type === 'multistep' ? $custom_ask_data : false,
     'steps' => $form_type === 'multistep' ? $steps : false
 );
 
@@ -169,11 +169,11 @@ $layouts_data = array(
 
     <div class="leads-form__grid <?php if ($form_type === 'multistep') echo "leads-form__multistep"; ?> ">
         <?php
-            if ($has_multisteps) {
-                GPPL4\get_partial("form/layouts/multistep", $layouts_data); 
-            } else {
-                GPPL4\get_partial("form/layouts/default", $layouts_data);  
-            }
+        if ($has_multisteps) {
+            GPPL4\get_partial("form/layouts/multistep", $layouts_data);
+        } else {
+            GPPL4\get_partial("form/layouts/default", $layouts_data);
+        }
         ?>
     </div>
     <?php if ($small_screen_image) : ?>
@@ -186,10 +186,14 @@ $layouts_data = array(
 <style>
     /* hide overflowing background on editor screen */
     .acf-block-component.acf-block-body .acf-block-preview {
-    max-width: 70vw !important;
-    overflow: hidden;
+        max-width: 70vw !important;
+        overflow: hidden;
     }
-    .leads-form {opacity: 1 !important;}
+
+    .leads-form {
+        opacity: 1 !important;
+    }
+
     /* Counter */
     #<?php echo $id . ' '; ?>.leads-form__counter {
         background: <?php echo $secondary_color; ?>;
@@ -219,6 +223,7 @@ $layouts_data = array(
         color: <?php echo $cta_text_color; ?> !important;
         fill: <?php echo $cta_text_color; ?> !important;
     }
+
     #<?php echo $id . ' '; ?>.button--donate-preset:not(.button--ghost) {
         border: 1px solid <?php echo $primary_color; ?>;
     }
@@ -229,106 +234,112 @@ $layouts_data = array(
 
     /* implementing the winnig A/B test */
     #<?php echo $id . ' '; ?>#facebook.button--share {
-      background-color : #4267B2;
-      box-shadow: 0 0 0 0 <?php echo GPPL4\hex2rgba($primary_color, 0.5); ?> !important;
-      cursor: pointer;
-      -webkit-animation: pulse 1.5s infinite;
-      -moz-animation: pulse 1.5s infinite;
-      animation: pulse 1.5s infinite;
-      text-align: center;
-      padding: 0.3rem 0.5rem;
-      border-radius: 0.2rem;
-      min-width: 9rem;
-      max-height: 3.4rem;
+        background-color: #4267B2;
+        box-shadow: 0 0 0 0 <?php echo GPPL4\hex2rgba($primary_color, 0.5); ?> !important;
+        cursor: pointer;
+        -webkit-animation: pulse 1.5s infinite;
+        -moz-animation: pulse 1.5s infinite;
+        animation: pulse 1.5s infinite;
+        text-align: center;
+        padding: 0.3rem 0.5rem;
+        border-radius: 0.2rem;
+        min-width: 9rem;
+        max-height: 3.4rem;
     }
 
     #<?php echo $id . ' '; ?>#facebook svg {
-      padding-bottom: 0.2rem;
+        padding-bottom: 0.2rem;
     }
 
     #<?php echo $id . ' '; ?>#facebook svg path {
-      fill: white!important;
+        fill: white !important;
     }
 
     #<?php echo $id . ' '; ?>#facebook.button--share:hover {
-      -webkit-animation: none;
-      -moz-animation: none;
-      animation: none;
+        -webkit-animation: none;
+        -moz-animation: none;
+        animation: none;
     }
 
     #<?php echo $id . ' '; ?>#facebook.button--share:active {
-      -webkit-animation: none;
-      -moz-animation: none;
-      animation: none;
+        -webkit-animation: none;
+        -moz-animation: none;
+        animation: none;
     }
 
     @-webkit-keyframes pulse {
-      0% {
-        -moz-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        -webkit-transform: scale(0.9);
-        transform: scale(0.9);
-      }
-      70% {
-        -moz-transform: scale(1);
-        -ms-transform: scale(1);
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
-      }
-      100% {
-        -moz-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        -webkit-transform: scale(0.9);
-        transform: scale(0.9);
-        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
-      }
+        0% {
+            -moz-transform: scale(0.9);
+            -ms-transform: scale(0.9);
+            -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+        }
+
+        70% {
+            -moz-transform: scale(1);
+            -ms-transform: scale(1);
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+        }
+
+        100% {
+            -moz-transform: scale(0.9);
+            -ms-transform: scale(0.9);
+            -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+            box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+        }
     }
 
     @-moz-keyframes pulse {
-      0% {
-        -moz-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        -webkit-transform: scale(0.9);
-        transform: scale(0.9);
-      }
-      70% {
-        -moz-transform: scale(1);
-        -ms-transform: scale(1);
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
-      }
-      100% {
-        -moz-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        -webkit-transform: scale(0.9);
-        transform: scale(0.9);
-        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
-      }
+        0% {
+            -moz-transform: scale(0.9);
+            -ms-transform: scale(0.9);
+            -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+        }
+
+        70% {
+            -moz-transform: scale(1);
+            -ms-transform: scale(1);
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+        }
+
+        100% {
+            -moz-transform: scale(0.9);
+            -ms-transform: scale(0.9);
+            -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+            box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+        }
     }
 
     @keyframes pulse {
-      0% {
-        -moz-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        -webkit-transform: scale(0.9);
-        transform: scale(0.9);
-      }
-      70% {
-        -moz-transform: scale(1);
-        -ms-transform: scale(1);
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
-      }
-      100% {
-        -moz-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        -webkit-transform: scale(0.9);
-        transform: scale(0.9);
-        box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
-      }
+        0% {
+            -moz-transform: scale(0.9);
+            -ms-transform: scale(0.9);
+            -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+        }
+
+        70% {
+            -moz-transform: scale(1);
+            -ms-transform: scale(1);
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            box-shadow: 0 0 0 50px rgba(90, 153, 212, 0);
+        }
+
+        100% {
+            -moz-transform: scale(0.9);
+            -ms-transform: scale(0.9);
+            -webkit-transform: scale(0.9);
+            transform: scale(0.9);
+            box-shadow: 0 0 0 0 rgba(90, 153, 212, 0);
+        }
     }
 
     #<?php echo $id . ' '; ?>#copy-link::before {
@@ -340,18 +351,18 @@ $layouts_data = array(
     }
 
     #<?php echo $id . ' '; ?>#copy-link {
-      background: <?php echo $primary_color; ?>;
-      color: <?php echo $cta_text_color; ?>;
+        background: <?php echo $primary_color; ?>;
+        color: <?php echo $cta_text_color; ?>;
     }
 
 
-    #<?php echo $id . ' '; ?>#copy-link svg#link{
-      margin-top: 0.25rem;
+    #<?php echo $id . ' '; ?>#copy-link svg#link {
+        margin-top: 0.25rem;
     }
 
     #<?php echo $id . ' '; ?>#copy-link svg#link path {
-      fill: <?php echo $cta_text_color; ?> !important;
-      background: transparent !important;
+        fill: <?php echo $cta_text_color; ?> !important;
+        background: transparent !important;
     }
 
     /* Implementing the winning A/B test */
@@ -438,19 +449,21 @@ $layouts_data = array(
         background-color: <?php echo $secondary_color; ?>;
     }
 
-     /* Errors */
+    /* Errors */
 
     #<?php echo $id; ?>.leads-form .input-container__error ul li {
         color: <?php echo $error_color; ?>;
         background-color: <?php echo GPPL4\hex2rgba($error_color, 0.1); ?>;
     }
+
     #<?php echo $id . ' '; ?>input.error {
-        border-color: <?php echo $error_color; ?>!important;
+        border-color: <?php echo $error_color; ?> !important;
     }
+
     #<?php echo $id . ' '; ?>input.error~svg path {
-        stroke: <?php echo $error_color; ?>!important;
+        stroke: <?php echo $error_color; ?> !important;
     }
- 
+
 
     /* Dark mode */
     #<?php echo $id; ?>.dark .leads-form__form {
@@ -477,7 +490,7 @@ $layouts_data = array(
     }
 
     #<?php echo $id; ?>.dark .leads-form__counter {
-        background-color: rgba(255,255,255,.05);
+        background-color: rgba(255, 255, 255, .05);
     }
 
     #<?php echo $id; ?>.dark .leads-form__counter__progress {
@@ -489,69 +502,79 @@ $layouts_data = array(
     }
 
     /* Multistep */
-    #<?php echo $id; ?> .leads-form__multistep__step h2,
-    #<?php echo $id; ?> .leads-form__multistep__step h4 {
+    #<?php echo $id; ?>.leads-form__multistep__step h2,
+    #<?php echo $id; ?>.leads-form__multistep__step h4 {
         color: <?php echo $primary_color; ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul::after {
+
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul::after {
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button,
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li .mock-button {
+
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button,
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li .mock-button {
         border-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
         color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
     }
+
     #<?php echo $id; ?>.dark .leads-form__bullet-navigation ul li button,
     #<?php echo $id; ?>.dark .leads-form__bullet-navigation ul li .mock-button {
         background-color: <?php echo $secondary_color; ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed,
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li .mock-button.completed {
+
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.completed,
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li .mock-button.completed {
         border-color: <?php echo $success_color; ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.completed svg path,
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li .mock-button.completed svg path {
+
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.completed svg path,
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li .mock-button.completed svg path {
         fill: <?php echo $success_color; ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.skipped {
+
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.skipped {
         border-color: <?php echo $error_color; ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.skipped svg path {
+
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.skipped svg path {
         fill: <?php echo $error_color; ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active {
+
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.active {
         color: white;
         border-color: <?php echo $primary_color; ?>;
         background-color: <?php echo $primary_color; ?>;
     }
-    #<?php echo $id; ?> .leads-form__bullet-navigation ul li button.active svg path {
+
+    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.active svg path {
         fill: white;
     }
-    #<?php echo $id; ?> .leads-form__multistep .button--secondary {
+
+    #<?php echo $id; ?>.leads-form__multistep .button--secondary {
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
         color: <?php echo $primary_color; ?>
     }
 </style>
 
-<?php 
+<?php
 $donate_amount_default = $form_type === 'multistep' ? $steps['donate_default_amount'] : $thank_you_settings['donate_default_amount'];
 $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0);
 ?>
 <script>
-
     window['leads_form_<?php echo $block['id']; ?>'] = {
         // toggle donations amount
         donateAmount: <?php echo $donate_amount; ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
         thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? $steps['thank_you_headline'] : $thank_you_settings['headline']); ?>',
+        thankYouDescription: "<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $thank_you_settings['description'])))); ?>",
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
-        //heroTitle trim slashes,remove tags and new lines
+        //heroTitle trim slashes, remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
         heroDescription: "<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_description)))); ?>",
         display: "<?php echo $display; ?>",
         formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
         enableCounter: '<?php echo $form_settings['enable_counter']; ?>',
-        counter: '<?php echo ((int)get_post_meta($form_id, 'count', true) ?: 0) + (int)$form_settings['counter']; ?>',
+        counter: <?php echo (int)(get_post_meta($form_id, 'count', true) ?: 0) + (int)$form_settings['counter']; ?>,
         counterGoalValue: '<?php echo $form_settings['counter_goal_value']; ?>',
         counterApiEndpoints: [<?php echo $form_settings['counter_api-endpoints'] ? join(',', array_map(function ($url) {
                                     return "\"${url['endpoint']}\"";
@@ -573,11 +596,10 @@ $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields
                 regex: ''
             },
             docref: {
-                value: (!document.referrer || document.referrer.indexOf('greenpeace.org') !== -1)
-                        ? (console.log('Referrer is null or contains greenpeace.org, not setting cookie'), sessionStorage.getItem('lead_referrer'))
-                        : ((sessionStorage.getItem('lead_referrer') !== null)
-                        ? (console.log('Cookie already exists for the current session, not setting cookie'), sessionStorage.getItem('lead_referrer'))
-                        : (sessionStorage.setItem('lead_referrer', document.referrer), console.log('Cookie set with referrer value for the current session'), document.referrer)),
+                value: (!document.referrer || document.referrer.indexOf('greenpeace.org') !== -1) ?
+                    (console.log('Referrer is null or contains greenpeace.org, not setting cookie'), sessionStorage.getItem('lead_referrer')) : ((sessionStorage.getItem('lead_referrer') !== null) ?
+                        (console.log('Cookie already exists for the current session, not setting cookie'), sessionStorage.getItem('lead_referrer')) :
+                        (sessionStorage.setItem('lead_referrer', document.referrer), console.log('Cookie set with referrer value for the current session'), document.referrer)),
                 fieldName: 'Referrer',
                 required: false,
                 regex: ''
@@ -623,7 +645,7 @@ $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields
         },
         formType: '<?php echo $form_type; ?>',
         multistepCount: <?php echo $multistep_count; ?>,
-        finalData: <?php echo json_encode($final_data);?>,
-        steps: <?php echo json_encode($steps);?>
+        finalData: <?php echo json_encode($final_data); ?>,
+        steps: <?php echo json_encode($steps); ?>
     };
 </script>
