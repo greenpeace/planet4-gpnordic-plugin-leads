@@ -566,6 +566,7 @@ $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields
         donateAmount: <?php echo $donate_amount; ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
         thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? $steps['thank_you_headline'] : $thank_you_settings['headline']); ?>',
+        thankYouDescription: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $form_type === 'multistep' ? $steps['thank_you_description'] : $thank_you_settings['description'])))); ?>',
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
         //heroTitle trim slashes,remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
@@ -573,7 +574,7 @@ $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields
         display: "<?php echo $display; ?>",
         formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
         enableCounter: '<?php echo $form_settings['enable_counter']; ?>',
-        counter: '<?php echo ((int)get_post_meta($form_id, 'count', true) ?: 0) + (int)$form_settings['counter']; ?>',
+        counter: <?php echo (int)(get_post_meta($form_id, 'count', true) ?: 0) + (int)$form_settings['counter']; ?>,
         counterGoalValue: '<?php echo $form_settings['counter_goal_value']; ?>',
         counterApiEndpoints: [<?php echo $form_settings['counter_api-endpoints'] ? join(',', array_map(function ($url) {
                                     return "\"${url['endpoint']}\"";
