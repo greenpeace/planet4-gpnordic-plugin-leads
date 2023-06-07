@@ -20,17 +20,29 @@ class FormController
 
       // SANITIZATION LOGIC - - - - - - - - - - - -
 
-      $dkVars = array('45','7','8');
-      $fiVars = array('358','8','10');
-      $noVars = array('47','7','8');
-      $seVars = array('46','7','9');
+      $dkVars = array('45', '7', '8');
+      $fiVars = array('358', '8', '10');
+      $noVars = array('47', '7', '8');
+      $seVars = array('46', '7', '9');
       $blist = "/000000|111111|222222|333333|444444|555555|666666|777777|888888|999999|12345|54321|1010101|111222333/";
 
-      switch($country_iso){
-         case "dk": case "DK": $v = $dkVars; break;
-         case "fi": case "FI": $v = $fiVars; break;
-         case "no": case "NO": $v = $noVars; break;
-         case "se": case "SE": $v = $seVars; break;
+      switch ($country_iso) {
+        case "dk":
+        case "DK":
+          $v = $dkVars;
+          break;
+        case "fi":
+        case "FI":
+          $v = $fiVars;
+          break;
+        case "no":
+        case "NO":
+          $v = $noVars;
+          break;
+        case "se":
+        case "SE":
+          $v = $seVars;
+          break;
       }
 
       $phone = preg_replace("/\D/", "", $phone); // strip non-numeric
@@ -39,7 +51,7 @@ class FormController
       (strlen($phone) > $v[2]) && (substr($phone, 0, strlen($v[0])) === $v[0]) ? $phone = substr($phone, strlen($v[0])) : $phone; // strip expected country code if still too long
       strlen($phone) > $v[2] ? $phone = "" : $phone; // set to 0 if still too long (non-nordic or country mismatch)
       preg_match($blist, $phone) ? $phone = "" : $phone; // set to 0 if it resembles black list regex
-      strlen($phone) > $v[1] ? $phone = "+".$v[0].$phone : $phone = ""; // clear value if too small, otherwise add + country code
+      strlen($phone) > $v[1] ? $phone = "+" . $v[0] . $phone : $phone = ""; // clear value if too small, otherwise add + country code
 
       // END LOGIC - - - - - - - - - - - - - - - -
 
@@ -47,7 +59,8 @@ class FormController
       $utm = $args['utm']['value'];
       // Capture referrer from the form data
       $referrer = $args['docref']['value'];
-      $source_code = get_field('form_settings', $form_id)['source_code'];
+      $form_settings = get_field('form_settings', $form_id);
+      $source_code = $form_settings['source_code'];
       $dbname = get_field('database_name', 'options');
       $username = get_field(
         'database_user',
@@ -66,7 +79,8 @@ class FormController
       $count = (int)get_post_meta($form_id, 'count', true) ?: 0;
       $count = $count + 1;
       update_post_meta($form_id, 'count', $count);
-      return $count;
+      $counter_start_value = (int)$form_settings['counter'];
+      return $count + $counter_start_value;
     } catch (Exception $e) {
       return $e;
     }
@@ -125,7 +139,7 @@ class FormController
   public static function register_api_routes()
   {
 
-     // Post Leads
+    // Post Leads
     register_rest_route("gplp/v2", '/leads', array(
       'methods' => 'POST',
       'permission_callback' => "__return_true",
@@ -141,7 +155,6 @@ class FormController
       'permission_callback' => "__return_true",
       'callback' => __NAMESPACE__ . '\\FormController::set_count',
     ));
-
   }
 }
 add_action('rest_api_init', __NAMESPACE__ . '\\FormController::register_api_routes');
