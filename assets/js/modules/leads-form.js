@@ -146,7 +146,7 @@
             this.blockData.counterApiEndpoints.forEach((e) => {
               if (e && jQuery.trim(e) !== "" && e !== undefined)
                 jQuery.get(e, this.formFields, (response) => {
-                  this.targetCounter = this.targetCounter + +response.counter;
+                  this.targetCounter = +response.counter;
                   this.animateCounter();
                 });
             });
