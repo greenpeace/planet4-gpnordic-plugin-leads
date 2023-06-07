@@ -14,10 +14,17 @@ function get_thank_you_settings()
                 ],
             ],
         ],
+        'description' => 'Settings for the thank you page that the signer is redirected to after signing the petition.'
     ])
+        ->addMessage(
+            'thank_you_settings_message',
+            'The thank you page is automatically generated based on the petition settings. The settings below allow you to customize the thank you page.<br/>Available variables:<ul><li><code>${fname}</code> - signers first name</li><li><code>${counterCurrent}</code> - counter current value</li><li><code>${counterGoal}</code> - counter goal value</li></ul>',
+            [
+                'label' => 'Variable reference'
+            ]
+        )
         ->addText('headline', [
             'label' => 'Thank you headline',
-            'instructions' => 'The variable ${fname} can be used to include the signers name.',
             'default_value' => 'Thank you, ${fname}!',
         ])
         ->addWysiwyg('description', [
@@ -53,7 +60,6 @@ function get_thank_you_settings()
         ->addTrueFalse('enable_donation_amount', $shared_donate_fields['enable_donation_amount'])
         ->addNumber('donate_default_amount', $shared_donate_fields['donate_default_amount'])
         ->addText('donate_cta', $shared_donate_fields['donate_cta'])
-        ->addText('donate_url', $shared_donate_fields['donate_url'])
-        ;
+        ->addText('donate_url', $shared_donate_fields['donate_url']);
     return $thank_you_settings;
 }
