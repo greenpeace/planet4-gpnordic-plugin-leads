@@ -195,45 +195,45 @@ $layouts_data = array(
     }
 
     /* Counter */
-    #<?php echo $id . ' '; ?>.leads-form__counter {
+    #<?= "$id " ?>.leads-form__counter {
         background: <?php echo $secondary_color; ?>;
         color: <?php echo $cta_text_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>.leads-form__counter--success {
+    #<?= "$id " ?>.leads-form__counter--success {
         background: transparent;
     }
 
-    #<?php echo $id . ' '; ?>.leads-form__counter__progress__bar {
+    #<?= "$id " ?>.leads-form__counter__progress__bar {
         background: <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>.leads-form__counter--success .leads-form__counter__headings {
+    #<?= "$id " ?>.leads-form__counter--success .leads-form__counter__headings {
         color: <?php echo $secondary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>.leads-form__counter__headings {
+    #<?= "$id " ?>.leads-form__counter__headings {
         color: <?php echo $primary_color; ?>;
     }
 
     /* Buttons */
-    #<?php echo $id . ' '; ?>.button:not(.button--ghost):not(.button--secondary),
-    #<?php echo $id . ' '; ?>.button--share {
+    #<?= "$id " ?>.button:not(.button--ghost):not(.button--secondary),
+    #<?= "$id " ?>.button--share {
         background: <?php echo $primary_color; ?>;
         color: <?php echo $cta_text_color; ?> !important;
         fill: <?php echo $cta_text_color; ?> !important;
     }
 
-    #<?php echo $id . ' '; ?>.button--donate-preset:not(.button--ghost) {
+    #<?= "$id " ?>.button--donate-preset:not(.button--ghost) {
         border: 1px solid <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>.button--share svg path {
+    #<?= "$id " ?>.button--share svg path {
         fill: <?php echo $cta_text_color; ?> !important;
     }
 
     /* implementing the winnig A/B test */
-    #<?php echo $id . ' '; ?>#facebook.button--share {
+    #<?= "$id " ?>#facebook.button--share {
         background-color: #4267B2;
         box-shadow: 0 0 0 0 <?php echo GPPL4\hex2rgba($primary_color, 0.5); ?> !important;
         cursor: pointer;
@@ -247,21 +247,21 @@ $layouts_data = array(
         max-height: 3.4rem;
     }
 
-    #<?php echo $id . ' '; ?>#facebook svg {
+    #<?= "$id " ?>#facebook svg {
         padding-bottom: 0.2rem;
     }
 
-    #<?php echo $id . ' '; ?>#facebook svg path {
+    #<?= "$id " ?>#facebook svg path {
         fill: white !important;
     }
 
-    #<?php echo $id . ' '; ?>#facebook.button--share:hover {
+    #<?= "$id " ?>#facebook.button--share:hover {
         -webkit-animation: none;
         -moz-animation: none;
         animation: none;
     }
 
-    #<?php echo $id . ' '; ?>#facebook.button--share:active {
+    #<?= "$id " ?>#facebook.button--share:active {
         -webkit-animation: none;
         -moz-animation: none;
         animation: none;
@@ -342,58 +342,58 @@ $layouts_data = array(
         }
     }
 
-    #<?php echo $id . ' '; ?>#copy-link::before {
+    #<?= "$id " ?>#copy-link::before {
         display: none;
     }
 
-    #<?php echo $id . ' '; ?>#copy-link::before {
+    #<?= "$id " ?>#copy-link::before {
         display: none;
     }
 
-    #<?php echo $id . ' '; ?>#copy-link {
+    #<?= "$id " ?>#copy-link {
         background: <?php echo $primary_color; ?>;
         color: <?php echo $cta_text_color; ?>;
     }
 
 
-    #<?php echo $id . ' '; ?>#copy-link svg#link {
+    #<?= "$id " ?>#copy-link svg#link {
         margin-top: 0.25rem;
     }
 
-    #<?php echo $id . ' '; ?>#copy-link svg#link path {
+    #<?= "$id " ?>#copy-link svg#link path {
         fill: <?php echo $cta_text_color; ?> !important;
         background: transparent !important;
     }
 
     /* Implementing the winning A/B test */
-    /* #<?php echo $id . ' '; ?>.button--share.email svg path {
+    /* #<?= "$id " ?>.button--share.email svg path {
         fill: transparent !important;
         stroke: <?php echo $cta_text_color; ?> !important;
     } */
 
-    #<?php echo $id . ' '; ?>.button--submit span,
+    #<?= "$id " ?>.button--submit span,
     .button--submit svg path {
         color: <?php echo $cta_text_color; ?>;
         stroke: <?php echo $cta_text_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>h3 {
+    #<?= "$id " ?>h3 {
         color: <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>a:not(.button--arrow):not(.button--submit):not(.button--ghost) {
+    #<?= "$id " ?>a:not(.button--arrow):not(.button--submit):not(.button--ghost) {
         color: <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>.leads-form__bkg::after {
+    #<?= "$id " ?>.leads-form__bkg::after {
         background-color: <?php echo $secondary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>.leads-form__icon {
+    #<?= "$id " ?>.leads-form__icon {
         background-color: <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>.leads-form__icon svg path {
+    #<?= "$id " ?>.leads-form__icon svg path {
         stroke: <?php echo $cta_text_color; ?>;
     }
 
@@ -401,46 +401,46 @@ $layouts_data = array(
     @media (max-width: 1140px) {
 
         /*
-        #<?php echo $id . ' '; ?>.description>.text,
+        #<?= "$id " ?>.description>.text,
         .description p {
             color: <?php echo $secondary_color; ?>;
         }
-        #<?php echo $id . ' '; ?>.leads-form__content h2 {
+        #<?= "$id " ?>.leads-form__content h2 {
             color: <?php echo $secondary_color; ?>;
         }
 
-        #<?php echo $id . ' '; ?>.button--arrow {
+        #<?= "$id " ?>.button--arrow {
             color: <?php echo $secondary_color; ?>;
         }
 
-        #<?php echo $id . ' '; ?>.button--arrow svg path {
+        #<?= "$id " ?>.button--arrow svg path {
             stroke: <?php echo $secondary_color; ?>;
         }
         */
     }
 
     /* Checkbox */
-    #<?php echo $id . ' '; ?>.checkbox {
+    #<?= "$id " ?>.checkbox {
         stroke: <?php echo $secondary_color; ?>;
         border-bottom-color: <?php echo $primary_color; ?>;
         border-left-color: <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>.checkbox input:checked~.checkbox__box {
+    #<?= "$id " ?>.checkbox input:checked~.checkbox__box {
         border-color: <?php echo $primary_color; ?>;
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.2); ?>;
     }
 
-    #<?php echo $id . ' '; ?>.checkbox .checkbox__box svg path {
+    #<?= "$id " ?>.checkbox .checkbox__box svg path {
         stroke: <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id . ' '; ?>input:focus,
+    #<?= "$id " ?>input:focus,
     input:active {
         border-color: <?php echo GPPL4\hex2rgba($primary_color, 0.6); ?>;
     }
 
-    #<?php echo $id . ' '; ?>input:focus~svg path,
+    #<?= "$id " ?>input:focus~svg path,
     input:active~svg path {
         stroke: <?php echo $primary_color; ?>;
     }
@@ -456,11 +456,11 @@ $layouts_data = array(
         background-color: <?php echo GPPL4\hex2rgba($error_color, 0.1); ?>;
     }
 
-    #<?php echo $id . ' '; ?>input.error {
+    #<?= "$id " ?>input.error {
         border-color: <?php echo $error_color; ?> !important;
     }
 
-    #<?php echo $id . ' '; ?>input.error~svg path {
+    #<?= "$id " ?>input.error~svg path {
         stroke: <?php echo $error_color; ?> !important;
     }
 
@@ -502,17 +502,17 @@ $layouts_data = array(
     }
 
     /* Multistep */
-    #<?php echo $id; ?>.leads-form__multistep__step h2,
-    #<?php echo $id; ?>.leads-form__multistep__step h4 {
+    #<?= "$id " ?>.leads-form__multistep__step h2,
+    #<?= "$id " ?>.leads-form__multistep__step h4 {
         color: <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul::after {
+    #<?= "$id " ?>.leads-form__bullet-navigation ul::after {
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
     }
 
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button,
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li .mock-button {
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li button,
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li .mock-button {
         border-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
         color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
     }
@@ -522,35 +522,35 @@ $layouts_data = array(
         background-color: <?php echo $secondary_color; ?>;
     }
 
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.completed,
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li .mock-button.completed {
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li button.completed,
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li .mock-button.completed {
         border-color: <?php echo $success_color; ?>;
     }
 
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.completed svg path,
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li .mock-button.completed svg path {
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li button.completed svg path,
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li .mock-button.completed svg path {
         fill: <?php echo $success_color; ?>;
     }
 
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.skipped {
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li button.skipped {
         border-color: <?php echo $error_color; ?>;
     }
 
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.skipped svg path {
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li button.skipped svg path {
         fill: <?php echo $error_color; ?>;
     }
 
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.active {
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li button.active {
         color: white;
         border-color: <?php echo $primary_color; ?>;
         background-color: <?php echo $primary_color; ?>;
     }
 
-    #<?php echo $id; ?>.leads-form__bullet-navigation ul li button.active svg path {
+    #<?= "$id " ?>.leads-form__bullet-navigation ul li button.active svg path {
         fill: white;
     }
 
-    #<?php echo $id; ?>.leads-form__multistep .button--secondary {
+    #<?= "$id " ?>.leads-form__multistep .button--secondary {
         background-color: <?php echo GPPL4\hex2rgba($primary_color, 0.4); ?>;
         color: <?php echo $primary_color; ?>
     }
@@ -566,15 +566,14 @@ $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields
         donateAmount: <?php echo $donate_amount; ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
         thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? $steps['thank_you_headline'] : $thank_you_settings['headline']); ?>',
-        thankYouDescription: "<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $thank_you_settings['description'])))); ?>",
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
-        //heroTitle trim slashes, remove tags and new lines
+        //heroTitle trim slashes,remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
         heroDescription: "<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_description)))); ?>",
         display: "<?php echo $display; ?>",
         formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
         enableCounter: '<?php echo $form_settings['enable_counter']; ?>',
-        counter: <?php echo (int)(get_post_meta($form_id, 'count', true) ?: 0) + (int)$form_settings['counter']; ?>,
+        counter: '<?php echo ((int)get_post_meta($form_id, 'count', true) ?: 0) + (int)$form_settings['counter']; ?>',
         counterGoalValue: '<?php echo $form_settings['counter_goal_value']; ?>',
         counterApiEndpoints: [<?php echo $form_settings['counter_api-endpoints'] ? join(',', array_map(function ($url) {
                                     return "\"${url['endpoint']}\"";
