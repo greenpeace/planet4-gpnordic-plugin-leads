@@ -10,8 +10,8 @@ $condition = $form_type === 'multistep' ? '!success && multistepActive === 0' : 
                 <small><?php echo $form_fields_translations['goal']; ?></small>
             </div>
             <div class="leads-form__counter__values">
-                <p>{{counter}}</p>
-                <p>{{blockData.counterGoalValue}}</p>
+                <p>{{targetCounter}}</p>
+                <p>{{goal}}</p>
             </div>
 
             <div class="leads-form__counter__progress">
