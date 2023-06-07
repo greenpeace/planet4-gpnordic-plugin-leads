@@ -1,15 +1,9 @@
 @charset 'utf-8';
 
-@import 'patterns/colors';
+@import "patterns/colors";
 
-@import 
-  'patterns/breakpoints',
-  'patterns/typography',
-  'patterns/buttons',
-  'patterns/inputs',
-  'patterns/transitions',
-  'patterns/icons';
+@import "patterns/breakpoints", "patterns/typography", "patterns/buttons",
+  "patterns/inputs", "patterns/transitions", "patterns/icons";
 
-@import 'modules/leads-form',
-'modules/leads-form-counter';
-
+@import "modules/leads-form", "modules/leads-form-counter",
+  "modules/leads-form-editor-view";

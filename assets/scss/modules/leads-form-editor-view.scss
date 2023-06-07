@@ -1,0 +1,11 @@
+.acf-block-preview {
+  .leads-form {
+    &__grid {
+      z-index: 2;
+    }
+    &__bkg {
+      max-width: 70vw;
+      z-index: 1;
+    }
+  }
+}
