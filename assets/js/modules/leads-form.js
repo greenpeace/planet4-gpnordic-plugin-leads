@@ -465,9 +465,21 @@
                 }
               })
               .fail((error) => {
+                //console.error('Error:', error);
+            
+                // Adding error message to arrays
                 this.errors.push(error.responseJSON.message);
                 this.otherErrors.push(error.responseJSON.message);
+            
+                // Log the state after adding the error message
+                //console.log('Errors:', this.errors);
+                //console.log('Other Errors:', this.otherErrors);
+            
+                // Set loading state to false
                 this.loading = false;
+            
+                // Log the state after setting loading to false
+                //console.log('Loading:', this.loading);
               });
           }
           return false;
