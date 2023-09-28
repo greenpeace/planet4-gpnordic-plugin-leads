@@ -559,6 +559,7 @@ $layouts_data = array(
 <?php
 $donate_amount_default = $form_type === 'multistep' ? $steps['donate_default_amount'] : $thank_you_settings['donate_default_amount'];
 $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0);
+$ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] : $thank_you_settings['description'];
 ?>
 <script>
     window['leads_form_<?php echo $block['id']; ?>'] = {
@@ -566,7 +567,7 @@ $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields
         donateAmount: <?php echo $donate_amount; ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
         thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? $steps['thank_you_headline'] : $thank_you_settings['headline']); ?>',
-        thankYouDescription: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $form_type === 'multistep' ? $steps['thank_you_description'] : $thank_you_settings['description'])))); ?>',
+        thankYouDescription: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s+/', ' ', trim($ty_description))))); ?>',
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
         //heroTitle trim slashes,remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
