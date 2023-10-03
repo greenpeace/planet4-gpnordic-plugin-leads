@@ -10,9 +10,8 @@
 }
 
 /* Typefaces */
-$header-font-family: "DK Plakkaat", "Helvetica Now Display Bold",
-  "Helvetica Neue", "Helvetica", sans-serif;
-$body-font-family: "Helvetica Now Display Regular", "Helvetica", sans-serif;
+$header-font-family: "DK Plakkaat", "Roboto","Helvetica", sans-serif;
+$body-font-family: "Roboto", "Helvetica", sans-serif;
 
 .leads-form {
   /* General styles */
@@ -113,11 +112,11 @@ $body-font-family: "Helvetica Now Display Regular", "Helvetica", sans-serif;
   }
   .preamble,
   .preamble p {
-    font-size: 2rem;
+    font-size: 1.3rem;
     line-height: 2.25rem;
     font-weight: 400;
     @media only screen and (max-width: $leads--large) {
-      font-size: 1.5rem;
+      font-size: 1.1rem;
       line-height: 1.7rem;
     }
     p {
