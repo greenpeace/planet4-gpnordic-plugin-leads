@@ -564,8 +564,8 @@
   &.dark {
     #{ $form }__form {
       h3 {
-        & ~ p {
-          color: white;
+        & ~ p, ul > li, ol >li {
+          color: $leads--white!important;
         }
       }
       small {
@@ -798,6 +798,7 @@
   }
   &.dark {
     #{ $form }__multistep {
+      .leads-form__form__container,
       .leads-form__donate,
       .leads-form__share,
       .leads-form__custom-ask,
