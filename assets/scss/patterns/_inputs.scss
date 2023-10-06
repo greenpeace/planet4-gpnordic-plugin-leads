@@ -62,6 +62,7 @@
       &::placeholder {
         color: white;
       }
+      &:hover,
       &:active,
       &:focus {
         background-color: $white--opacity-20;
