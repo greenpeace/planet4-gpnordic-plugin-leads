@@ -26,7 +26,6 @@
       data: {
         formId: jQuery($block).attr("data-form-id"),
         blockData: blockData,
-        counter: 0,
         targetCounter: +blockData.counter,
         goal: blockData.counterGoalValue,
         loading: false,
@@ -63,19 +62,16 @@
       },
       computed: {
         percentReachedGoal: function () {
-          return Math.min(
-            (+this.counter / +blockData.counterGoalValue) * 100,
-            100
-          );
+          return Math.min((+this.targetCounter / +this.goal) * 100, 100);
         },
         reachedGoal: function () {
-          return this.counter >= this.goal;
+          return this.targetCounter >= this.goal;
         },
         thankYouTitle: function () {
-          return blockData.thankYouTitle.replace(
-            "${fname}",
-            this.formFields.fname.value
-          );
+          return this.parseVariables(blockData.thankYouTitle);
+        },
+        thankYouDescription: function () {
+          return this.parseVariables(blockData.thankYouDescription);
         },
         hasErrors: function () {
           return this.errors.length > 0;
@@ -91,6 +87,12 @@
         },
         completedAllAsks() {
           return this.multistepCompleted.length === this.multistepCount - 2;
+        },
+        isLocalEnv: function () {
+          return (
+            $(location).attr("hostname") === "www.planet4.test" ||
+            $(location).attr("hostname") === "greenpeace.local"
+          );
         },
       },
       watch: {
@@ -129,7 +131,7 @@
         ) {
           // fix for the local dev env
           let jQueryPostStrCounter = "";
-          if ($(location).attr("hostname") === "www.planet4.test") {
+          if (this.isLocalEnv) {
             jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${
               this.sourceCode
             }?v=${Date.now()}`;
@@ -137,16 +139,14 @@
             jQueryPostStrCounter = `/${
               window.location.pathname.split("/")[1]
             }/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
-            //console.log(jQueryPostStrCounter)
           }
 
           jQuery.get(jQueryPostStrCounter, (count) => {
-            // jQuery.get(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`, (count) => {
             this.targetCounter = count.counter;
             this.blockData.counterApiEndpoints.forEach((e) => {
               if (e && jQuery.trim(e) !== "" && e !== undefined)
                 jQuery.get(e, this.formFields, (response) => {
-                  this.targetCounter = this.targetCounter + +response.counter;
+                  this.targetCounter = +response.counter;
                   this.animateCounter();
                 });
             });
@@ -156,6 +156,14 @@
         }
       },
       methods: {
+        parseVariables: function (str) {
+          const variables = {
+            fname: this.formFields.fname.value,
+            counterCurrent: this.targetCounter,
+            counterGoal: this.goal,
+          };
+          return str.replace(/\${(.*?)}/g, (x, g) => variables[g]);
+        },
         animateCounter: lodash.debounce(function (t = this) {
           var Cont = { val: t.counter },
             NewVal = t.targetCounter;
@@ -270,16 +278,17 @@
             this.loading = true;
             // fix for the local dev env
             let jQueryPostStr = "";
-            if ($(location).attr("hostname") === "www.planet4.test") {
+            if (this.isLocalEnv) {
               jQueryPostStr = `/wp-json/gplp/v2/leads`;
             } else {
-              jQueryPostStr = `${window.location.origin}/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`;
+              jQueryPostStr = `${window.location.origin}/${
+                window.location.pathname.split("/")[1]
+              }/wp-json/gplp/v2/leads`;
             }
             jQuery
               .post(jQueryPostStr, this.formFields, (response) => {
-                // jQuery.post(`/${window.location.pathname.split('/')[1]}/wp-json/gplp/v2/leads`, this.formFields, (response) => {
                 this.loading = false;
-                this.counter++;
+                this.targetCounter = response;
                 this.dataLayer &&
                   this.dataLayer.push({
                     event: "petitionSignup",
@@ -439,33 +448,6 @@
                                     eventCategory: "Social Share",
                                   });
                               });
-
-                              // const twShare = document.getElementById("twitter");
-                              // twShare.addEventListener('click', () =>{
-                              //   this.dataLayer && this.dataLayer.push({
-                              //     'event': 'uaevent',
-                              //     'eventAction': 'Twitter',
-                              //     'eventCategory':'Social Share'
-                              //   });
-                              // });
-
-                              // const eShare = document.getElementById("email");
-                              // eShare.addEventListener('click', () =>{
-                              //   this.dataLayer && this.dataLayer.push({
-                              //     'event': 'uaevent',
-                              //     'eventAction': 'Email',
-                              //     'eventCategory':'Social Share'
-                              //   });
-                              // });
-
-                              // const waShare = document.getElementById("whatsapp");
-                              // waShare.addEventListener('click', () =>{
-                              //   this.dataLayer && this.dataLayer.push({
-                              //     'event': 'uaevent',
-                              //     'eventAction': 'Whatsapp',
-                              //     'eventCategory':'Social Share'
-                              //   });
-                              // });
                             });
                           });
                       },
@@ -483,9 +465,21 @@
                 }
               })
               .fail((error) => {
+                //console.error('Error:', error);
+            
+                // Adding error message to arrays
                 this.errors.push(error.responseJSON.message);
                 this.otherErrors.push(error.responseJSON.message);
+            
+                // Log the state after adding the error message
+                //console.log('Errors:', this.errors);
+                //console.log('Other Errors:', this.otherErrors);
+            
+                // Set loading state to false
                 this.loading = false;
+            
+                // Log the state after setting loading to false
+                //console.log('Loading:', this.loading);
               });
           }
           return false;

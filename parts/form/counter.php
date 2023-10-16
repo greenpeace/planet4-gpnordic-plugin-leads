@@ -5,8 +5,8 @@
             <small>Goal</small>
         </div>
         <div class="leads-form__counter__values">
-            <p>{{counter}}</p>
-            <p>{{blockData.counterGoalValue}}</p>
+            <p>{{targetCounter}}</p>
+            <p>{{goal}}</p>
         </div>
 
         <div class="leads-form__counter__progress">

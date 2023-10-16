@@ -10,6 +10,7 @@ $blue--dark: #093944;
 $yellow: #FFF6CD;
 
 $leads--black: #212121;
+$black--opacity-80: rgba($leads--black, 0.8);
 $black--opacity-60: rgba($leads--black, 0.6);
 $black--opacity-40: rgba($leads--black, 0.4);
 $black--opacity-20: rgba($leads--black, 0.2);
@@ -27,6 +28,7 @@ $colors: (
   'gray': $gray,
   'gray--light': $gray--light,
   'gray--dark': $gray--dark,
+  'black--opacity-80' : $black--opacity-80,
   'black--opacity-60' : $black--opacity-60,
   'black--opacity-40' : $black--opacity-40,
   'black--opacity-20' : $black--opacity-20,

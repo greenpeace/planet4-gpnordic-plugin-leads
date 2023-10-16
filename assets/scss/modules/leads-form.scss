@@ -199,7 +199,7 @@
   &__form {
     small {
       p {
-        color: $black--opacity-40;
+        color: $black--opacity-60;
         &:first-child {
           margin-top: 1.5rem;
         }
@@ -407,7 +407,8 @@
       margin-top: 2rem;
     }
   }
-  &__custom-ask {
+  &__custom-ask,
+  &__thank-you {
     .button-container {
       margin-top: 2rem;
     }
@@ -563,8 +564,8 @@
   &.dark {
     #{ $form }__form {
       h3 {
-        & ~ p {
-          color: white;
+        & ~ p, ul > li, ol >li {
+          color: $leads--white!important;
         }
       }
       small {
@@ -797,6 +798,7 @@
   }
   &.dark {
     #{ $form }__multistep {
+      .leads-form__form__container,
       .leads-form__donate,
       .leads-form__share,
       .leads-form__custom-ask,

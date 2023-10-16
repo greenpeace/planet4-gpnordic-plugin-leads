@@ -4,11 +4,11 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Tested up to: 5.4.0
 
-Leadss with device camera for attaching a photo.
+Greenpeace Nordics leads form. 
 
 == Description ==
 
-Leadss with device camera for attaching a photo.
+Greenpeace Nordics leads form. 
 
 == Installation ==
 
