@@ -232,6 +232,24 @@ $layouts_data = array(
         fill: <?php echo $cta_text_color; ?> !important;
     }
 
+    /* Style links */
+    #<?= "$id " ?>.leads-form__form__container span a,
+    #<?= "$id " ?>.leads-form__thank-you .preamble p a,
+    #<?= "$id " ?>.leads-form__thank-you .preamble p span a  {
+        border-bottom-color: <?php echo $primary_color; ?> !important;
+    }
+
+    #<?= "$id " ?>.leads-form__form__container span a:hover {
+        color: <?php echo  $secondary_color; ?> !important;
+        border-bottom-color: <?php echo  $secondary_color; ?> !important;
+    }
+
+    #<?= "$id " ?>.leads-form__thank-you .preamble p a:hover,
+    #<?= "$id " ?>.leads-form__thank-you .preamble p span a:hover  {
+        color: <?php echo $cta_text_color; ?> !important;
+        border-bottom-color: <?php echo $cta_text_color; ?> !important;
+    }
+
     /* implementing the winnig A/B test */
     #<?= "$id " ?>#facebook.button--share {
         background-color: #4267B2;
@@ -499,6 +517,11 @@ $layouts_data = array(
 
     #<?php echo $id; ?>.dark .leads-form__counter--success {
         background: rgba(255, 255, 255, 0.25);
+    }
+
+    #<?= "$id " ?>.leads-form__form__container span a:hover {
+        color: <?php echo  $cta_text_color; ?> !important;
+        border-bottom-color: <?php echo  $cta_text_color; ?> !important;
     }
 
     /* Multistep */
