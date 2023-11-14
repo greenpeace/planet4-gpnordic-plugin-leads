@@ -232,6 +232,24 @@ $layouts_data = array(
         fill: <?php echo $cta_text_color; ?> !important;
     }
 
+    /* Style links */
+    #<?= "$id " ?>.leads-form__form__container span a,
+    #<?= "$id " ?>.leads-form__thank-you .preamble p a,
+    #<?= "$id " ?>.leads-form__thank-you .preamble p span a  {
+        border-bottom-color: <?php echo $primary_color; ?> !important;
+    }
+
+    #<?= "$id " ?>.leads-form__form__container span a:hover {
+        color: <?php echo  $secondary_color; ?> !important;
+        border-bottom-color: <?php echo  $secondary_color; ?> !important;
+    }
+
+    #<?= "$id " ?>.leads-form__thank-you .preamble p a:hover,
+    #<?= "$id " ?>.leads-form__thank-you .preamble p span a:hover  {
+        color: <?php echo $cta_text_color; ?> !important;
+        border-bottom-color: <?php echo $cta_text_color; ?> !important;
+    }
+
     /* implementing the winnig A/B test */
     #<?= "$id " ?>#facebook.button--share {
         background-color: #4267B2;
@@ -501,6 +519,11 @@ $layouts_data = array(
         background: rgba(255, 255, 255, 0.25);
     }
 
+    #<?= "$id " ?>.leads-form__form__container span a:hover {
+        color: <?php echo  $cta_text_color; ?> !important;
+        border-bottom-color: <?php echo  $cta_text_color; ?> !important;
+    }
+
     /* Multistep */
     #<?= "$id " ?>.leads-form__multistep__step h2,
     #<?= "$id " ?>.leads-form__multistep__step h4 {
@@ -567,7 +590,7 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
         donateAmount: <?php echo $donate_amount; ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
         thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? $steps['thank_you_headline'] : $thank_you_settings['headline']); ?>',
-        thankYouDescription: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s+/', ' ', trim($ty_description))))); ?>',
+        thankYouDescription: '<?php echo addslashes(trim(preg_replace('/\s+/', ' ', trim($ty_description))));?>',
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
         //heroTitle trim slashes,remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
