@@ -621,9 +621,9 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
             },
             docref: {
                 value: (!document.referrer || document.referrer.indexOf('greenpeace.org') !== -1) ?
-                    (console.log('Referrer is null or contains greenpeace.org, not setting cookie'), sessionStorage.getItem('lead_referrer')) : ((sessionStorage.getItem('lead_referrer') !== null) ?
-                        (console.log('Cookie already exists for the current session, not setting cookie'), sessionStorage.getItem('lead_referrer')) :
-                        (sessionStorage.setItem('lead_referrer', document.referrer), console.log('Cookie set with referrer value for the current session'), document.referrer)),
+                    (sessionStorage.getItem('lead_referrer')) : ((sessionStorage.getItem('lead_referrer') !== null) ?
+                        (sessionStorage.getItem('lead_referrer')) :
+                        (sessionStorage.setItem('lead_referrer', document.referrer), document.referrer)),
                 fieldName: 'Referrer',
                 required: false,
                 regex: ''
