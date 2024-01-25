@@ -616,20 +616,25 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
             utm: {
                 value: function () {
 
-                    // get latest utm
+                    // parsing of the UTM values from a dynamic URL
                     const currentUTM = new URLSearchParams(window.location.search);
-                    const utmInputValue = document.querySelector('input[type="tel"][name="postcode"]').value;
+                    const postcodeInput = document.querySelector('input[type="tel"][name="postcode"]');
 
-                    // update or add utm_input parameter
-                    currentUTM.set('utm_postcode', utmInputValue);
+                    if (postcodeInput) {
+                        const utmInputValue = postcodeInput.value;
+                        currentUTM.set('utm_postcode', utmInputValue);
 
-                    // уpdate the URL without reloading the page
-                    const newURL = `${window.location.origin}${window.location.pathname}${currentUTM.toString() === '' ? '&' : '?'}${currentUTM.toString()}`;
-                    window.history.replaceState({}, document.title, newURL);
-                    
-                    //retutn latest utm
-                    return window.location.search;
-                }, // parsing of the UTM values from a dynamic URL
+                        // Update the URL without reloading the page
+                        const newURL = `${window.location.origin}${window.location.pathname}${currentUTM.toString() === '' ? '&' : '?'}${currentUTM.toString()}`;
+                        window.history.replaceState({}, document.title, newURL);
+
+                        // return the latest utm
+                        return window.location.search;
+                    } else {
+                        // return the initial utm
+                        return window.location.search;
+                    }
+                }, 
                 fieldName: 'UTM',
                 required: false,
                 regex: ''
