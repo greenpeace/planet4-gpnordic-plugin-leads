@@ -614,7 +614,8 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
                 regex: ''
             },
             utm: {
-                function () {
+                value: function () {
+
                     // parsing of the UTM values from a dynamic URL
                     const currentUTM = new URLSearchParams(window.location.search);
                     const postcodeInput = document.querySelector('input[type="tel"][name="postcode"]');
@@ -626,10 +627,13 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
                         // Update the URL without reloading the page
                         const newURL = `${window.location.origin}${window.location.pathname}${currentUTM.toString() === '' ? '&' : '?'}${currentUTM.toString()}`;
                         window.history.replaceState({}, document.title, newURL);
-                    }
 
-                    // return the latest utm
-                    return window.location.search;
+                        // return the latest utm
+                        return window.location.search;
+                    } else {
+                        // return the initial utm
+                        return window.location.search;
+                    }
                 }, 
                 fieldName: 'UTM',
                 required: false,
