@@ -614,16 +614,31 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
                 regex: ''
             },
             utm: {
-                value: window.location.search, //the fixed parsing of the UTM values from the URL
+                value: function () {
+
+                    // get latest utm
+                    const currentUTM = new URLSearchParams(window.location.search);
+                    const utmInputValue = document.querySelector('input[type="tel"][name="postcode"]').value;
+
+                    // update or add utm_input parameter
+                    currentUTM.set('utm_postcode', utmInputValue);
+
+                    // уpdate the URL without reloading the page
+                    const newURL = `${window.location.origin}${window.location.pathname}${currentUTM.toString() === '' ? '&' : '?'}${currentUTM.toString()}`;
+                    window.history.replaceState({}, document.title, newURL);
+                    
+                    //retutn latest utm
+                    return window.location.search;
+                }, // parsing of the UTM values from a dynamic URL
                 fieldName: 'UTM',
                 required: false,
                 regex: ''
             },
             docref: {
                 value: (!document.referrer || document.referrer.indexOf('greenpeace.org') !== -1) ?
-                    (console.log('Referrer is null or contains greenpeace.org, not setting cookie'), sessionStorage.getItem('lead_referrer')) : ((sessionStorage.getItem('lead_referrer') !== null) ?
-                        (console.log('Cookie already exists for the current session, not setting cookie'), sessionStorage.getItem('lead_referrer')) :
-                        (sessionStorage.setItem('lead_referrer', document.referrer), console.log('Cookie set with referrer value for the current session'), document.referrer)),
+                    (sessionStorage.getItem('lead_referrer')) : ((sessionStorage.getItem('lead_referrer') !== null) ?
+                        (sessionStorage.getItem('lead_referrer')) :
+                        (sessionStorage.setItem('lead_referrer', document.referrer), document.referrer)),
                 fieldName: 'Referrer',
                 required: false,
                 regex: ''
