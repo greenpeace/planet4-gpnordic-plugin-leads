@@ -2,7 +2,7 @@
 $condition = $form_type === 'multistep' ? '!success && multistepActive === 0' : '!success';
 
 ?>
-<div class="leads-form__form <?php echo $form_type; ?> <?php if ($form_type !== 'multistep') echo 'leads-form__main-container';  ?>" v-show="<?php echo $condition; ?>">
+<div class="leads-form__form <?php echo $form_type; ?> <?php if ($form_type !== 'multistep') echo 'leads-form__main-container';  ?>" v-show="<?php echo $condition; ?>" name="leads-form">
     <?php if ($form_settings['enable_counter']) : ?>
         <div class="leads-form__counter">
             <div class="leads-form__counter__headings">

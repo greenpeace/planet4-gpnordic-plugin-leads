@@ -59,6 +59,8 @@
         multistepViewed: [],
         finalData: blockData.finalData,
         steps: blockData.steps,
+        //VWO form tracking
+        vwo: window.VWO || [],
       },
       computed: {
         percentReachedGoal: function () {
@@ -238,6 +240,10 @@
           this.phoneErrors = [];
           this.otherErrors = [];
 
+          //vwo fail event 
+          this.vwo.push(['nls.formAnalysis.markSuccess', $('.leads-form'), 0]);
+          console.log('nls.formAnalysis.markSuccess ' + this.formId + " " + this.success);
+
           Object.keys(this.formFields).forEach(
             (key) =>
               this.formFields[key].value == "" &&
@@ -309,7 +315,10 @@
                       y: 100,
                       opacity: 0,
                       duration: this.animationSpeed,
-                      onComplete: () => (this.success = true),
+                      onComplete: () => (this.success = true,
+                      //vwo success event
+                      this.vwo.push(['nls.formAnalysis.markSuccess', $('.leads-form'), 1]),
+                      console.log('nls.formAnalysis.markSuccess ' + this.formId + " " + this.success)),
                     })
                     .to(".leads-form__multistep__container", {
                       y: 0,
@@ -349,6 +358,9 @@
                             a.addEventListener("complete", () => {
                               this.success = true;
                               this.showThankYouAnimation = false;
+                              //vwo success event
+                              this.vwo.push(['nls.formAnalysis.markSuccess', $('.leads-form'), 1]);
+                              console.log('nls.formAnalysis.markSuccess ' + this.formId + " " + this.success);
 
                               Vue.nextTick(() => {
                                 gsap
