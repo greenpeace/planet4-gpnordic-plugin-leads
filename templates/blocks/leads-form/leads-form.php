@@ -616,22 +616,39 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
             utm: {
                 value: function () {
 
-                    // parsing of the UTM values from a dynamic URL
+                    // Parsing of the UTM values from a dynamic URL
                     const currentUTM = new URLSearchParams(window.location.search);
                     const postcodeInput = document.querySelector('input[type="tel"][name="postcode"]');
 
                     if (postcodeInput) {
-                        const utmInputValue = postcodeInput.value;
-                        currentUTM.set('utm_postcode', utmInputValue);
+                        postcodeInput.addEventListener('input', () => {
+                            const postcodeRegex = /^\d{5}$/;
+                            const utmInputValue = postcodeInput.value;
+
+                            if (postcodeRegex.test(enteredPostcode)) {
+                                const utmPostcodeParam = currentUTM.get('utm_postcode');
+                                if (utmPostcodeParam){
+                                    currentUTM.set('utm_postcode', utmInputValue);
+                                } else {
+                                    if (currentUTM.toString() !== '') {
+                                        currentUTM.append('utm_postcode', utmInputValue);
+                                    } else {
+                                        // If there are no existing params add with "?"
+                                        currentUTM.set('utm_postcode', utmInputValue);
+                                    }
+                                }
+                            }
+                        });
 
                         // Update the URL without reloading the page
                         const newURL = `${window.location.origin}${window.location.pathname}${currentUTM.toString() === '' ? '&' : '?'}${currentUTM.toString()}`;
                         window.history.replaceState({}, document.title, newURL);
 
-                        // return the latest utm
+                        // Return the latest utm
                         return window.location.search;
+
                     } else {
-                        // return the initial utm
+                        // Return the initial utm
                         return window.location.search;
                     }
                 }, 
