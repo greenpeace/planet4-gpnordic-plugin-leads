@@ -59,8 +59,6 @@
         multistepViewed: [],
         finalData: blockData.finalData,
         steps: blockData.steps,
-        //VWO form tracking
-        vwo: window.VWO || [],
       },
       computed: {
         percentReachedGoal: function () {
@@ -276,12 +274,16 @@
               errorMessageOther: this.otherErrors[0],
             });
 
-            this.vwo && this.vwo.push([
-              'nls.formAnalysis.markSuccess', 
-              $('form[name=leads-form]'), 
-              this.errors.length == 0 ? 1 : 0
+            // Register the markSuccess push
+            window.VWO.push([
+                'nls.formAnalysis.markSuccess', 
+                $('form[name=leads-form]'), 
+                this.errors.length == 0 ? 1 : 0
             ]);
-            console.log('nls.formAnalysis.markSuccess ' + this.formId + " " + (this.errors.length == 0 ? "Success" : "Failure"));
+
+            // Call markSuccess directly
+            VWO.nls.formAnalysis.markSuccess($('form[name=leads-form]'), this.errors.length == 0 ? 1 : 0);            
+            console.log('markSuccess ' + this.formId + " " + (this.errors.length == 0 ? "Success" : "Failure"));
 
           if (this.errors.length == 0) {
             this.loading = true;
@@ -755,6 +757,25 @@
       $(".leads-form").each((index, block) => {
         initializeBlock($(block));
       });
+      
+      console.log('Before loading VWO:', window.VWO);
+      window.VWO = window.VWO || [];
+      console.log('After loading VWO:', window.VWO);
+
+      // Check if window.VWO is defined and is an array
+      if (Array.isArray(window.VWO)) {
+          // Iterate over each item in the array
+          for (let i = 0; i < window.VWO.length; i++) {
+              const item = window.VWO[i];
+              if (item[0] === 'nls.formAnalysis.markSuccess') {
+                  console.log('Found a markSuccess push:', item);
+              }
+          }
+      } else {
+          console.log('window.VWO is not an array or is undefined');
+      }
+
+
     }
   });
 
