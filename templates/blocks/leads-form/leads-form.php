@@ -615,7 +615,6 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
             },
             utm: {
                 value: function () {
-
                     // Parsing of the UTM values from a dynamic URL
                     const currentUTM = new URLSearchParams(window.location.search);
                     const postcodeInput = document.querySelector('input[type="tel"][name="postcode"]');
@@ -646,11 +645,9 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
                                     //There are no other utms
                                         utmCampaignValue = `${utmInputValue.slice(-5)}`;
                                     }
-                                }
-                                
+                                }                              
                                 currentUTM.set('utm_campaign', utmCampaignValue);
-                                console.log(currentUTM);
-
+                                // console.log(currentUTM);
                             }
                         });
 

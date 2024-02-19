@@ -283,7 +283,7 @@
 
             // Call markSuccess directly
             VWO.nls.formAnalysis.markSuccess($('form[name=leads-form]'), this.errors.length == 0 ? 1 : 0);            
-            console.log('markSuccess ' + this.formId + " " + (this.errors.length == 0 ? "Success" : "Failure"));
+            // console.log('markSuccess ' + this.formId + " " + (this.errors.length == 0 ? "Success" : "Failure"));
 
           if (this.errors.length == 0) {
             this.loading = true;
