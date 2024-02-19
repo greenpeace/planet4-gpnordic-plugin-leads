@@ -757,25 +757,7 @@
       $(".leads-form").each((index, block) => {
         initializeBlock($(block));
       });
-      
-      console.log('Before loading VWO:', window.VWO);
       window.VWO = window.VWO || [];
-      console.log('After loading VWO:', window.VWO);
-
-      // Check if window.VWO is defined and is an array
-      if (Array.isArray(window.VWO)) {
-          // Iterate over each item in the array
-          for (let i = 0; i < window.VWO.length; i++) {
-              const item = window.VWO[i];
-              if (item[0] === 'nls.formAnalysis.markSuccess') {
-                  console.log('Found a markSuccess push:', item);
-              }
-          }
-      } else {
-          console.log('window.VWO is not an array or is undefined');
-      }
-
-
     }
   });
 
