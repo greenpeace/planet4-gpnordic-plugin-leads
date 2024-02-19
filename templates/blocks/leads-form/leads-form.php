@@ -624,19 +624,33 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
                         postcodeInput.addEventListener('input', () => {
                             const postcodeRegex = /^\d{5}$/;
                             const utmInputValue = postcodeInput.value;
-
-                            if (postcodeRegex.test(enteredPostcode)) {
-                                const utmPostcodeParam = currentUTM.get('utm_postcode');
-                                if (utmPostcodeParam){
-                                    currentUTM.set('utm_postcode', utmInputValue);
-                                } else {
-                                    if (currentUTM.toString() !== '') {
-                                        currentUTM.append('utm_postcode', utmInputValue);
+                            
+                            if (postcodeRegex.test(utmInputValue)) {
+                                let utmCampaignValue = currentUTM.get('utm_campaign');
+                                
+                                //utm_campaign exists
+                                if(utmCampaignValue){
+                                    if(hasFiveDigits(utmCampaignValue)){
+                                    //& has 5 digits at the end
+                                        utmCampaignValue = utmInputValue.slice(0, -5) + utmInputValue.slice(-5);
                                     } else {
-                                        // If there are no existing params add with "?"
-                                        currentUTM.set('utm_postcode', utmInputValue);
+                                    //Doesn't have 5 digits at the end
+                                        utmCampaignValue += `${utmInputValue.slice(-5)}`;
+                                    }
+                                } else {
+                                //utm_campaign doesn't exists
+                                    if (currentUTM.toString() !== '') {
+                                    //There are other utms
+                                        utmCampaignValue = `${utmInputValue.slice(-5)}`;
+                                    } else {
+                                    //There are no other utms
+                                        utmCampaignValue = `${utmInputValue.slice(-5)}`;
                                     }
                                 }
+                                
+                                currentUTM.set('utm_campaign', utmCampaignValue);
+                                console.log(currentUTM);
+
                             }
                         });
 
