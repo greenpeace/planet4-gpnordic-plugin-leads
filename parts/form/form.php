@@ -2,7 +2,7 @@
 $condition = $form_type === 'multistep' ? '!success && multistepActive === 0' : '!success';
 
 ?>
-<div class="leads-form__form <?php echo $form_type; ?> <?php if ($form_type !== 'multistep') echo 'leads-form__main-container';  ?>" v-show="<?php echo $condition; ?>">
+<form class="leads-form__form <?php echo $form_type; ?> <?php if ($form_type !== 'multistep') echo 'leads-form__main-container';  ?>" v-show="<?php echo $condition; ?>" name="leads-form">
     <?php if ($form_settings['enable_counter']) : ?>
         <div class="leads-form__counter">
             <div class="leads-form__counter__headings">
@@ -89,7 +89,7 @@ $condition = $form_type === 'multistep' ? '!success && multistepActive === 0' : 
                 </div>
             </div>
         <?php endif; ?>
-        <a @click="submit" class="button button--submit">
+        <a @click="submit" class="button button--submit" id="btn-submit">
             <span v-if="!loading"><?php GPPL4\svg_icon('send-message'); ?></span>
             <span v-html="loading ? '<?php echo $form_fields_translations['sending']; ?>' : '<?php echo addslashes($form_settings['call_to_action']); ?>'"></span>
         </a>
@@ -97,4 +97,4 @@ $condition = $form_type === 'multistep' ? '!success && multistepActive === 0' : 
             <small><?php echo $form_settings['consent_message'] !== '' ? $form_settings['consent_message'] : $form_fields_translations['terms_agree']; ?></small>
         <?php endif; ?>
     </div>
-</div>
+</form>

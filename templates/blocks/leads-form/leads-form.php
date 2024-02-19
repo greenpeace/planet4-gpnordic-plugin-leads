@@ -615,23 +615,51 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
             },
             utm: {
                 value: function () {
-
-                    // parsing of the UTM values from a dynamic URL
+                    // Parsing of the UTM values from a dynamic URL
                     const currentUTM = new URLSearchParams(window.location.search);
                     const postcodeInput = document.querySelector('input[type="tel"][name="postcode"]');
 
                     if (postcodeInput) {
-                        const utmInputValue = postcodeInput.value;
-                        currentUTM.set('utm_postcode', utmInputValue);
+                        postcodeInput.addEventListener('input', () => {
+                            const postcodeRegex = /^\d{5}$/;
+                            const utmInputValue = postcodeInput.value;
+                            
+                            if (postcodeRegex.test(utmInputValue)) {
+                                let utmCampaignValue = currentUTM.get('utm_campaign');
+                                
+                                //utm_campaign exists
+                                if(utmCampaignValue){
+                                    if(hasFiveDigits(utmCampaignValue)){
+                                    //& has 5 digits at the end
+                                        utmCampaignValue = utmInputValue.slice(0, -5) + utmInputValue.slice(-5);
+                                    } else {
+                                    //Doesn't have 5 digits at the end
+                                        utmCampaignValue += `${utmInputValue.slice(-5)}`;
+                                    }
+                                } else {
+                                //utm_campaign doesn't exists
+                                    if (currentUTM.toString() !== '') {
+                                    //There are other utms
+                                        utmCampaignValue = `${utmInputValue.slice(-5)}`;
+                                    } else {
+                                    //There are no other utms
+                                        utmCampaignValue = `${utmInputValue.slice(-5)}`;
+                                    }
+                                }                              
+                                currentUTM.set('utm_campaign', utmCampaignValue);
+                                // console.log(currentUTM);
+                            }
+                        });
 
                         // Update the URL without reloading the page
                         const newURL = `${window.location.origin}${window.location.pathname}${currentUTM.toString() === '' ? '&' : '?'}${currentUTM.toString()}`;
                         window.history.replaceState({}, document.title, newURL);
 
-                        // return the latest utm
+                        // Return the latest utm
                         return window.location.search;
+
                     } else {
-                        // return the initial utm
+                        // Return the initial utm
                         return window.location.search;
                     }
                 }, 

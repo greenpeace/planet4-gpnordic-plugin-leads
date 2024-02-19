@@ -274,6 +274,17 @@
               errorMessageOther: this.otherErrors[0],
             });
 
+            // Register the markSuccess push
+            window.VWO.push([
+                'nls.formAnalysis.markSuccess', 
+                $('form[name=leads-form]'), 
+                this.errors.length == 0 ? 1 : 0
+            ]);
+
+            // Call markSuccess directly
+            VWO.nls.formAnalysis.markSuccess($('form[name=leads-form]'), this.errors.length == 0 ? 1 : 0);            
+            // console.log('markSuccess ' + this.formId + " " + (this.errors.length == 0 ? "Success" : "Failure"));
+
           if (this.errors.length == 0) {
             this.loading = true;
             // fix for the local dev env
@@ -746,6 +757,7 @@
       $(".leads-form").each((index, block) => {
         initializeBlock($(block));
       });
+      window.VWO = window.VWO || [];
     }
   });
 
