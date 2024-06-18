@@ -158,6 +158,7 @@
       methods: {
         parseVariables: function (str) {
           const variables = {
+            email: this.formFields.email.value,
             fname: this.formFields.fname.value,
             counterCurrent: this.targetCounter,
             counterGoal: this.goal,
@@ -296,6 +297,7 @@
                     gConsent: this.formFields.consent.value
                       ? "optIn"
                       : "optOut",
+                    gEmail: this.formFields.email.value,
                     gPhone: this.formFields.phone.value
                       ? "withPhone"
                       : "withoutPhone",
