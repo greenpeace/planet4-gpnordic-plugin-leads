@@ -8,6 +8,7 @@ module.exports = {
   core: resolve('src/core'),
   shared: resolve('src/shared'),
   web: resolve('src/platforms/web'),
-  server: resolve('packages/server-renderer/src'),
-  sfc: resolve('packages/compiler-sfc/src')
+  weex: resolve('src/platforms/weex'),
+  server: resolve('src/server'),
+  sfc: resolve('src/sfc')
 }

@@ -62,10 +62,7 @@ class FormController
       $form_settings = get_field('form_settings', $form_id);
       $source_code = $form_settings['source_code'];
       $dbname = get_field('database_name', 'options');
-      $username = get_field(
-        'database_user',
-        'options'
-      );
+      $username = get_field('database_user', 'options');
       $password = get_field('database_password', 'options');
       $hostname = get_field('database_host', 'options');
 

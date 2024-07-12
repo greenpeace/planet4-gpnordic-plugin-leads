@@ -22,7 +22,6 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "bower": "^1.8.14",
     "node-sass": "^7.0.1"
   }
 }

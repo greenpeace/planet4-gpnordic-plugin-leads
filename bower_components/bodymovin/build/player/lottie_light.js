@@ -1735,6 +1735,7 @@
     this.onSetupError = this.onSetupError.bind(this);
     this.onSegmentComplete = this.onSegmentComplete.bind(this);
     this.drawnFrameEvent = new BMEnterFrameEvent('drawnFrame', 0, 0, 0);
+    this.expressionsPlugin = getExpressionsPlugin();
   };
 
   extendPrototype([BaseEvent], AnimationItem);
@@ -2051,6 +2052,10 @@
     }
 
     try {
+      if (this.expressionsPlugin) {
+        this.expressionsPlugin.resetFrame();
+      }
+
       this.renderer.renderFrame(this.currentFrame + this.firstFrame);
     } catch (error) {
       this.triggerRenderFrameError(error);
@@ -2064,7 +2069,7 @@
 
     if (this.isPaused === true) {
       this.isPaused = false;
-      this.trigger('_pause');
+      this.trigger('_play');
       this.audioController.resume();
 
       if (this._idle) {
@@ -2081,7 +2086,7 @@
 
     if (this.isPaused === false) {
       this.isPaused = true;
-      this.trigger('_play');
+      this.trigger('_pause');
       this._idle = true;
       this.trigger('_idle');
       this.audioController.pause();
@@ -2336,7 +2341,7 @@
     this.onSegmentStart = null;
     this.onDestroy = null;
     this.renderer = null;
-    this.renderer = null;
+    this.expressionsPlugin = null;
     this.imagePreloader = null;
     this.projectInterface = null;
   };
@@ -4909,6 +4914,11 @@
       return this;
     }
 
+    function multiply(matrix) {
+      var matrixProps = matrix.props;
+      return this.transform(matrixProps[0], matrixProps[1], matrixProps[2], matrixProps[3], matrixProps[4], matrixProps[5], matrixProps[6], matrixProps[7], matrixProps[8], matrixProps[9], matrixProps[10], matrixProps[11], matrixProps[12], matrixProps[13], matrixProps[14], matrixProps[15]);
+    }
+
     function isIdentity() {
       if (!this._identityCalculated) {
         this._identity = !(this.props[0] !== 1 || this.props[1] !== 0 || this.props[2] !== 0 || this.props[3] !== 0 || this.props[4] !== 0 || this.props[5] !== 1 || this.props[6] !== 0 || this.props[7] !== 0 || this.props[8] !== 0 || this.props[9] !== 0 || this.props[10] !== 1 || this.props[11] !== 0 || this.props[12] !== 0 || this.props[13] !== 0 || this.props[14] !== 0 || this.props[15] !== 1);
@@ -5124,6 +5134,7 @@
       this.setTransform = setTransform;
       this.translate = translate;
       this.transform = transform;
+      this.multiply = multiply;
       this.applyToPoint = applyToPoint;
       this.applyToX = applyToX;
       this.applyToY = applyToY;
@@ -5262,7 +5273,7 @@
   lottie.useWebWorker = setWebWorker;
   lottie.setIDPrefix = setPrefix;
   lottie.__getFactory = getFactory;
-  lottie.version = '5.11.0';
+  lottie.version = '5.12.2';
 
   function checkReady() {
     if (document.readyState === 'complete') {
@@ -5991,7 +6002,10 @@
     }
 
     function precalculateMatrix() {
-      if (!this.a.k) {
+      this.appliedTransformations = 0;
+      this.pre.reset();
+
+      if (!this.a.effectsSequence.length) {
         this.pre.translate(-this.a.v[0], -this.a.v[1], this.a.v[2]);
         this.appliedTransformations = 1;
       } else {
@@ -7209,8 +7223,15 @@
     var combinedCharacters = []; // Hindi characters
 
     combinedCharacters = combinedCharacters.concat([2304, 2305, 2306, 2307, 2362, 2363, 2364, 2364, 2366, 2367, 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377, 2378, 2379, 2380, 2381, 2382, 2383, 2387, 2388, 2389, 2390, 2391, 2402, 2403]);
+    var BLACK_FLAG_CODE_POINT = 127988;
+    var CANCEL_TAG_CODE_POINT = 917631;
+    var A_TAG_CODE_POINT = 917601;
+    var Z_TAG_CODE_POINT = 917626;
+    var VARIATION_SELECTOR_16_CODE_POINT = 65039;
+    var ZERO_WIDTH_JOINER_CODE_POINT = 8205;
+    var REGIONAL_CHARACTER_A_CODE_POINT = 127462;
+    var REGIONAL_CHARACTER_Z_CODE_POINT = 127487;
     var surrogateModifiers = ['d83cdffb', 'd83cdffc', 'd83cdffd', 'd83cdffe', 'd83cdfff'];
-    var zeroWidthJoiner = [65039, 8205];
 
     function trimFontOptions(font) {
       var familyArray = font.split(',');
@@ -7507,23 +7528,24 @@
     }
 
     function measureText(_char2, fontName, size) {
-      var fontData = this.getFontByName(fontName);
+      var fontData = this.getFontByName(fontName); // Using the char instead of char.charCodeAt(0)
+      // to avoid collisions between equal chars
 
-      var index = _char2.charCodeAt(0);
+      var index = _char2;
 
-      if (!fontData.cache[index + 1]) {
+      if (!fontData.cache[index]) {
         var tHelper = fontData.helper;
 
         if (_char2 === ' ') {
           var doubleSize = tHelper.measureText('|' + _char2 + '|');
           var singleSize = tHelper.measureText('||');
-          fontData.cache[index + 1] = (doubleSize - singleSize) / 100;
+          fontData.cache[index] = (doubleSize - singleSize) / 100;
         } else {
-          fontData.cache[index + 1] = tHelper.measureText(_char2) / 100;
+          fontData.cache[index] = tHelper.measureText(_char2) / 100;
         }
       }
 
-      return fontData.cache[index + 1] * size;
+      return fontData.cache[index] * size;
     }
 
     function getFontByName(name) {
@@ -7541,21 +7563,86 @@
       return this.fonts[0];
     }
 
+    function getCodePoint(string) {
+      var codePoint = 0;
+      var first = string.charCodeAt(0);
+
+      if (first >= 0xD800 && first <= 0xDBFF) {
+        var second = string.charCodeAt(1);
+
+        if (second >= 0xDC00 && second <= 0xDFFF) {
+          codePoint = (first - 0xD800) * 0x400 + second - 0xDC00 + 0x10000;
+        }
+      }
+
+      return codePoint;
+    } // Skin tone modifiers
+
+
     function isModifier(firstCharCode, secondCharCode) {
       var sum = firstCharCode.toString(16) + secondCharCode.toString(16);
       return surrogateModifiers.indexOf(sum) !== -1;
     }
 
-    function isZeroWidthJoiner(firstCharCode, secondCharCode) {
-      if (!secondCharCode) {
-        return firstCharCode === zeroWidthJoiner[1];
+    function isZeroWidthJoiner(charCode) {
+      return charCode === ZERO_WIDTH_JOINER_CODE_POINT;
+    } // This codepoint may change the appearance of the preceding character.
+    // If that is a symbol, dingbat or emoji, U+FE0F forces it to be rendered
+    // as a colorful image as compared to a monochrome text variant.
+
+
+    function isVariationSelector(charCode) {
+      return charCode === VARIATION_SELECTOR_16_CODE_POINT;
+    } // The regional indicator symbols are a set of 26 alphabetic Unicode
+    /// characters (A–Z) intended to be used to encode ISO 3166-1 alpha-2
+    // two-letter country codes in a way that allows optional special treatment.
+
+
+    function isRegionalCode(string) {
+      var codePoint = getCodePoint(string);
+
+      if (codePoint >= REGIONAL_CHARACTER_A_CODE_POINT && codePoint <= REGIONAL_CHARACTER_Z_CODE_POINT) {
+        return true;
       }
 
-      return firstCharCode === zeroWidthJoiner[0] && secondCharCode === zeroWidthJoiner[1];
+      return false;
+    } // Some Emoji implementations represent combinations of
+    // two “regional indicator” letters as a single flag symbol.
+
+
+    function isFlagEmoji(string) {
+      return isRegionalCode(string.substr(0, 2)) && isRegionalCode(string.substr(2, 2));
     }
 
     function isCombinedCharacter(_char3) {
       return combinedCharacters.indexOf(_char3) !== -1;
+    } // Regional flags start with a BLACK_FLAG_CODE_POINT
+    // folowed by 5 chars in the TAG range
+    // and end with a CANCEL_TAG_CODE_POINT
+
+
+    function isRegionalFlag(text, index) {
+      var codePoint = getCodePoint(text.substr(index, 2));
+
+      if (codePoint !== BLACK_FLAG_CODE_POINT) {
+        return false;
+      }
+
+      var count = 0;
+      index += 2;
+
+      while (count < 5) {
+        codePoint = getCodePoint(text.substr(index, 2));
+
+        if (codePoint < A_TAG_CODE_POINT || codePoint > Z_TAG_CODE_POINT) {
+          return false;
+        }
+
+        count += 1;
+        index += 2;
+      }
+
+      return getCodePoint(text.substr(index, 2)) === CANCEL_TAG_CODE_POINT;
     }
 
     function setIsLoaded() {
@@ -7575,7 +7662,12 @@
 
     Font.isModifier = isModifier;
     Font.isZeroWidthJoiner = isZeroWidthJoiner;
+    Font.isFlagEmoji = isFlagEmoji;
+    Font.isRegionalCode = isRegionalCode;
     Font.isCombinedCharacter = isCombinedCharacter;
+    Font.isRegionalFlag = isRegionalFlag;
+    Font.isVariationSelector = isVariationSelector;
+    Font.BLACK_FLAG_CODE_POINT = BLACK_FLAG_CODE_POINT;
     var fontPrototype = {
       addChars: addChars,
       addFonts: addFonts,
@@ -8305,17 +8397,25 @@
     };
   };
 
+  var effectTypes = {
+    TRANSFORM_EFFECT: 'transformEFfect'
+  };
+
   function TransformElement() {}
 
   TransformElement.prototype = {
     initTransform: function initTransform() {
+      var mat = new Matrix();
       this.finalTransform = {
         mProp: this.data.ks ? TransformPropertyFactory.getTransformProperty(this, this.data.ks, this) : {
           o: 0
         },
         _matMdf: false,
+        _localMatMdf: false,
         _opMdf: false,
-        mat: new Matrix()
+        mat: mat,
+        localMat: mat,
+        localOpacity: 1
       };
 
       if (this.data.ao) {
@@ -8352,8 +8452,75 @@
           finalMat.cloneFromProps(mat);
 
           for (i = 0; i < len; i += 1) {
-            mat = this.hierarchy[i].finalTransform.mProp.v.props;
-            finalMat.transform(mat[0], mat[1], mat[2], mat[3], mat[4], mat[5], mat[6], mat[7], mat[8], mat[9], mat[10], mat[11], mat[12], mat[13], mat[14], mat[15]);
+            finalMat.multiply(this.hierarchy[i].finalTransform.mProp.v);
+          }
+        }
+      }
+
+      if (this.finalTransform._matMdf) {
+        this.finalTransform._localMatMdf = this.finalTransform._matMdf;
+      }
+
+      if (this.finalTransform._opMdf) {
+        this.finalTransform.localOpacity = this.finalTransform.mProp.o.v;
+      }
+    },
+    renderLocalTransform: function renderLocalTransform() {
+      if (this.localTransforms) {
+        var i = 0;
+        var len = this.localTransforms.length;
+        this.finalTransform._localMatMdf = this.finalTransform._matMdf;
+
+        if (!this.finalTransform._localMatMdf || !this.finalTransform._opMdf) {
+          while (i < len) {
+            if (this.localTransforms[i]._mdf) {
+              this.finalTransform._localMatMdf = true;
+            }
+
+            if (this.localTransforms[i]._opMdf && !this.finalTransform._opMdf) {
+              this.finalTransform.localOpacity = this.finalTransform.mProp.o.v;
+              this.finalTransform._opMdf = true;
+            }
+
+            i += 1;
+          }
+        }
+
+        if (this.finalTransform._localMatMdf) {
+          var localMat = this.finalTransform.localMat;
+          this.localTransforms[0].matrix.clone(localMat);
+
+          for (i = 1; i < len; i += 1) {
+            var lmat = this.localTransforms[i].matrix;
+            localMat.multiply(lmat);
+          }
+
+          localMat.multiply(this.finalTransform.mat);
+        }
+
+        if (this.finalTransform._opMdf) {
+          var localOp = this.finalTransform.localOpacity;
+
+          for (i = 0; i < len; i += 1) {
+            localOp *= this.localTransforms[i].opacity * 0.01;
+          }
+
+          this.finalTransform.localOpacity = localOp;
+        }
+      }
+    },
+    searchEffectTransforms: function searchEffectTransforms() {
+      if (this.renderableEffectsManager) {
+        var transformEffects = this.renderableEffectsManager.getEffects(effectTypes.TRANSFORM_EFFECT);
+
+        if (transformEffects.length) {
+          this.localTransforms = [];
+          this.finalTransform.localMat = new Matrix();
+          var i = 0;
+          var len = transformEffects.length;
+
+          for (i = 0; i < len; i += 1) {
+            this.localTransforms.push(transformEffects[i]);
           }
         }
       }
@@ -8736,6 +8903,20 @@
     }
   };
 
+  SVGEffects.prototype.getEffects = function (type) {
+    var i;
+    var len = this.filters.length;
+    var effects = [];
+
+    for (i = 0; i < len; i += 1) {
+      if (this.filters[i].type === type) {
+        effects.push(this.filters[i]);
+      }
+    }
+
+    return effects;
+  };
+
   function registerEffect(id, effect, countsAsEffect) {
     registeredEffects[id] = {
       effect: effect,
@@ -8810,12 +8991,12 @@
       }
     },
     renderElement: function renderElement() {
-      if (this.finalTransform._matMdf) {
-        this.transformedElement.setAttribute('transform', this.finalTransform.mat.to2dCSS());
+      if (this.finalTransform._localMatMdf) {
+        this.transformedElement.setAttribute('transform', this.finalTransform.localMat.to2dCSS());
       }
 
       if (this.finalTransform._opMdf) {
-        this.transformedElement.setAttribute('opacity', this.finalTransform.mProp.o.v);
+        this.transformedElement.setAttribute('opacity', this.finalTransform.localOpacity);
       }
     },
     destroyBaseElement: function destroyBaseElement() {
@@ -8833,6 +9014,7 @@
     createRenderableComponents: function createRenderableComponents() {
       this.maskManager = new MaskElement(this.data, this, this.globalData);
       this.renderableEffectsManager = new SVGEffects(this);
+      this.searchEffectTransforms();
     },
     getMatte: function getMatte(matteType) {
       // This should not be a common case. But for backward compatibility, we'll create the matte object.
@@ -9024,6 +9206,7 @@
 
         this.renderTransform();
         this.renderRenderable();
+        this.renderLocalTransform();
         this.renderElement();
         this.renderInnerContent();
 
@@ -9620,7 +9803,6 @@
       var lvl = itemData.lvl;
       var paths;
       var mat;
-      var props;
       var iterations;
       var k;
 
@@ -9643,8 +9825,7 @@
             k = itemData.transformers.length - 1;
 
             while (iterations > 0) {
-              props = itemData.transformers[k].mProps.v.props;
-              mat.transform(props[0], props[1], props[2], props[3], props[4], props[5], props[6], props[7], props[8], props[9], props[10], props[11], props[12], props[13], props[14], props[15]);
+              mat.multiply(itemData.transformers[k].mProps.v);
               iterations -= 1;
               k -= 1;
             }
@@ -10445,45 +10626,53 @@
     var charCode;
     var secondCharCode;
     var shouldCombine = false;
+    var shouldCombineNext = false;
+    var currentChars = '';
 
     while (i < len) {
+      shouldCombine = shouldCombineNext;
+      shouldCombineNext = false;
       charCode = text.charCodeAt(i);
+      currentChars = text.charAt(i);
 
       if (FontManager.isCombinedCharacter(charCode)) {
-        charactersArray[charactersArray.length - 1] += text.charAt(i);
+        shouldCombine = true; // It's a potential surrogate pair (this is the High surrogate)
       } else if (charCode >= 0xD800 && charCode <= 0xDBFF) {
-        secondCharCode = text.charCodeAt(i + 1);
-
-        if (secondCharCode >= 0xDC00 && secondCharCode <= 0xDFFF) {
-          if (shouldCombine || FontManager.isModifier(charCode, secondCharCode)) {
-            charactersArray[charactersArray.length - 1] += text.substr(i, 2);
-            shouldCombine = false;
-          } else {
-            charactersArray.push(text.substr(i, 2));
-          }
-
-          i += 1;
+        if (FontManager.isRegionalFlag(text, i)) {
+          currentChars = text.substr(i, 14);
         } else {
-          charactersArray.push(text.charAt(i));
+          secondCharCode = text.charCodeAt(i + 1); // It's a surrogate pair (this is the Low surrogate)
+
+          if (secondCharCode >= 0xDC00 && secondCharCode <= 0xDFFF) {
+            if (FontManager.isModifier(charCode, secondCharCode)) {
+              currentChars = text.substr(i, 2);
+              shouldCombine = true;
+            } else if (FontManager.isFlagEmoji(text.substr(i, 4))) {
+              currentChars = text.substr(i, 4);
+            } else {
+              currentChars = text.substr(i, 2);
+            }
+          }
         }
       } else if (charCode > 0xDBFF) {
         secondCharCode = text.charCodeAt(i + 1);
 
-        if (FontManager.isZeroWidthJoiner(charCode, secondCharCode)) {
+        if (FontManager.isVariationSelector(charCode)) {
           shouldCombine = true;
-          charactersArray[charactersArray.length - 1] += text.substr(i, 2);
-          i += 1;
-        } else {
-          charactersArray.push(text.charAt(i));
         }
       } else if (FontManager.isZeroWidthJoiner(charCode)) {
-        charactersArray[charactersArray.length - 1] += text.charAt(i);
         shouldCombine = true;
-      } else {
-        charactersArray.push(text.charAt(i));
+        shouldCombineNext = true;
       }
 
-      i += 1;
+      if (shouldCombine) {
+        charactersArray[charactersArray.length - 1] += currentChars;
+        shouldCombine = false;
+      } else {
+        charactersArray.push(currentChars);
+      }
+
+      i += currentChars.length;
     }
 
     return charactersArray;
@@ -11722,12 +11911,6 @@
     this._mdf = false;
     this.prepareRenderableFrame(num);
     this.prepareProperties(num, this.isInRange);
-
-    if (this.textProperty._mdf || this.textProperty._isFirstFrame) {
-      this.buildNewText();
-      this.textProperty._isFirstFrame = false;
-      this.textProperty._mdf = false;
-    }
   };
 
   ITextElement.prototype.createPathShape = function (matrixHelper, shapes) {
@@ -11788,6 +11971,14 @@
   ITextElement.prototype.emptyProp = new LetterProps();
 
   ITextElement.prototype.destroy = function () {};
+
+  ITextElement.prototype.validateText = function () {
+    if (this.textProperty._mdf || this.textProperty._isFirstFrame) {
+      this.buildNewText();
+      this.textProperty._isFirstFrame = false;
+      this.textProperty._mdf = false;
+    }
+  };
 
   var emptyShapeData = {
     shapes: []
@@ -12082,6 +12273,8 @@
   };
 
   SVGTextLottieElement.prototype.renderInnerContent = function () {
+    this.validateText();
+
     if (!this.data.singleShape || this._mdf) {
       this.textAnimator.getMeasures(this.textProperty.currentData, this.lettersChangedFlag);
 
