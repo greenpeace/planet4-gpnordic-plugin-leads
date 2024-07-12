@@ -142,11 +142,11 @@
           }
 
           jQuery.get(jQueryPostStrCounter, (count) => {
-            this.targetCounter = count.counter;
+            this.targetCounter = +count.counter; // Ensure this is a number
             this.blockData.counterApiEndpoints.forEach((e) => {
               if (e && jQuery.trim(e) !== "" && e !== undefined)
                 jQuery.get(e, this.formFields, (response) => {
-                  this.targetCounter = +response.counter;
+                  this.targetCounter = this.targetCounter + +response.counter; // Aggregate the counter values
                   this.animateCounter();
                 });
             });
