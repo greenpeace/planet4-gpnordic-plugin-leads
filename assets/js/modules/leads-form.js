@@ -5,7 +5,7 @@
    * Adds custom JavaScript to the block HTML.
    *
    * @date    25/04/23
-   * @since   2.0.1
+   * @since   2.0.2
    *
    * @param   object $block The block jQuery element.
    * @param   object attributes The block attributes (only available when editing).
@@ -132,13 +132,11 @@
           // fix for the local dev env
           let jQueryPostStrCounter = "";
           if (this.isLocalEnv) {
-            jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${
-              this.sourceCode
-            }?v=${Date.now()}`;
+            jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode
+              }?v=${Date.now()}`;
           } else {
-            jQueryPostStrCounter = `/${
-              window.location.pathname.split("/")[1]
-            }/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
+            jQueryPostStrCounter = `/${window.location.pathname.split("/")[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode
+              }?v=${Date.now()}`;
           }
 
           jQuery.get(jQueryPostStrCounter, (count) => {
@@ -282,14 +280,14 @@
             if (this.isLocalEnv) {
               jQueryPostStr = `/wp-json/gplp/v2/leads`;
             } else {
-              jQueryPostStr = `${window.location.origin}/${
-                window.location.pathname.split("/")[1]
-              }/wp-json/gplp/v2/leads`;
+              jQueryPostStr = `${window.location.origin}/${window.location.pathname.split("/")[1]
+                }/wp-json/gplp/v2/leads`;
             }
             jQuery
               .post(jQueryPostStr, this.formFields, (response) => {
                 this.loading = false;
-                this.targetCounter = response;
+                this.targetCounter = this.targetCounter + 1;
+
                 this.dataLayer &&
                   this.dataLayer.push({
                     event: "petitionSignup",
@@ -468,18 +466,18 @@
               })
               .fail((error) => {
                 //console.error('Error:', error);
-            
+
                 // Adding error message to arrays
                 this.errors.push(error.responseJSON.message);
                 this.otherErrors.push(error.responseJSON.message);
-            
+
                 // Log the state after adding the error message
                 //console.log('Errors:', this.errors);
                 //console.log('Other Errors:', this.otherErrors);
-            
+
                 // Set loading state to false
                 this.loading = false;
-            
+
                 // Log the state after setting loading to false
                 //console.log('Loading:', this.loading);
               });
@@ -649,9 +647,8 @@
                 event: "petitionThankYou",
                 sourceCode: this.sourceCode,
                 stepName: "finalStep",
-                stepCompleted: `${this.multistepCompleted.length + 1}/${
-                  this.multistepCount - 1
-                }`,
+                stepCompleted: `${this.multistepCompleted.length + 1}/${this.multistepCount - 1
+                  }`,
               };
               break;
             case "action_final":
@@ -680,8 +677,8 @@
             this.steps.step && this.steps.step[this.multistepActive - 1]
               ? this.steps.step[this.multistepActive - 1].select_step
               : this.multistepActive === this.steps.step.length + 1
-              ? "final"
-              : null;
+                ? "final"
+                : null;
           let dynamicValue = null;
           if (activeStepType === "custom_ask")
             dynamicValue = this.steps.custom_ask_headline;
