@@ -113,6 +113,11 @@ $petition_options->setLocation('options_page', '==', 'acf-options-leads-form')
         'instructions' => 'The variable ${fieldName} inserts the field name.',
         'default_value' => 'Field "${fieldName}" has wrong format.',
     ])
+    ->addText('error_format_phone', [
+        'label' => 'Error (Phone format)',
+        'instructions' => 'Write a custom error message with the allowed phone format.',
+        'default_value' => 'Ops, the field "Telephone number" has the wrong format. Use 8 digits without spaces.',
+    ])
     ->addText('multistep_skip_step')
     ->addText('multistep_go_back_step')
     ;

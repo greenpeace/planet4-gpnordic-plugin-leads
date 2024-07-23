@@ -713,7 +713,8 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
         },
         errorMessages: {
             required: '<?php echo $form_fields_translations['error_required']; ?>',
-            format: '<?php echo $form_fields_translations['error_format']; ?>'
+            format: '<?php echo $form_fields_translations['error_format']; ?>',
+            phoneFormat: '<?php echo $form_fields_translations['error_format_phone']; ?>'
         },
         formType: '<?php echo $form_type; ?>',
         multistepCount: <?php echo $multistep_count; ?>,

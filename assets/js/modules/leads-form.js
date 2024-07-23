@@ -249,18 +249,28 @@
                 )
               )
           );
+          
           Object.keys(this.formFields).forEach(
-            (key) =>
-              this.formFields[key].value !== "" &&
-              this.formFields[key].regex !== "" &&
-              !this.formFields[key].regex.test(this.formFields[key].value) &&
-              this.pushMessage(
-                this.formFields[key].id,
-                blockData.errorMessages.format.replace(
-                  "${fieldName}",
-                  this.formFields[key].fieldName
-                )
-              )
+            (key) => {
+              if (this.formFields[key].value !== "" && this.formFields[key].regex !== "") {
+                if (!this.formFields[key].regex.test(this.formFields[key].value)) {
+                  if (key === 'phone') {
+                    this.pushMessage(
+                      this.formFields[key].id,
+                      this.blockData.errorMessages.phoneFormat  // Push custom phoneFormat error message
+                    );
+                  } else {
+                    this.pushMessage(
+                      this.formFields[key].id,
+                      this.blockData.errorMessages.format.replace(
+                        "${fieldName}",
+                        this.formFields[key].fieldName
+                      )
+                    );
+                  }
+                }
+              }
+            }
           );
 
           this.dataLayer &&
