@@ -90,6 +90,10 @@ $petition_options->setLocation('options_page', '==', 'acf-options-leads-form')
         'label' => 'Minimum Donation Amount',
         'default_value' => 10,
     ])
+    ->addText('donate_custom_amount', [
+        'label' => 'Custom donation amount',
+        'default_value' => 'Custom amount',
+    ])
     ->addText('donate_url_option', [
         'label' => 'Donation URL',
         'default_value' => 'donate_url',

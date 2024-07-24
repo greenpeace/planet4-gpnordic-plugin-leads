@@ -28,7 +28,7 @@ $onClick = $form_type === 'multistep' ? "completeMultistep($step_index), pushDat
                 </ul>
             <?php endif; ?>
             <div id="donate-input-amount" class="input-container">
-                <input placeholder="Custom amount" id="ghost" class="ghost donation-options" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" :value="donateAmountInputValue" @keypress="numbersOnly($event), presetDonateAmount = 0" @keyup="setDonateAmount($event)" @change="checkMinVal($event), presetDonateAmount = 0, setDonateAmount($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
+                <input placeholder="<?php echo $form_fields_translations['donate_custom_amount'] ?>" id="ghost" class="ghost donation-options" type="number" :min="blockData.donateMinimumAmount" pattern="[0-9]*" :value="donateAmountInputValue" @keypress="numbersOnly($event), presetDonateAmount = 0" @keyup="setDonateAmount($event)" @change="checkMinVal($event), presetDonateAmount = 0, setDonateAmount($event)"> <span class="currency"><?php echo $form_fields_translations['donate_currency']; ?></span>
             </div>
         <?php endif; ?>
         <a @click="<?php echo $onClick; ?>" id="donate-button" :href="getDonateUrl(`<?php echo $donate_url; ?>`)" class="button--submit button donation-options" target="_blank"><?php GPPL4\svg_icon('gift'); ?><?php echo $donate_cta; ?></a>
