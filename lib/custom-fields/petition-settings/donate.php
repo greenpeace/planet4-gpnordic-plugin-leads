@@ -11,7 +11,7 @@ function get_shared_donate_fields() {
     ],
     'donate_default_amount' => [
       'label' => 'Default donation amount',
-      'instructions' => 'The default donation amount in EUR.',
+      'instructions' => 'The default donation amount in your local currency.',
       'default_value' => 10,
       'min' => 1,
       'max' => 1000,
