@@ -412,7 +412,8 @@
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
                                       sourceCode: this.sourceCode,
-                                      stepName: "intro",
+                                      flow: "singe-step-flow",
+                                      // stepName: "intro",
                                     });
 
                                   donateBtn.addEventListener("click", () => {
@@ -430,7 +431,6 @@
                                   this.dataLayer &&
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
-                                      flow: "singe-step-flow",
                                       donationOption:
                                         "Direct link to choose amount",
                                     });
