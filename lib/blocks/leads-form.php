@@ -14,7 +14,7 @@ function acf_blocks_init()
             'render_template'   => GPLP_PLUGIN_ROOT_URI . 'templates/blocks/leads-form/leads-form.php',
             'enqueue_style'     => GPLP_PLUGIN_ROOT . 'public/css/app.css?v=' . $plugin_data['Version'],
             'enqueue_script'    => GPLP_PLUGIN_ROOT . 'public/js/modules/leads-form.js?v=' . $plugin_data['Version'],
-            'category'          => 'widgets',
+            'category'          => 'planet4-blocks',
             'icon'              => 'welcome-write-blog',
             'enqueue_assets'    => __NAMESPACE__ . '\\block_enqueue_assets',
         ));
