@@ -430,6 +430,7 @@
                                   this.dataLayer &&
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
+                                      flow: "singe-step-flow",
                                       donationOption:
                                         "Direct link to choose amount",
                                     });
@@ -586,6 +587,7 @@
               dataObj = {
                 event: "petitionThankYou",
                 sourceCode: this.sourceCode,
+                flow: "multi-step-flow",
                 stepName: "intro",
               };
               break;
