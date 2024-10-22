@@ -249,7 +249,7 @@
                 )
               )
           );
-          
+
           Object.keys(this.formFields).forEach(
             (key) => {
               if (this.formFields[key].value !== "" && this.formFields[key].regex !== "") {
@@ -415,14 +415,15 @@
                                       flow: "singe-step-flow",
                                       // stepName: "intro",
                                     });
-
+                                  
+                                  const amountDefault = this.donateAmount ;
                                   donateBtn.addEventListener("click", () => {
                                     this.dataLayer &&
                                       this.dataLayer.push({
                                         event: "petitionDonation",
                                         PetitionDonationLink:
                                           "predefined amount to donation",
-                                        amount: amount
+                                        amount: amountDefault
                                       });
                                   });
                                   break;
