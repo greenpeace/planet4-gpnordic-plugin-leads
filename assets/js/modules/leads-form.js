@@ -420,7 +420,8 @@
                                       this.dataLayer.push({
                                         event: "petitionDonation",
                                         PetitionDonationLink:
-                                          "Pre-selected amount to donation",
+                                          "predefined amount to donation",
+                                        amount: amount
                                       });
                                   });
                                   break;
