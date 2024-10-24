@@ -70,6 +70,7 @@ class FormController
       if (!strpos(get_site_url(), '.develop') && get_post_status($form_id) == 'publish') {
         $remote_db = new \wpdb($username, $password, $dbname, $hostname);
         $results = $remote_db->get_results("INSERT INTO LEADS VALUES (null, '$email', '$firstname', '$lastname', '$date', '$approved_terms', '$source_code', '$country_iso', '$phone', '$utm', CURRENT_TIMESTAMP, '$referrer');");
+        $counter_sync = $remote_db->query("UPDATE LEADS_COUNT SET COUNT = COUNT + 1 WHERE NAME = 'LEADS_TOTAL';");
         $remote_db->close();
       }
       // Update counter
