@@ -412,8 +412,8 @@
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
                                       sourceCode: this.sourceCode,
-                                      flow: "singe-step-flow",
-                                      // stepName: "intro",
+                                      flow: "single-step-flow",
+                                      stepName: "intro",
                                     });
                                   
                                   const amountDefault = this.donateAmount ;
