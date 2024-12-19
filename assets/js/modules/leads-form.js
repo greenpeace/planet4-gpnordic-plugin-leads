@@ -413,7 +413,7 @@
                                       event: "petitionThankYou",
                                       sourceCode: this.sourceCode,
                                       flow: "single-step-flow",
-                                      stepName: "intro",
+                                      // stepName: "intro",
                                     });
                                   
                                   const amountDefault = this.donateAmount ;
