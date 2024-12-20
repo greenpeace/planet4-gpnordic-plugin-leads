@@ -411,19 +411,19 @@
                                   this.dataLayer &&
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
-                                      sourceCode: this.sourceCode,
+                                      sourceCode: this.sourceCode, 
                                       flow: "single-step-flow",
-                                      // stepName: "intro",
-                                    });
+                                      donationOption: "predefined link to donation", 
+                                    }); //should trigger when Default flow & amount set
                                   
                                   const amountDefault = this.donateAmount ;
                                   donateBtn.addEventListener("click", () => {
                                     this.dataLayer &&
                                       this.dataLayer.push({
                                         event: "petitionDonation",
-                                        PetitionDonationLink:
-                                          "predefined amount to donation",
-                                        amount: amountDefault
+                                        PetitionDonationLink: "predefined amount to donation",
+                                        amount: amountDefault,
+                                        flow: "single-step-flow",
                                       });
                                   });
                                   break;
@@ -432,16 +432,16 @@
                                   this.dataLayer &&
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
-                                      donationOption:
-                                        "Direct link to choose amount",
-                                    });
+                                      donationOption: "direct link to donation",
+                                      flow: "single-step-flow",
+                                    }); //should trigger when Default flow & no amount set
 
                                   donateBtn.addEventListener("click", () => {
                                     this.dataLayer &&
                                       this.dataLayer.push({
                                         event: "petitionDonation",
-                                        PetitionDonationLink:
-                                          "Direct link to choose amount",
+                                        PetitionDonationLink: "direct link to choose amount",
+                                        flow: "single-step-flow",
                                       });
                                   });
                                   break;
