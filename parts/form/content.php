@@ -1,10 +1,11 @@
 <?php
 $condition = $form_type === 'multistep' ? true : '!success';
+
 ?>
 <div class="leads-form__content" v-show="<?php echo $condition; ?>">
     <h2 :class="lengthClass(heroTitle)" v-if="heroTitle !== ''"><?php echo stripslashes($headline); ?></h2>
     <div class="description">
-        <div class="text" ref="heroDescription" v-html="limitedText(heroDescription, textOpen)" v-if="heroDescription !== ''"><?php echo $hero_description; ?>
+        <div class="text" ref="heroDescription" v-html="limitedText(heroDescription, textOpen)" v-if="heroDescription !== ''"><?php echo $description; ?>
         </div>
         <div v-if="showReadMore">
             <a @click="toggleText()" class='button--arrow'>

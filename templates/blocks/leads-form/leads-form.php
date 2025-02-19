@@ -82,7 +82,6 @@ $opacity = (isset($form_styles['opacity']) && $form_styles['opacity'] != false) 
 
 // Alignment
 $align = $form_styles['placement'];
-$hero_description = (isset($hero_settings['description']) && $hero_settings['description'] != false) ? $hero_settings['description'] : '';
 
 // Url
 $url = get_the_permalink();
@@ -99,7 +98,7 @@ $has_multisteps = $form_type === 'multistep';
 $content_data = array(
     'form_type' => $form_type,
     'headline' => $hero_settings['headline'],
-    'description' => $hero_description
+    'description' => $hero_settings['description']
 );
 $form_data = array(
     'form_type' => $form_type,
@@ -594,7 +593,7 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
         //heroTitle trim slashes,remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
-        heroDescription: "<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_description)))); ?>",
+        heroDescription: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['description'])))); ?>',
         display: "<?php echo $display; ?>",
         formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
         enableCounter: '<?php echo $form_settings['enable_counter']; ?>',
