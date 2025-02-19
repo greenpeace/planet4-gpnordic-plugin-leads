@@ -593,7 +593,7 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
         //heroTitle trim slashes,remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
-        heroDescription: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['description'])))); ?>',
+        heroDescription: <?php echo json_encode(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['description'] ?? '')))); ?>,
         display: "<?php echo $display; ?>",
         formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
         enableCounter: '<?php echo $form_settings['enable_counter']; ?>',
