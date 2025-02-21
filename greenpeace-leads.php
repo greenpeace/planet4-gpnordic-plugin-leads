@@ -4,8 +4,8 @@
  * Plugin Name: Greenpeace - Leads
  * Description: Petition with Gutenberg blocks
  * Plugin URI:
- * Version: 1.1.13
- * Php Version: 7.0
+ * Version: 1.1.14
+ * Php Version: 8.3
  *
  * Author: Simma Lugnt
  * Author URI: https://simmalugnt.se
