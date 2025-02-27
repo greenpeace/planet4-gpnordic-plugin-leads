@@ -16,12 +16,11 @@
     "gulp-uglify": "^3.0.1",
     "motion-ui": "~1.2.2",
     "node-notifier": "^10.0.1",
-    "sass": "^1.52.2"
+    "sass": "^1.85.1"
   },
   "author": "Simma Lugnt <info@simmalugnt.se>",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "node-sass": "^7.0.1"
   }
 }
