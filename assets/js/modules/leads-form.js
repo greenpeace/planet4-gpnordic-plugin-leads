@@ -412,6 +412,7 @@
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
                                       sourceCode: this.sourceCode, 
+                                      phone: this.formFields.phone.value,
                                       flow: "single-step-flow",
                                       donationOption: "predefined link to donation", 
                                     }); //should trigger when Default flow & amount set
@@ -588,6 +589,7 @@
               dataObj = {
                 event: "petitionThankYou",
                 sourceCode: this.sourceCode,
+                phone: this.formFields.phone.value,
                 flow: "multi-step-flow",
                 stepName: "intro",
               };
