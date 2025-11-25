@@ -122,8 +122,16 @@ $petition_options->setLocation('options_page', '==', 'acf-options-leads-form')
         'instructions' => 'Write a custom error message with the allowed phone format.',
         'default_value' => 'Ops, the field "Telephone number" has the wrong format. Use 8 digits without spaces.',
     ])
-    ->addText('multistep_skip_step')
-    ->addText('multistep_go_back_step')
-    ;
+    ->addText('multistep_skip_step', [
+        'label' => 'Multistep: Skip Step',
+        'instructions' => 'Label for the button to skip a step in multistep forms.',
+        'default_value' => 'Skip step',
+    ])
+    ->addText('multistep_go_back_step', [
+        'label' => 'Multistep: Go Back',
+        'instructions' => 'Label for the button to go back a step in multistep forms.',
+        'default_value' => 'Go back',
+    ])
+;
 
 acf_add_local_field_group($petition_options->build());
