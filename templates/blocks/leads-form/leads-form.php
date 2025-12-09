@@ -234,7 +234,7 @@ $layouts_data = array(
     /* Style links */
     #<?= "$id " ?>.leads-form__form__container span a,
     #<?= "$id " ?>.leads-form__thank-you .preamble p a,
-    #<?= "$id " ?>.leads-form__thank-you .preamble p span a  {
+    #<?= "$id " ?>.leads-form__thank-you .preamble p span a {
         border-bottom-color: <?php echo $primary_color; ?> !important;
     }
 
@@ -244,7 +244,7 @@ $layouts_data = array(
     }
 
     #<?= "$id " ?>.leads-form__thank-you .preamble p a:hover,
-    #<?= "$id " ?>.leads-form__thank-you .preamble p span a:hover  {
+    #<?= "$id " ?>.leads-form__thank-you .preamble p span a:hover {
         color: <?php echo $cta_text_color; ?> !important;
         border-bottom-color: <?php echo $cta_text_color; ?> !important;
     }
@@ -582,6 +582,25 @@ $layouts_data = array(
 $donate_amount_default = $form_type === 'multistep' ? $steps['donate_default_amount'] : $thank_you_settings['donate_default_amount'];
 $donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0);
 $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] : $thank_you_settings['description'];
+$phone_by_country = <<<'JS'
+(function() {
+    const path = window.location.pathname.toLowerCase();
+    const countryRules = {
+        "/denmark/":  { min: 7, max: 8 },
+        "/norway/":   { min: 7, max: 8 },
+        "/finland/":  { min: 8, max: 10 },
+        "/sweden/":   { min: 7, max: 9 }
+    };
+    for (const prefix in countryRules) {
+        if (path.startsWith(prefix)) {
+            const { min, max } = countryRules[prefix];
+            return new RegExp(`^\\d{${min},${max}}$`);
+        }
+    }
+    return /^[0-9]{6,11}$/;
+})()
+JS;
+
 ?>
 <script>
     window['leads_form_<?php echo $block['id']; ?>'] = {
@@ -589,7 +608,7 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
         donateAmount: <?php echo $donate_amount; ?>,
         donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
         thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? $steps['thank_you_headline'] : $thank_you_settings['headline']); ?>',
-        thankYouDescription: '<?php echo addslashes(trim(preg_replace('/\s+/', ' ', trim($ty_description))));?>',
+        thankYouDescription: '<?php echo addslashes(trim(preg_replace('/\s+/', ' ', trim($ty_description)))); ?>',
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
         //heroTitle trim slashes,remove tags and new lines
         heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
@@ -613,7 +632,7 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
                 regex: ''
             },
             utm: {
-                value: function () {
+                value: function() {
                     // Parsing of the UTM values from a dynamic URL
                     const currentUTM = new URLSearchParams(window.location.search);
                     const postcodeInput = document.querySelector('input[type="tel"][name="postcode"]');
@@ -622,29 +641,29 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
                         postcodeInput.addEventListener('input', () => {
                             const postcodeRegex = /^\d{5}$/;
                             const utmInputValue = postcodeInput.value;
-                            
+
                             if (postcodeRegex.test(utmInputValue)) {
                                 let utmCampaignValue = currentUTM.get('utm_campaign');
-                                
+
                                 //utm_campaign exists
-                                if(utmCampaignValue){
-                                    if(hasFiveDigits(utmCampaignValue)){
-                                    //& has 5 digits at the end
+                                if (utmCampaignValue) {
+                                    if (hasFiveDigits(utmCampaignValue)) {
+                                        //& has 5 digits at the end
                                         utmCampaignValue = utmInputValue.slice(0, -5) + utmInputValue.slice(-5);
                                     } else {
-                                    //Doesn't have 5 digits at the end
+                                        //Doesn't have 5 digits at the end
                                         utmCampaignValue += `${utmInputValue.slice(-5)}`;
                                     }
                                 } else {
-                                //utm_campaign doesn't exists
+                                    //utm_campaign doesn't exists
                                     if (currentUTM.toString() !== '') {
-                                    //There are other utms
+                                        //There are other utms
                                         utmCampaignValue = `${utmInputValue.slice(-5)}`;
                                     } else {
-                                    //There are no other utms
+                                        //There are no other utms
                                         utmCampaignValue = `${utmInputValue.slice(-5)}`;
                                     }
-                                }                              
+                                }
                                 currentUTM.set('utm_campaign', utmCampaignValue);
                                 // console.log(currentUTM);
                             }
@@ -661,7 +680,7 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
                         // Return the initial utm
                         return window.location.search;
                     }
-                }, 
+                },
                 fieldName: 'UTM',
                 required: false,
                 regex: ''
@@ -701,7 +720,7 @@ $ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] :
                 id: 'phone',
                 fieldName: '<?php echo $form_fields_translations['phone']; ?>',
                 required: <?php echo $form_settings['phone'] == 'required' ? 1 : 0; ?>,
-                regex: /^[0-9]{6,11}$/
+                regex: <?php echo $phone_by_country; ?>
             },
             consent: {
                 value: <?php echo var_export((bool)($form_settings['consent_method'] == 'checkbox_checked' || $form_settings['consent_method'] == 'assumed'), true); ?>,
