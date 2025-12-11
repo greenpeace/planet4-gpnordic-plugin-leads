@@ -730,9 +730,9 @@ JS;
             },
         },
         errorMessages: {
-            required: '<?php echo $form_fields_translations['error_required']; ?>',
-            format: '<?php echo $form_fields_translations['error_format']; ?>',
-            phoneFormat: '<?php echo $form_fields_translations['error_format_phone']; ?>'
+            required: <?php echo json_encode($form_fields_translations['error_required']); ?>,
+            format: <?php echo json_encode($form_fields_translations['error_format']); ?>,
+            phoneFormat: <?php echo json_encode($form_fields_translations['error_format_phone']); ?>
         },
         formType: '<?php echo $form_type; ?>',
         multistepCount: <?php echo $multistep_count; ?>,
