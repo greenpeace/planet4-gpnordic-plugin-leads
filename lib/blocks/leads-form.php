@@ -17,21 +17,30 @@ function acf_blocks_init()
             'category'          => 'planet4-blocks',
             'icon'              => 'welcome-write-blog',
             'enqueue_assets'    => __NAMESPACE__ . '\\block_enqueue_assets',
+            /* * PATCH: Support for Planet 4 Master Theme Editor 
+             * apiVersion 2 allows the block to render inside the modern iframe 
+             * without crashing older ACF Pro 5.9 installations.
+             */
+            'apiVersion'        => 2,
+            'supports'          => array(
+                'jsx'   => true, // Required for modern block compatibility
+                'align' => array('full', 'wide'),
+            ),
         ));
     }
 }
 
 function block_enqueue_assets()
 {
-    wp_enqueue_script('vue', 'https://cdn.jsdelivr.net/npm/vue@2', array(), '', true);
-    wp_enqueue_script('gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js', array(), '', true);
-    wp_enqueue_script('lodash', GPLP_PLUGIN_ROOT . '/bower_components/lodash/dist/lodash.min.js', array(), '', true);
+    wp_enqueue_script('vue', GPLP_PLUGIN_ROOT . 'public/js/vendor/vue.min.js', array(), '2.7.16', true);
+    wp_enqueue_script('gsap', GPLP_PLUGIN_ROOT . 'public/js/vendor/gsap.min.js', array(), '3.12.5', true);
+    wp_enqueue_script('lodash', GPLP_PLUGIN_ROOT . 'public/js/vendor/lodash.min.js', array(), '4.17.21', true);
 }
 add_action('acf/init', __NAMESPACE__ . '\\acf_blocks_init');
 
 function admin_enqueue_scripts()
 {
-    wp_enqueue_script('vue', 'https://cdn.jsdelivr.net/npm/vue@2', array(), '', true);
+    wp_enqueue_script('vue', GPLP_PLUGIN_ROOT . 'public/js/vendor/vue.min.js', array(), '2.7.16', true);
     wp_localize_script('vue', 'gplp', array(
         'nonce' => wp_create_nonce('wp_rest'),
     ));
