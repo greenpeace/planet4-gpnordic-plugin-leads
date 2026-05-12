@@ -22,9 +22,9 @@ function acf_blocks_init()
              * without crashing older ACF Pro 5.9 installations.
              */
             'apiVersion'        => 2,
+            'enqueue_assets'    => __NAMESPACE__ . '\\block_enqueue_assets',
             'supports'          => array(
-                'jsx'   => true, // Required for modern block compatibility
-                'align' => array('full', 'wide'),
+                'jsx' => true,
             ),
         ));
     }
@@ -42,7 +42,8 @@ function admin_enqueue_scripts()
 {
     wp_enqueue_script('vue', GPLP_PLUGIN_ROOT . 'public/js/vendor/vue.min.js', array(), '2.7.16', true);
     wp_localize_script('vue', 'gplp', array(
-        'nonce' => wp_create_nonce('wp_rest'),
+        'nonce'    => wp_create_nonce('wp_rest'), //add nonce check for REST API request
+        'rest_url' => get_rest_url(null, 'gplp/v2/leads'), // Absolute API path for country subdomains after MT v1.367.0
     ));
 }
 
