@@ -132,11 +132,9 @@
           // fix for the local dev env
           let jQueryPostStrCounter = "";
           if (this.isLocalEnv) {
-            jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode
-              }?v=${Date.now()}`;
+            jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
           } else {
-            jQueryPostStrCounter = `/${window.location.pathname.split("/")[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode
-              }?v=${Date.now()}`;
+            jQueryPostStrCounter = `/${window.location.pathname.split("/")[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
           }
 
           jQuery.get(jQueryPostStrCounter, (count) => {
@@ -750,35 +748,6 @@
           );
         },
       },
-    });
-
-    /**
-     * FIX: DOM-to-Vue Bridge
-     * Planet 4 Master Theme v1.367 Isolation Fix
-     */
-    const $form = jQuery($block);
-    
-    // We use a namespaced click listener to avoid duplicates
-    $form.on('click.repair', '#btn-submit', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      // Retrieve the Vue instance directly from the element 
-      // (This is the most reliable way in the P4 Iframe)
-      const vm = $form[0].__vue__;
-
-      if (vm && typeof vm.submit === 'function') {
-        console.log("🚀 Bridge: Manually triggering Vue submit");
-        vm.submit();
-      } else {
-        console.error("❌ Bridge: Vue submit method not found");
-      }
-    });
-
-    // Visual helper to ensure the button feels active
-    $form.find('#btn-submit').css({
-      'cursor': 'pointer',
-      'pointer-events': 'auto'
     });
     
   };
