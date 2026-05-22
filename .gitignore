@@ -6,6 +6,9 @@
 # Node artifact files
 node_modules/
 
+# Dependency directories
+vendor/
+
 # Compiled Java class files
 *.class
 

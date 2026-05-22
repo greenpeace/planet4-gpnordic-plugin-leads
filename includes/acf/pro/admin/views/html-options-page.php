@@ -1,20 +1,33 @@
+<?php
+/**
+ * @package ACF
+ * @author  WP Engine
+ *
+ * © 2026 Advanced Custom Fields (ACF®). All rights reserved.
+ * "ACF" is a trademark of WP Engine.
+ * Licensed under the GNU General Public License v2 or later.
+ * https://www.gnu.org/licenses/gpl-2.0.html
+ */
+?>
 <div class="wrap acf-settings-wrap">
 	
-	<h1><?php echo $page_title; ?></h1>
+	<h1><?php echo esc_html( $page_title ); ?></h1>
 	
 	<form id="post" method="post" name="post">
 		
-		<?php 
-		
+		<?php
+
 		// render post data
-		acf_form_data(array(
-			'screen'	=> 'options',
-			'post_id'	=> $post_id,
-		));
-		
+		acf_form_data(
+			array(
+				'screen'  => 'options',
+				'post_id' => $post_id,
+			)
+		);
+
 		wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false );
 		wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false );
-		
+
 		?>
 		
 		<div id="poststuff" class="poststuff">
@@ -23,13 +36,13 @@
 				
 				<div id="postbox-container-1" class="postbox-container">
 					
-					<?php do_meta_boxes('acf_options_page', 'side', null); ?>
+					<?php do_meta_boxes( 'acf_options_page', 'side', null ); ?>
 						
 				</div>
 				
 				<div id="postbox-container-2" class="postbox-container">
 					
-					<?php do_meta_boxes('acf_options_page', 'normal', null); ?>
+					<?php do_meta_boxes( 'acf_options_page', 'normal', null ); ?>
 					
 				</div>
 			

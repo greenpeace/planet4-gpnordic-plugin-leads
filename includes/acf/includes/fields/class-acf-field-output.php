@@ -1,77 +1,54 @@
 <?php
+/**
+ * @package ACF
+ * @author  WP Engine
+ *
+ * © 2026 Advanced Custom Fields (ACF®). All rights reserved.
+ * "ACF" is a trademark of WP Engine.
+ * Licensed under the GNU General Public License v2 or later.
+ * https://www.gnu.org/licenses/gpl-2.0.html
+ */
 
-if( ! class_exists('acf_field_output') ) :
+if ( ! class_exists( 'acf_field_output' ) ) :
 
-class acf_field_output extends acf_field {
-	
-	
-	/*
-	*  __construct
-	*
-	*  This function will setup the field type data
-	*
-	*  @type	function
-	*  @date	5/03/2014
-	*  @since	5.0.0
-	*
-	*  @param	n/a
-	*  @return	n/a
-	*/
-	
-	function initialize() {
-		
-		// vars
-		$this->name = 'output';
-		$this->label = 'output';
-		$this->public = false;
-		$this->defaults = array(
-			'html'	=> false
-		);
-		
-	}
-		
-	
-	/*
-	*  render_field()
-	*
-	*  Create the HTML interface for your field
-	*
-	*  @param	$field (array) the $field being rendered
-	*
-	*  @type	action
-	*  @since	3.6
-	*  @date	23/01/13
-	*
-	*  @param	$field (array) the $field being edited
-	*  @return	n/a
-	*/
-	
-	function render_field( $field ) {
-		
-		// bail early if no html
-		if( !$field['html'] ) return;
-		
-		
-		// html
-		if( is_string($field['html']) && !function_exists($field['html']) ) {
-			
-			echo $field['html'];
-		
-		// function	
-		} else {
-			
-			call_user_func_array($field['html'], array($field));
-			
+	/**
+	 * This class and field type has been deprecated since ACF 6.3.2 and will not output anything.
+	 */
+	class acf_field_output extends acf_field {
+
+
+		/**
+		 * This function will setup the field type data
+		 *
+		 * @since   5.0.0
+		 */
+		public function initialize() {
+
+			// vars
+			$this->name     = 'output';
+			$this->label    = 'output';
+			$this->public   = false;
+			$this->defaults = array(
+				'html' => false,
+			);
 		}
-		
+
+
+		/**
+		 * The render field call. Deprecated since ACF 6.3.2.
+		 *
+		 * @param   array $field The $field being edited
+		 * @return  false
+		 */
+		public function render_field( $field ) {
+
+			// Deprecated since 6.3.2 and will be removed in a future release.
+			_deprecated_function( __FUNCTION__, '6.3.2' );
+			return false;
+		}
 	}
-		
-}
 
 
-// initialize
-acf_register_field_type( 'acf_field_output' );
-
+	// initialize
+	acf_register_field_type( 'acf_field_output' );
 endif; // class_exists check
-
-?>
