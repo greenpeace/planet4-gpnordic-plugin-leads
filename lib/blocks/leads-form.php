@@ -16,11 +16,6 @@ function acf_blocks_init()
             'enqueue_script'    => GPLP_PLUGIN_ROOT . 'public/js/modules/leads-form.js?v=' . $plugin_data['Version'],
             'category'          => 'planet4-blocks',
             'icon'              => 'welcome-write-blog',
-            'enqueue_assets'    => __NAMESPACE__ . '\\block_enqueue_assets',
-            /* * PATCH: Support for Planet 4 Master Theme Editor 
-             * apiVersion 2 allows the block to render inside the modern iframe 
-             * without crashing older ACF Pro 5.9 installations.
-             */
             'apiVersion'        => 2,
             'enqueue_assets'    => __NAMESPACE__ . '\\block_enqueue_assets',
             'supports'          => array(
