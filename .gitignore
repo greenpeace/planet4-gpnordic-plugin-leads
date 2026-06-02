@@ -7,7 +7,7 @@
 node_modules/
 
 # Dependency directories
-vendor/
+/vendor/
 
 # Compiled Java class files
 *.class
