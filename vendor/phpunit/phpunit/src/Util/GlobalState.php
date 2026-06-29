@@ -120,6 +120,42 @@ final class GlobalState
             'mbstring.internal_encoding'   => true,
             'oci8.old_oci_close_semantics' => true,
         ],
+
+        '8.4' => [
+            'auto_detect_line_endings'     => true,
+            'filter.default'               => true,
+            'iconv.input_encoding'         => true,
+            'iconv.output_encoding'        => true,
+            'iconv.internal_encoding'      => true,
+            'mbstring.http_input'          => true,
+            'mbstring.http_output'         => true,
+            'mbstring.internal_encoding'   => true,
+            'oci8.old_oci_close_semantics' => true,
+        ],
+
+        '8.5' => [
+            'auto_detect_line_endings'     => true,
+            'filter.default'               => true,
+            'iconv.input_encoding'         => true,
+            'iconv.output_encoding'        => true,
+            'iconv.internal_encoding'      => true,
+            'mbstring.http_input'          => true,
+            'mbstring.http_output'         => true,
+            'mbstring.internal_encoding'   => true,
+            'oci8.old_oci_close_semantics' => true,
+        ],
+
+        '8.6' => [
+            'auto_detect_line_endings'     => true,
+            'filter.default'               => true,
+            'iconv.input_encoding'         => true,
+            'iconv.output_encoding'        => true,
+            'iconv.internal_encoding'      => true,
+            'mbstring.http_input'          => true,
+            'mbstring.http_output'         => true,
+            'mbstring.internal_encoding'   => true,
+            'oci8.old_oci_close_semantics' => true,
+        ],
     ];
 
     /**
@@ -188,7 +224,7 @@ final class GlobalState
             $result .= sprintf(
                 '@ini_set(%s, %s);' . "\n",
                 self::exportVariable($key),
-                self::exportVariable((string) $value)
+                self::exportVariable((string) $value),
             );
         }
 
@@ -206,7 +242,7 @@ final class GlobalState
                     'if (!defined(\'%s\')) define(\'%s\', %s);' . "\n",
                     $name,
                     $name,
-                    self::exportVariable($value)
+                    self::exportVariable($value),
                 );
             }
         }
@@ -229,7 +265,7 @@ final class GlobalState
                         '$GLOBALS[\'%s\'][\'%s\'] = %s;' . "\n",
                         $superGlobalArray,
                         $key,
-                        self::exportVariable($GLOBALS[$superGlobalArray][$key])
+                        self::exportVariable($GLOBALS[$superGlobalArray][$key]),
                     );
                 }
             }
@@ -243,7 +279,7 @@ final class GlobalState
                 $result .= sprintf(
                     '$GLOBALS[\'%s\'] = %s;' . "\n",
                     $key,
-                    self::exportVariable($GLOBALS[$key])
+                    self::exportVariable($GLOBALS[$key]),
                 );
             }
         }

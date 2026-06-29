@@ -2,12 +2,76 @@
 
 All notable changes to this project will be documented in this file.
 
-This projects adheres to [Keep a CHANGELOG](http://keepachangelog.com/) and uses [Semantic Versioning](http://semver.org/).
+This projects adheres to [Keep a CHANGELOG](http://keepachangelog.com/) and uses [Semantic Versioning](https://semver.org/).
 
 
 ## [Unreleased]
 
 _Nothing yet._
+
+## [1.1.5] - 2025-08-10
+
+### Fixed
+* PHP 8.5 deprecation notice when using the `AssertAttributeHelper::getProperty()` and `AssertAttributeHelper::getPropertyValue()` methods. PR [#261]
+
+### Changed
+* General housekeeping.
+
+[#261]: https://github.com/Yoast/PHPUnit-Polyfills/pull/261
+
+
+## [1.1.4] - 2025-02-09
+
+This is a maintenance release.
+
+### Changed
+* README: updated sub-section about PHPUnit version support with information about the PHPUnit Polyfills 4.x branch. PR [#249]
+* General housekeeping.
+
+[#249]: https://github.com/Yoast/PHPUnit-Polyfills/pull/249
+
+
+## [1.1.3] - 2025-01-08
+
+This is a maintenance release.
+
+### Changed
+* README: fixed a few broken badges.
+* General housekeeping.
+
+
+## [1.1.2] - 2024-09-07
+
+This is a maintenance release.
+
+### Changed
+* README: updated sub-section about PHPUnit version support with information about the PHPUnit Polyfills 3.x branch. PR [#188]
+* General housekeeping.
+
+[#188]: https://github.com/Yoast/PHPUnit-Polyfills/pull/188
+
+
+## [1.1.1] - 2024-04-05
+
+### Added
+* Compatibility fix for running tests using a PHPUnit PHAR file for PHPUnit 8.5.38+ and PHPUnit 9.6.19+. PR [#161].
+
+### Changed
+* General housekeeping.
+
+[#161]: https://github.com/Yoast/PHPUnit-Polyfills/pull/161
+
+
+## [1.1.0] - 2023-08-19
+
+### Added
+* `Yoast\PHPUnitPolyfills\Polyfills\AssertObjectProperty` trait to polyfill the `Assert::assertObjectHasProperty()` and `Assert::assertObjectNotHasProperty()` methods as backported from PHPUnit 10.1.0 to PHPUnit 9.6.11. PR [#135].
+
+### Changed
+* General housekeeping.
+
+[#135]: https://github.com/Yoast/PHPUnit-Polyfills/pull/135
+
 
 ## [1.0.5] - 2023-03-31
 
@@ -155,7 +219,13 @@ As of version 2.15.0 of the `shivammathur/setup-php` action for GitHub Actions, 
 Initial release.
 
 
-[Unreleased]: https://github.com/Yoast/PHPUnit-Polyfills/compare/main...HEAD
+[Unreleased]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.1.5...1.x
+[1.1.5]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.1.4...1.1.5
+[1.1.4]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.1.3...1.1.4
+[1.1.3]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.1.2...1.1.3
+[1.1.2]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.1.1...1.1.2
+[1.1.1]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.1.0...1.1.1
+[1.1.0]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.0.5...1.1.0
 [1.0.5]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.0.4...1.0.5
 [1.0.4]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.0.3...1.0.4
 [1.0.3]: https://github.com/Yoast/PHPUnit-Polyfills/compare/1.0.2...1.0.3

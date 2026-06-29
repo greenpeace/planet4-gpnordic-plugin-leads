@@ -12,6 +12,7 @@ use Yoast\PHPUnitPolyfills\Polyfills\AssertionRenames;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertIsType;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertNumericType;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertObjectEquals;
+use Yoast\PHPUnitPolyfills\Polyfills\AssertObjectProperty;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertStringContains;
 use Yoast\PHPUnitPolyfills\Polyfills\EqualToSpecializations;
 use Yoast\PHPUnitPolyfills\Polyfills\ExpectException;
@@ -29,6 +30,8 @@ use Yoast\PHPUnitPolyfills\Polyfills\ExpectPHPException;
  * `@after` and `@afterClass` annotations.
  * The naming of the overloaded methods is open as long as the method names don't conflict with
  * the PHPUnit native method names.
+ *
+ * @since 0.1.0
  */
 abstract class XTestCase extends PHPUnit_TestCase {
 
@@ -41,6 +44,7 @@ abstract class XTestCase extends PHPUnit_TestCase {
 	use AssertIsType;
 	use AssertNumericType;
 	use AssertObjectEquals;
+	use AssertObjectProperty;
 	use AssertStringContains;
 	use EqualToSpecializations;
 	use ExpectException;

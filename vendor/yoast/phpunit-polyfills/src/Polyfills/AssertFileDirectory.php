@@ -2,6 +2,7 @@
 
 namespace Yoast\PHPUnitPolyfills\Polyfills;
 
+use PHPUnit_Framework_Exception;
 use PHPUnit_Util_InvalidArgumentHelper;
 
 /**
@@ -14,6 +15,8 @@ use PHPUnit_Util_InvalidArgumentHelper;
  * Introduced in PHPUnit 5.6.0.
  *
  * @link https://github.com/sebastianbergmann/phpunit/pull/2262
+ *
+ * @since 0.2.0
  */
 trait AssertFileDirectory {
 
@@ -25,7 +28,7 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertIsReadable( $filename, $message = '' ) {
 		if ( ! \is_string( $filename ) ) {
@@ -48,7 +51,7 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertNotIsReadable( $filename, $message = '' ) {
 		if ( ! \is_string( $filename ) ) {
@@ -71,7 +74,7 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertIsWritable( $filename, $message = '' ) {
 		if ( ! \is_string( $filename ) ) {
@@ -94,7 +97,7 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertNotIsWritable( $filename, $message = '' ) {
 		if ( ! \is_string( $filename ) ) {
@@ -117,7 +120,7 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertDirectoryExists( $directory, $message = '' ) {
 		if ( ! \is_string( $directory ) ) {
@@ -140,7 +143,7 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertDirectoryNotExists( $directory, $message = '' ) {
 		if ( ! \is_string( $directory ) ) {

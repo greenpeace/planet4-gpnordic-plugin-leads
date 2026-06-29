@@ -9,15 +9,19 @@ if ( \class_exists( 'Yoast\PHPUnitPolyfills\Autoload', false ) === false ) {
 
 	/**
 	 * Custom autoloader.
+	 *
+	 * @since 0.1.0
 	 */
 	final class Autoload {
 
 		/**
 		 * Version number.
 		 *
+		 * @since 1.0.1
+		 *
 		 * @var string
 		 */
-		const VERSION = '1.0.5';
+		const VERSION = '1.1.5';
 
 		/**
 		 * Loads a class.
@@ -35,7 +39,7 @@ if ( \class_exists( 'Yoast\PHPUnitPolyfills\Autoload', false ) === false ) {
 			if ( $className === 'Error' || $className === 'TypeError' ) {
 				$file = \realpath( __DIR__ . '/src/Exceptions/' . $className . '.php' );
 
-				if ( \file_exists( $file ) === true ) {
+				if ( \is_string( $file ) && \file_exists( $file ) === true ) {
 					require_once $file;
 					return true;
 				}
@@ -105,6 +109,10 @@ if ( \class_exists( 'Yoast\PHPUnitPolyfills\Autoload', false ) === false ) {
 					self::loadAssertObjectEquals();
 					return true;
 
+				case 'Yoast\PHPUnitPolyfills\Polyfills\AssertObjectProperty':
+					self::loadAssertObjectProperty();
+					return true;
+
 				case 'Yoast\PHPUnitPolyfills\TestCases\TestCase':
 					self::loadTestCase();
 					return true;
@@ -124,7 +132,7 @@ if ( \class_exists( 'Yoast\PHPUnitPolyfills\Autoload', false ) === false ) {
 				default:
 					$file = \realpath( __DIR__ . '/src/' . \strtr( \substr( $className, 23 ), '\\', '/' ) . '.php' );
 
-					if ( \file_exists( $file ) === true ) {
+					if ( \is_string( $file ) && \file_exists( $file ) === true ) {
 						require_once $file;
 						return true;
 					}
@@ -419,6 +427,23 @@ if ( \class_exists( 'Yoast\PHPUnitPolyfills\Autoload', false ) === false ) {
 
 			// PHPUnit >= 9.4.0.
 			require_once __DIR__ . '/src/Polyfills/AssertObjectEquals_Empty.php';
+		}
+
+		/**
+		 * Load the AssertObjectProperty polyfill or an empty trait with the same name
+		 * if a PHPUnit version is used which already contains this functionality.
+		 *
+		 * @return void
+		 */
+		public static function loadAssertObjectProperty() {
+			if ( \method_exists( '\PHPUnit\Framework\Assert', 'assertObjectHasProperty' ) === false ) {
+				// PHPUnit < 9.6.11.
+				require_once __DIR__ . '/src/Polyfills/AssertObjectProperty.php';
+				return;
+			}
+
+			// PHPUnit >= 9.6.11.
+			require_once __DIR__ . '/src/Polyfills/AssertObjectProperty_Empty.php';
 		}
 
 		/**

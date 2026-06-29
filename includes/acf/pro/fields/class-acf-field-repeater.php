@@ -1,1122 +1,1284 @@
 <?php
+/**
+ * @package ACF
+ * @author  WP Engine
+ *
+ * © 2026 Advanced Custom Fields (ACF®). All rights reserved.
+ * "ACF" is a trademark of WP Engine.
+ * Licensed under the GNU General Public License v2 or later.
+ * https://www.gnu.org/licenses/gpl-2.0.html
+ */
 
-if( ! class_exists('acf_field_repeater') ) :
+if ( ! class_exists( 'acf_field_repeater' ) ) :
 
-class acf_field_repeater extends acf_field {
-	
-	
-	/*
-	*  __construct
-	*
-	*  This function will setup the field type data
-	*
-	*  @type	function
-	*  @date	5/03/2014
-	*  @since	5.0.0
-	*
-	*  @param	n/a
-	*  @return	n/a
-	*/
-	
-	function initialize() {
-		
-		// vars
-		$this->name = 'repeater';
-		$this->label = __("Repeater",'acf');
-		$this->category = 'layout';
-		$this->defaults = array(
-			'sub_fields'	=> array(),
-			'min'			=> 0,
-			'max'			=> 0,
-			'layout' 		=> 'table',
-			'button_label'	=> '',
-			'collapsed'		=> ''
-		);
-		
-		
-		// field filters
-		$this->add_field_filter('acf/prepare_field_for_export', array($this, 'prepare_field_for_export'));
-		$this->add_field_filter('acf/prepare_field_for_import', array($this, 'prepare_field_for_import'));
-		
-		
-		// filters
-		$this->add_filter('acf/validate_field',					array($this, 'validate_any_field'));
-		
-	}
-	
-	
-	/*
-	*  input_admin_enqueue_scripts
-	*
-	*  description
-	*
-	*  @type	function
-	*  @date	16/12/2015
-	*  @since	5.3.2
-	*
-	*  @param	$post_id (int)
-	*  @return	$post_id (int)
-	*/
-	
-	function input_admin_enqueue_scripts() {
-		
-		// localize
-		acf_localize_text(array(
-		   	'Minimum rows reached ({min} rows)'	=> __('Minimum rows reached ({min} rows)', 'acf'),
-			'Maximum rows reached ({max} rows)'	=> __('Maximum rows reached ({max} rows)', 'acf'),
-	   	));
-	}
-	
-	
-	/*
-	*  load_field()
-	*
-	*  This filter is appied to the $field after it is loaded from the database
-	*
-	*  @type	filter
-	*  @since	3.6
-	*  @date	23/01/13
-	*
-	*  @param	$field - the field array holding all the field options
-	*
-	*  @return	$field - the field array holding all the field options
-	*/
-	
-	function load_field( $field ) {
-		
-		// min/max
-		$field['min'] = (int) $field['min'];
-		$field['max'] = (int) $field['max'];
-		
-		
-		// vars
-		$sub_fields = acf_get_fields( $field );
-		
-		
-		// append
-		if( $sub_fields ) {
-			
-			$field['sub_fields'] = $sub_fields;
-			
+	class acf_field_repeater extends acf_field {
+
+		/**
+		 * If we're currently rendering fields.
+		 *
+		 * @var boolean
+		 */
+		public $is_rendering = false;
+
+		/**
+		 * The post/page ID that we're rendering for.
+		 *
+		 * @var mixed
+		 */
+		public $post_id = false;
+
+		/**
+		 * This function will set up the field type data
+		 *
+		 * @date  5/03/2014
+		 * @since 5.0.0
+		 */
+		public function initialize() {
+			$this->name          = 'repeater';
+			$this->label         = __( 'Repeater', 'acf' );
+			$this->category      = 'layout';
+			$this->description   = __( 'Provides a solution for repeating content such as slides, team members, and call-to-action tiles, by acting as a parent to a set of subfields which can be repeated again and again.', 'acf' );
+			$this->preview_image = acf_get_url() . '/assets/images/field-type-previews/field-preview-repeater.png';
+			$this->doc_url       = acf_add_url_utm_tags( 'https://www.advancedcustomfields.com/resources/repeater/', 'docs', 'field-type-selection' );
+			$this->tutorial_url  = acf_add_url_utm_tags( 'https://www.advancedcustomfields.com/resources/repeater/how-to-use-the-repeater-field/', 'docs', 'field-type-selection' );
+			$this->pro           = true;
+			$this->supports      = array( 'bindings' => false );
+			$this->defaults      = array(
+				'sub_fields'    => array(),
+				'min'           => 0,
+				'max'           => 0,
+				'rows_per_page' => 20,
+				'layout'        => 'table',
+				'button_label'  => '',
+				'collapsed'     => '',
+			);
+
+			// field filters
+			$this->add_field_filter( 'acf/prepare_field_for_export', array( $this, 'prepare_field_for_export' ) );
+			$this->add_field_filter( 'acf/prepare_field_for_import', array( $this, 'prepare_field_for_import' ) );
+
+			// filters
+			$this->add_filter( 'acf/validate_field', array( $this, 'validate_any_field' ) );
+			$this->add_filter( 'acf/pre_render_fields', array( $this, 'pre_render_fields' ), 10, 2 );
+
+			add_action( 'wp_ajax_acf/ajax/query_repeater', array( $this, 'ajax_get_rows' ) );
 		}
-				
-		
-		// return
-		return $field;
-		
-	}
-	
-	
-	/*
-	*  render_field()
-	*
-	*  Create the HTML interface for your field
-	*
-	*  @param	$field - an array holding all the field's data
-	*
-	*  @type	action
-	*  @since	3.6
-	*  @date	23/01/13
-	*/
-	
-	function render_field( $field ) {
-		
-		// vars
-		$sub_fields = $field['sub_fields'];
-		$show_order = true;
-		$show_add = true;
-		$show_remove = true;
-		
-		
-		// bail early if no sub fields
-		if( empty($sub_fields) ) return;
-		
-		
-		// value
-		$value = is_array($field['value']) ? $field['value'] : array();
-		
-		
-		// div
-		$div = array(
-			'class' 		=> 'acf-repeater',
-			'data-min' 		=> $field['min'],
-			'data-max'		=> $field['max']
-		);
-		
-		
-		// empty
-		if( empty($value) ) {
-			
-			$div['class'] .= ' -empty';
-			
+
+		/**
+		 * Localizes text for the repeater field.
+		 *
+		 * @date    16/12/2015
+		 * @since   5.3.2
+		 */
+		public function input_admin_enqueue_scripts() {
+			acf_localize_text(
+				array(
+					'Minimum rows not reached ({min} rows)' => __( 'Minimum rows not reached ({min} rows)', 'acf' ),
+					'Maximum rows reached ({max} rows)' => __( 'Maximum rows reached ({max} rows)', 'acf' ),
+					'Error loading page'                => __( 'Error loading page', 'acf' ),
+					'Order will be assigned upon save'  => __( 'Order will be assigned upon save', 'acf' ),
+				)
+			);
 		}
-		
-		
-		// If there are less values than min, populate the extra values
-		if( $field['min'] ) {
-			
-			$value = array_pad($value, $field['min'], array());
-			
-		}
-		
-		
-		// If there are more values than man, remove some values
-		if( $field['max'] ) {
-			
-			$value = array_slice($value, 0, $field['max']);
-			
-			
-			// if max 1 row, don't show order
-			if( $field['max'] == 1 ) {
-			
-				$show_order = false;
-				
+
+		/**
+		 * Filters the field array after it's loaded from the database.
+		 *
+		 * @since   3.6
+		 * @date    23/01/13
+		 *
+		 * @param array $field The field array holding all the field options.
+		 * @return array
+		 */
+		public function load_field( $field ) {
+			$field['min'] = (int) $field['min'];
+			$field['max'] = (int) $field['max'];
+			$sub_fields   = acf_get_fields( $field );
+
+			if ( $sub_fields ) {
+				$field['sub_fields'] = array_map(
+					function ( $sub_field ) use ( $field ) {
+						$sub_field['parent_repeater'] = $field['key'];
+						return $sub_field;
+					},
+					$sub_fields
+				);
 			}
-			
-			
-			// if max == min, don't show add or remove buttons
-			if( $field['max'] <= $field['min'] ) {
-			
-				$show_remove = false;
-				$show_add = false;
-				
+
+			if ( empty( $field['rows_per_page'] ) || (int) $field['rows_per_page'] < 1 ) {
+				$field['rows_per_page'] = 20;
 			}
-			
+
+			if ( '' === $field['button_label'] ) {
+				$field['button_label'] = __( 'Add Row', 'acf' );
+			}
+
+			return $field;
 		}
-		
-		
-		// setup values for row clone
-		$value['acfcloneindex'] = array();
-		
-		
-		// button label
-		if( $field['button_label'] === '' ) $field['button_label'] = __('Add Row', 'acf');
-		
-		
-		// field wrap
-		$el = 'td';
-		$before_fields = '';
-		$after_fields = '';
-		
-		if( $field['layout'] == 'row' ) {
-		
-			$el = 'div';
-			$before_fields = '<td class="acf-fields -left">';
-			$after_fields = '</td>';
-			
-		} elseif( $field['layout'] == 'block' ) {
-		
-			$el = 'div';
-			
-			$before_fields = '<td class="acf-fields">';
-			$after_fields = '</td>';
-			
+
+		/**
+		 * Runs on the "acf/pre_render_fields" filter. Used to signify
+		 * that we're currently rendering a repeater field.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @param array $fields  The main field array.
+		 * @param mixed $post_id The post ID for the field being rendered.
+		 * @return array
+		 */
+		public function pre_render_fields( $fields, $post_id = false ) {
+			if ( is_admin() ) {
+				$this->is_rendering = true;
+				$this->post_id      = $post_id;
+			}
+
+			return $fields;
 		}
-		
-		
-		// layout
-		$div['class'] .= ' -' . $field['layout'];
-		
-		
-		// collapsed
-		if( $field['collapsed'] ) {
-			
-			// loop
-			foreach( $sub_fields as &$sub_field ) {
-				
-				// add target class
-				if( $sub_field['key'] == $field['collapsed'] ) {
-					$sub_field['wrapper']['class'] .= ' -collapsed-target';
+
+		/**
+		 * Create the HTML interface for your field
+		 *
+		 * @since 3.6
+		 * @date  23/01/13
+		 *
+		 * @param array $field An array holding all the field's data.
+		 */
+		public function render_field( $field ) {
+			$_field              = $field;
+			$field['orig_name']  = $this->get_field_name_from_input_name( $field['name'] );
+			$_field['name']      = $field['orig_name'];
+			$field['total_rows'] = (int) acf_get_metadata_by_field( $this->post_id, $_field );
+			$table               = new ACF_Repeater_Table( $field );
+			$table->render();
+		}
+
+		/**
+		 * Create extra options for your field. This is rendered when editing a field.
+		 * The value of $field['name'] can be used (like bellow) to save extra data to the $field
+		 *
+		 * @since 3.6
+		 * @date  23/01/13
+		 *
+		 * @param array $field An array holding all the field's data.
+		 */
+		function render_field_settings( $field ) {
+			$args                = array(
+				'fields'      => $field['sub_fields'],
+				'parent'      => $field['ID'],
+				'is_subfield' => true,
+			);
+			$supports_pagination = ( empty( $field['parent_repeater'] ) && empty( $field['parent_layout'] ) );
+			?>
+			<div class="acf-field acf-field-setting-sub_fields" data-setting="repeater" data-name="sub_fields">
+				<div class="acf-label">
+					<label><?php esc_html_e( 'Sub Fields', 'acf' ); ?></label>
+					<p class="description"></p>		
+				</div>
+				<div class="acf-input acf-input-sub">
+					<?php
+
+					acf_get_view( 'acf-field-group/fields', $args );
+
+					?>
+				</div>
+			</div>
+			<?php
+			acf_render_field_setting(
+				$field,
+				array(
+					'label'        => __( 'Layout', 'acf' ),
+					'instructions' => '',
+					'class'        => 'acf-repeater-layout',
+					'type'         => 'radio',
+					'name'         => 'layout',
+					'layout'       => 'horizontal',
+					'choices'      => array(
+						'table' => __( 'Table', 'acf' ),
+						'block' => __( 'Block', 'acf' ),
+						'row'   => __( 'Row', 'acf' ),
+					),
+				)
+			);
+
+			if ( $supports_pagination ) {
+				acf_render_field_setting(
+					$field,
+					array(
+						'label'        => __( 'Pagination', 'acf' ),
+						'instructions' => __( 'Useful for fields with a large number of rows.', 'acf' ),
+						'class'        => 'acf-repeater-pagination',
+						'type'         => 'true_false',
+						'name'         => 'pagination',
+						'ui'           => 1,
+					)
+				);
+
+				acf_render_field_setting(
+					$field,
+					array(
+						'label'        => __( 'Rows Per Page', 'acf' ),
+						'instructions' => __( 'Set the number of rows to be displayed on a page.', 'acf' ),
+						'class'        => 'acf-repeater-pagination-num-rows',
+						'type'         => 'number',
+						'name'         => 'rows_per_page',
+						'placeholder'  => 20,
+						'ui'           => 1,
+						'min'          => 1,
+						'conditions'   => array(
+							'field'    => 'pagination',
+							'operator' => '==',
+							'value'    => 1,
+						),
+					)
+				);
+			}
+		}
+
+		/**
+		 * Renders the field settings used in the "Validation" tab.
+		 *
+		 * @since 6.0
+		 *
+		 * @param array $field The field settings array.
+		 * @return void
+		 */
+		function render_field_validation_settings( $field ) {
+			$field['min'] = empty( $field['min'] ) ? '' : $field['min'];
+			$field['max'] = empty( $field['max'] ) ? '' : $field['max'];
+
+			acf_render_field_setting(
+				$field,
+				array(
+					'label'        => __( 'Minimum Rows', 'acf' ),
+					'instructions' => '',
+					'type'         => 'number',
+					'name'         => 'min',
+					'placeholder'  => '0',
+				)
+			);
+
+			acf_render_field_setting(
+				$field,
+				array(
+					'label'        => __( 'Maximum Rows', 'acf' ),
+					'instructions' => '',
+					'type'         => 'number',
+					'name'         => 'max',
+					'placeholder'  => '0',
+				)
+			);
+		}
+
+		/**
+		 * Renders the field settings used in the "Presentation" tab.
+		 *
+		 * @since 6.0
+		 *
+		 * @param array $field The field settings array.
+		 * @return void
+		 */
+		function render_field_presentation_settings( $field ) {
+			$choices = array();
+			if ( $field['collapsed'] ) {
+				$sub_field = acf_get_field( $field['collapsed'] );
+
+				if ( $sub_field ) {
+					$choices[ $sub_field['key'] ] = $sub_field['label'];
 				}
 			}
-			unset( $sub_field );
-		}
-		
-?>
-<div <?php acf_esc_attr_e( $div ); ?>>
-	<?php acf_hidden_input(array( 'name' => $field['name'], 'value' => '' )); ?>
-<table class="acf-table">
-	
-	<?php if( $field['layout'] == 'table' ): ?>
-		<thead>
-			<tr>
-				<?php if( $show_order ): ?>
-					<th class="acf-row-handle"></th>
-				<?php endif; ?>
-				
-				<?php foreach( $sub_fields as $sub_field ): 
-					
-					// prepare field (allow sub fields to be removed)
-					$sub_field = acf_prepare_field($sub_field);
-					
-					
-					// bail ealry if no field
-					if( !$sub_field ) continue;
-					
-					
-					// vars
-					$atts = array();
-					$atts['class'] = 'acf-th';
-					$atts['data-name'] = $sub_field['_name'];
-					$atts['data-type'] = $sub_field['type'];
-					$atts['data-key'] = $sub_field['key'];
-					
-					
-					// Add custom width
-					if( $sub_field['wrapper']['width'] ) {
-					
-						$atts['data-width'] = $sub_field['wrapper']['width'];
-						$atts['style'] = 'width: ' . $sub_field['wrapper']['width'] . '%;';
-						
-					}
-					
-					?>
-					<th <?php echo acf_esc_attr( $atts ); ?>>
-						<?php echo acf_get_field_label( $sub_field ); ?>
-						<?php if( $sub_field['instructions'] ): ?>
-							<p class="description"><?php echo $sub_field['instructions']; ?></p>
-						<?php endif; ?>
-					</th>
-				<?php endforeach; ?>
 
-				<?php if( $show_remove ): ?>
-					<th class="acf-row-handle"></th>
-				<?php endif; ?>
-			</tr>
-		</thead>
-	<?php endif; ?>
-	
-	<tbody>
-		<?php foreach( $value as $i => $row ): 
-			
-			// Generate row id.
-			$id = ( $i === 'acfcloneindex' ) ? 'acfcloneindex' : "row-$i";
-			
-			?>
-			<tr class="acf-row<?php if( $i === 'acfcloneindex' ){ echo ' acf-clone'; } ?>" data-id="<?php echo $id; ?>">
-				
-				<?php if( $show_order ): ?>
-					<td class="acf-row-handle order" title="<?php _e('Drag to reorder','acf'); ?>">
-						<?php if( $field['collapsed'] ): ?>
-						<a class="acf-icon -collapse small" href="#" data-event="collapse-row" title="<?php _e('Click to toggle','acf'); ?>"></a>
-						<?php endif; ?>
-						<span><?php echo intval($i) + 1; ?></span>
-					</td>
-				<?php endif; ?>
-				
-				<?php echo $before_fields; ?>
-				
-				<?php foreach( $sub_fields as $sub_field ): 
-					
-					// add value
-					if( isset($row[ $sub_field['key'] ]) ) {
-						
-						// this is a normal value
-						$sub_field['value'] = $row[ $sub_field['key'] ];
-						
-					} elseif( isset($sub_field['default_value']) ) {
-						
-						// no value, but this sub field has a default value
-						$sub_field['value'] = $sub_field['default_value'];
-						
-					}
-					
-					
-					// update prefix to allow for nested values
-					$sub_field['prefix'] = $field['name'] . '[' . $id . ']';
-					
-					
-					// render input
-					acf_render_field_wrap( $sub_field, $el ); ?>
-					
-				<?php endforeach; ?>
-				
-				<?php echo $after_fields; ?>
-				
-				<?php if( $show_remove ): ?>
-					<td class="acf-row-handle remove">
-						<a class="acf-icon -plus small acf-js-tooltip hide-on-shift" href="#" data-event="add-row" title="<?php _e('Add row','acf'); ?>"></a>
-						<a class="acf-icon -duplicate small acf-js-tooltip show-on-shift" href="#" data-event="duplicate-row" title="<?php _e('Duplicate row','acf'); ?>"></a>
-						<a class="acf-icon -minus small acf-js-tooltip" href="#" data-event="remove-row" title="<?php _e('Remove row','acf'); ?>"></a>
-					</td>
-				<?php endif; ?>
-				
-			</tr>
-		<?php endforeach; ?>
-	</tbody>
-</table>
-<?php if( $show_add ): ?>
-	
-	<div class="acf-actions">
-		<a class="acf-button button button-primary" href="#" data-event="add-row"><?php echo $field['button_label']; ?></a>
-	</div>
-			
-<?php endif; ?>
-</div>
-<?php
-		
-	}
-	
-	
-	/*
-	*  render_field_settings()
-	*
-	*  Create extra options for your field. This is rendered when editing a field.
-	*  The value of $field['name'] can be used (like bellow) to save extra data to the $field
-	*
-	*  @type	action
-	*  @since	3.6
-	*  @date	23/01/13
-	*
-	*  @param	$field	- an array holding all the field's data
-	*/
-	
-	function render_field_settings( $field ) {
-		
-		// vars
-		$args = array(
-			'fields'	=> $field['sub_fields'],
-			'parent'	=> $field['ID']
-		);
-		
-		
-		?><tr class="acf-field acf-field-setting-sub_fields" data-setting="repeater" data-name="sub_fields">
-			<td class="acf-label">
-				<label><?php _e("Sub Fields",'acf'); ?></label>
-				<p class="description"></p>		
-			</td>
-			<td class="acf-input">
-				<?php 
-				
-				acf_get_view('field-group-fields', $args);
-				
-				?>
-			</td>
-		</tr>
-		<?php
-		
-		
-		// rows
-		$field['min'] = empty($field['min']) ? '' : $field['min'];
-		$field['max'] = empty($field['max']) ? '' : $field['max'];
-		
-		
-		// collapsed
-		$choices = array();
-		if( $field['collapsed'] ) {
-			
-			// load sub field
-			$sub_field = acf_get_field($field['collapsed']);
-			
-			// append choice
-			if( $sub_field ) {
-				$choices[ $sub_field['key'] ] = $sub_field['label'];
+			acf_render_field_setting(
+				$field,
+				array(
+					'label'        => __( 'Collapsed', 'acf' ),
+					'instructions' => __( 'Select a sub field to show when row is collapsed', 'acf' ),
+					'type'         => 'select',
+					'name'         => 'collapsed',
+					'allow_null'   => 1,
+					'choices'      => $choices,
+				)
+			);
+
+			acf_render_field_setting(
+				$field,
+				array(
+					'label'        => __( 'Button Label', 'acf' ),
+					'instructions' => '',
+					'type'         => 'text',
+					'name'         => 'button_label',
+					'placeholder'  => __( 'Add Row', 'acf' ),
+				)
+			);
+		}
+
+		/**
+		 * Filters the field $value after it is loaded from the database.
+		 *
+		 * @since   3.6
+		 *
+		 * @param mixed $value   The value found in the database.
+		 * @param mixed $post_id The $post_id from which the value was loaded.
+		 * @param array $field   The field array holding all the field options.
+		 * @return array $value
+		 */
+		public function load_value( $value, $post_id, $field ) {
+			// Bail early if we don't have enough info to load the field.
+			if ( empty( $value ) || ! is_numeric( $value ) || empty( $field['sub_fields'] ) ) {
+				return false;
 			}
-		}
-		
-		acf_render_field_setting( $field, array(
-			'label'			=> __('Collapsed','acf'),
-			'instructions'	=> __('Select a sub field to show when row is collapsed','acf'),
-			'type'			=> 'select',
-			'name'			=> 'collapsed',
-			'allow_null'	=> 1,
-			'choices'		=> $choices
-		));
-		
-		
-		// min
-		acf_render_field_setting( $field, array(
-			'label'			=> __('Minimum Rows','acf'),
-			'instructions'	=> '',
-			'type'			=> 'number',
-			'name'			=> 'min',
-			'placeholder'	=> '0',
-		));
-		
-		
-		// max
-		acf_render_field_setting( $field, array(
-			'label'			=> __('Maximum Rows','acf'),
-			'instructions'	=> '',
-			'type'			=> 'number',
-			'name'			=> 'max',
-			'placeholder'	=> '0',
-		));
-		
-		
-		// layout
-		acf_render_field_setting( $field, array(
-			'label'			=> __('Layout','acf'),
-			'instructions'	=> '',
-			'class'			=> 'acf-repeater-layout',
-			'type'			=> 'radio',
-			'name'			=> 'layout',
-			'layout'		=> 'horizontal',
-			'choices'		=> array(
-				'table'			=> __('Table','acf'),
-				'block'			=> __('Block','acf'),
-				'row'			=> __('Row','acf')
-			)
-		));
-		
-		
-		// button_label
-		acf_render_field_setting( $field, array(
-			'label'			=> __('Button Label','acf'),
-			'instructions'	=> '',
-			'type'			=> 'text',
-			'name'			=> 'button_label',
-			'placeholder'	=> __('Add Row','acf')
-		));
-		
-	}
-	
-	
-	/*
-	*  load_value()
-	*
-	*  This filter is applied to the $value after it is loaded from the db
-	*
-	*  @type	filter
-	*  @since	3.6
-	*  @date	23/01/13
-	*
-	*  @param	$value (mixed) the value found in the database
-	*  @param	$post_id (mixed) the $post_id from which the value was loaded
-	*  @param	$field (array) the field array holding all the field options
-	*  @return	$value
-	*/
-	
-	function load_value( $value, $post_id, $field ) {
-		
-		// bail early if no value
-		if( empty($value) ) return false;
-		
-		
-		// bail ealry if not numeric
-		if( !is_numeric($value) ) return false;
-		
-		
-		// bail early if no sub fields
-		if( empty($field['sub_fields']) ) return false;
-		
-		
-		// vars
-		$value = intval($value);
-		$rows = array();
-		
-		
-		// loop
-		for( $i = 0; $i < $value; $i++ ) {
-			
-			// create empty array
-			$rows[ $i ] = array();
-			
-			
-			// loop through sub fields
-			foreach( array_keys($field['sub_fields']) as $j ) {
-				
-				// get sub field
-				$sub_field = $field['sub_fields'][ $j ];
-				
-				
-				// bail ealry if no name (tab)
-				if( acf_is_empty($sub_field['name']) ) continue;
-				
-				
-				// update $sub_field name
-				$sub_field['name'] = "{$field['name']}_{$i}_{$sub_field['name']}";
-				
-				
-				// get value
-				$sub_value = acf_get_value( $post_id, $sub_field );
-			
-			
-				// add value
-				$rows[ $i ][ $sub_field['key'] ] = $sub_value;
-				
+
+			$value  = (int) $value;
+			$rows   = array();
+			$offset = 0;
+			$paged  = isset( $_POST['paged'] ) ? intval( $_POST['paged'] ) : 1; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
+
+			// Ensure pagination is disabled inside blocks.
+			if ( acf_get_data( 'acf_inside_rest_call' ) || doing_action( 'wp_ajax_acf/ajax/fetch-block' ) ) {
+				$field['pagination'] = false;
 			}
-			
-		}
-		
-		
-		// return
-		return $rows;
-		
-	}
-	
-	
-	/*
-	*  format_value()
-	*
-	*  This filter is appied to the $value after it is loaded from the db and before it is returned to the template
-	*
-	*  @type	filter
-	*  @since	3.6
-	*  @date	23/01/13
-	*
-	*  @param	$value (mixed) the value which was loaded from the database
-	*  @param	$post_id (mixed) the $post_id from which the value was loaded
-	*  @param	$field (array) the field array holding all the field options
-	*
-	*  @return	$value (mixed) the modified value
-	*/
-	
-	function format_value( $value, $post_id, $field ) {
-		
-		// bail early if no value
-		if( empty($value) ) return false;
-		
-		
-		// bail ealry if not array
-		if( !is_array($value) ) return false;
-		
-		
-		// bail early if no sub fields
-		if( empty($field['sub_fields']) ) return false;
-		
-		
-		// loop over rows
-		foreach( array_keys($value) as $i ) {
-			
-			// loop through sub fields
-			foreach( array_keys($field['sub_fields']) as $j ) {
-				
-				// get sub field
-				$sub_field = $field['sub_fields'][ $j ];
-				
-				
-				// bail ealry if no name (tab)
-				if( acf_is_empty($sub_field['name']) ) continue;
-				
-				
-				// extract value
-				$sub_value = acf_extract_var( $value[ $i ], $sub_field['key'] );
-				
-				
-				// update $sub_field name
-				$sub_field['name'] = "{$field['name']}_{$i}_{$sub_field['name']}";
-				
-				
-				// format value
-				$sub_value = acf_format_value( $sub_value, $post_id, $sub_field );
-				
-				
-				// append to $row
-				$value[ $i ][ $sub_field['_name'] ] = $sub_value;
-				
+
+			if ( ! empty( $field['pagination'] ) && $this->is_rendering ) {
+				$rows_per_page = isset( $field['rows_per_page'] ) ? (int) $field['rows_per_page'] : 20;
+
+				if ( $rows_per_page < 1 ) {
+					$rows_per_page = 20;
+				}
+
+				if ( doing_action( 'wp_ajax_acf/ajax/query_repeater' ) ) {
+					$offset = ( $paged - 1 ) * $rows_per_page; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified elsewhere.
+					$value  = min( $value, $offset + $rows_per_page );
+				} else {
+					$value = min( $value, $rows_per_page );
+				}
 			}
-			
-		}
-		
-		
-		// return
-		return $value;
-		
-	}
-	
-	
-	/*
-	*  validate_value
-	*
-	*  description
-	*
-	*  @type	function
-	*  @date	11/02/2014
-	*  @since	5.0.0
-	*
-	*  @param	$post_id (int)
-	*  @return	$post_id (int)
-	*/
-	
-	function validate_value( $valid, $value, $field, $input ){
-		
-		// vars
-		$count = 0;
-		
-		
-		// check if is value (may be empty string)
-		if( is_array($value) ) {
-			
-			// remove acfcloneindex
-			if( isset($value['acfcloneindex']) ) {
-				unset($value['acfcloneindex']);
-			}
-			
-			// count
-			$count = count($value);
-		}
-		
-		
-		// validate required
-		if( $field['required'] && !$count ) {
-			$valid = false;
-		}
-		
-		
-		// min
-		$min = (int) $field['min'];
-		if( $min && $count < $min ) {
-			
-			// create error
-			$error = __('Minimum rows reached ({min} rows)', 'acf');
- 			$error = str_replace('{min}', $min, $error);
- 			
- 			// return
-			return $error;
-		}
-		
-		
-		// validate value
-		if( $count ) {
-			
-			// bail early if no sub fields
-			if( !$field['sub_fields'] ) {
-				return $valid;
-			}
-			
-			// loop rows
-			foreach( $value as $i => $row ) {
-				
-				// loop sub fields
-				foreach( $field['sub_fields'] as $sub_field ) {
-					
-					// vars
-					$k = $sub_field['key'];
-					
-					// test sub field exists
-					if( !isset($row[ $k ]) ) {
+
+			for ( $i = $offset; $i < $value; $i++ ) {
+				$rows[ $i ] = array();
+
+				foreach ( array_keys( $field['sub_fields'] ) as $j ) {
+					$sub_field = $field['sub_fields'][ $j ];
+
+					// Bail early if no name (tab field).
+					if ( acf_is_empty( $sub_field['name'] ) ) {
 						continue;
 					}
-					
-					// validate
-					acf_validate_value( $row[ $k ], $sub_field, "{$input}[{$i}][{$k}]" );
+
+					// Update $sub_field name and value.
+					$sub_field['name']               = "{$field['name']}_{$i}_{$sub_field['name']}";
+					$sub_value                       = acf_get_value( $post_id, $sub_field );
+					$rows[ $i ][ $sub_field['key'] ] = $sub_value;
 				}
-				// end loop sub fields
 			}
-			// end loop rows
+
+			return $rows;
 		}
-		
-		
-		// return
-		return $valid;
-	}
-	
-	
-	/*
-	*  update_row
-	*
-	*  This function will update a value row
-	*
-	*  @type	function
-	*  @date	15/2/17
-	*  @since	5.5.8
-	*
-	*  @param	$i (int)
-	*  @param	$field (array)
-	*  @param	$post_id (mixed)
-	*  @return	(boolean)
-	*/
-	
-	function update_row( $row, $i = 0, $field, $post_id ) {
-		
-		// bail early if no layout reference
-		if( !is_array($row) ) return false;
-		
-		
-		// bail early if no layout
-		if( empty($field['sub_fields']) ) return false;
-		
-		
-		// loop
-		foreach( $field['sub_fields'] as $sub_field ) {
-			
-			// value
-			$value = null;
-			
-			
-			// find value (key)
-			if( isset($row[ $sub_field['key'] ]) ) {
-				
-				$value = $row[ $sub_field['key'] ];
-			
-			// find value (name)	
-			} elseif( isset($row[ $sub_field['name'] ]) ) {
-				
-				$value = $row[ $sub_field['name'] ];
-				
-			// value does not exist	
+
+		/**
+		 * This filter is appied to the $value after it is loaded from the db and before it is returned to the template
+		 *
+		 * @type  filter
+		 * @since 3.6
+		 *
+		 * @param mixed   $value       The value which was loaded from the database.
+		 * @param mixed   $post_id     The $post_id from which the value was loaded.
+		 * @param array   $field       The field array holding all the field options.
+		 * @param boolean $escape_html Should the field return a HTML safe formatted value.
+		 * @return array  $value The modified value.
+		 */
+		public function format_value( $value, $post_id, $field, $escape_html = false ) {
+			// bail early if no value
+			if ( empty( $value ) ) {
+				return false;
+			}
+
+			// bail early if not array
+			if ( ! is_array( $value ) ) {
+				return false;
+			}
+
+			// bail early if no sub fields
+			if ( empty( $field['sub_fields'] ) ) {
+				return false;
+			}
+
+			// loop over rows
+			foreach ( array_keys( $value ) as $i ) {
+
+				// loop through sub fields
+				foreach ( array_keys( $field['sub_fields'] ) as $j ) {
+
+					// get sub field
+					$sub_field = $field['sub_fields'][ $j ];
+
+					// bail early if no name (tab)
+					if ( acf_is_empty( $sub_field['name'] ) ) {
+						continue;
+					}
+
+					// extract value
+					$sub_value = acf_extract_var( $value[ $i ], $sub_field['key'] );
+
+					// update $sub_field name
+					$sub_field['name'] = "{$field['name']}_{$i}_{$sub_field['name']}";
+
+					// format value
+					$sub_value = acf_format_value( $sub_value, $post_id, $sub_field, $escape_html );
+
+					// append to $row
+					$value[ $i ][ $sub_field['_name'] ] = $sub_value;
+				}
+			}
+
+			return $value;
+		}
+
+		/**
+		 * Validates values for the repeater field
+		 *
+		 * @date  11/02/2014
+		 * @since 5.0.0
+		 *
+		 * @param  boolean $valid If the field is valid.
+		 * @param  mixed   $value The value to validate.
+		 * @param  array   $field The main field array.
+		 * @param  string  $input The input element's name attribute.
+		 * @return boolean
+		 */
+		function validate_value( $valid, $value, $field, $input ) {
+			// vars
+			$count = 0;
+
+			// check if is value (may be empty string)
+			if ( is_array( $value ) ) {
+
+				// remove acfcloneindex
+				if ( isset( $value['acfcloneindex'] ) ) {
+					unset( $value['acfcloneindex'] );
+				}
+
+				// count
+				$count = count( $value );
+			}
+
+			// validate required
+			if ( $field['required'] && ! $count ) {
+				$valid = false;
+			}
+
+			// min
+			$min = (int) $field['min'];
+			if ( empty( $field['pagination'] ) && $min && $count < $min ) {
+
+				// create error
+				$error = __( 'Minimum rows not reached ({min} rows)', 'acf' );
+				$error = str_replace( '{min}', $min, $error );
+
+				// return
+				return $error;
+			}
+
+			// validate value
+			if ( $count ) {
+
+				// bail early if no sub fields
+				if ( ! $field['sub_fields'] ) {
+					return $valid;
+				}
+
+				// loop rows
+				foreach ( $value as $i => $row ) {
+
+					// Skip rows that were deleted in paginated repeaters.
+					if ( false !== strpos( $i, '_deleted' ) ) {
+						continue;
+					}
+
+					// loop sub fields
+					foreach ( $field['sub_fields'] as $sub_field ) {
+
+						// vars
+						$k = $sub_field['key'];
+
+						// test sub field exists
+						if ( ! isset( $row[ $k ] ) ) {
+							continue;
+						}
+
+						// validate
+						acf_validate_value( $row[ $k ], $sub_field, "{$input}[{$i}][{$k}]" );
+					}
+					// end loop sub fields
+				}
+				// end loop rows
+			}
+
+			return $valid;
+		}
+
+		/**
+		 * This function will update a value row.
+		 *
+		 * @date    15/2/17
+		 * @since   5.5.8
+		 *
+		 * @param   array   $row
+		 * @param   integer $i
+		 * @param   array   $field
+		 * @param   mixed   $post_id
+		 * @return  boolean
+		 */
+		function update_row( $row, $i, $field, $post_id ) {
+			// bail early if no layout reference
+			if ( ! is_array( $row ) ) {
+				return false;
+			}
+
+			// bail early if no layout
+			if ( empty( $field['sub_fields'] ) ) {
+				return false;
+			}
+
+			foreach ( $field['sub_fields'] as $sub_field ) {
+				$value = null;
+
+				if ( array_key_exists( $sub_field['key'], $row ) ) {
+					$value = $row[ $sub_field['key'] ];
+				} elseif ( array_key_exists( $sub_field['name'], $row ) ) {
+					$value = $row[ $sub_field['name'] ];
+				} else {
+					// Value does not exist.
+					continue;
+				}
+
+				// modify name for save
+				$sub_field['name'] = "{$field['name']}_{$i}_{$sub_field['name']}";
+
+				// update field
+				acf_update_value( $value, $post_id, $sub_field );
+			}
+
+			return true;
+		}
+
+		/**
+		 * This function will delete a value row.
+		 *
+		 * @date    15/2/17
+		 * @since   5.5.8
+		 *
+		 * @param   integer $i
+		 * @param   array   $field
+		 * @param   mixed   $post_id
+		 * @return  boolean
+		 */
+		function delete_row( $i, $field, $post_id ) {
+			// bail early if no sub fields
+			if ( empty( $field['sub_fields'] ) ) {
+				return false;
+			}
+
+			foreach ( $field['sub_fields'] as $sub_field ) {
+				// modify name for delete
+				$sub_field['name'] = "{$field['name']}_{$i}_{$sub_field['name']}";
+
+				// delete value
+				acf_delete_value( $post_id, $sub_field );
+			}
+
+			return true;
+		}
+
+		/**
+		 * Filters the $value before it is updated in the database.
+		 *
+		 * @since   3.6
+		 * @date    23/01/13
+		 *
+		 * @param  mixed $value   The value which will be saved in the database.
+		 * @param  mixed $post_id The $post_id of which the value will be saved.
+		 * @param  array $field   The field array holding all the field options.
+		 * @return mixed $value
+		 */
+		public function update_value( $value, $post_id, $field ) {
+			// Bail early if no sub fields.
+			if ( empty( $field['sub_fields'] ) ) {
+				return $value;
+			}
+
+			if ( ! is_array( $value ) ) {
+				$value = array();
+			}
+
+			if ( isset( $value['acfcloneindex'] ) ) {
+				unset( $value['acfcloneindex'] );
+			}
+
+			$new_value = 0;
+			$old_value = (int) acf_get_metadata_by_field( $post_id, $field );
+
+			if ( ! empty( $field['pagination'] ) && did_action( 'acf/save_post' ) && ! isset( $_POST['_acf_form'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Value not used.
+				$old_rows       = acf_get_value( $post_id, $field );
+				$old_rows       = is_array( $old_rows ) ? $old_rows : array();
+				$edited_rows    = array();
+				$deleted_rows   = array();
+				$reordered_rows = array();
+				$new_rows       = array();
+
+				// Categorize the submitted values, so we know what to do with them.
+				foreach ( $value as $key => $row ) {
+					if ( ! is_array( $row ) ) {
+						continue;
+					}
+
+					// Check if this is a new row.
+					if ( false === strpos( $key, 'row' ) ) {
+						unset( $row['acf_changed'] );
+
+						// Check if this new row was inserted before an existing row.
+						$reordered_row_num = isset( $row['acf_reordered'] ) ? (int) $row['acf_reordered'] : false;
+
+						if ( false !== $reordered_row_num && $reordered_row_num <= $old_value ) {
+							$reordered_rows[ $key ] = $reordered_row_num;
+						} else {
+							$new_rows[ $key ] = $row;
+						}
+
+						continue;
+					}
+
+					$row_num = (int) str_replace( 'row-', '', $key );
+
+					if ( isset( $row['acf_deleted'] ) ) {
+						$deleted_rows[] = $row_num;
+					} elseif ( isset( $row['acf_reordered'] ) ) {
+						$reordered_rows[ $row_num ] = (int) $row['acf_reordered'];
+					} else {
+						unset( $row['acf_changed'] );
+						$edited_rows[ $row_num ] = $row;
+					}
+				}
+
+				// Process any row deletions first, but don't remove their keys yet.
+				foreach ( $deleted_rows as $deleted_row ) {
+					$this->delete_row( $deleted_row, $field, $post_id );
+					$old_rows[ $deleted_row ] = 'acf_deleted';
+				}
+
+				// Update any existing rows that were edited.
+				foreach ( $edited_rows as $key => $row ) {
+					if ( array_key_exists( $key, $old_rows ) ) {
+						$old_rows[ $key ] = $row;
+					}
+				}
+
+				$rows_to_move     = array();
+				$new_rows_to_move = array();
+				foreach ( $reordered_rows as $old_order => $new_order ) {
+					if ( is_int( $old_order ) ) {
+						$rows_to_move[ $new_order ][] = $value[ 'row-' . $old_order ];
+						unset( $old_rows[ $old_order ] );
+					} else {
+						$new_rows_to_move[ $new_order ][] = $value[ $old_order ];
+					}
+				}
+
+				// Iterate over existing moved rows first.
+				if ( ! empty( $rows_to_move ) ) {
+					ksort( $rows_to_move );
+					foreach ( $rows_to_move as $key => $values ) {
+						array_splice( $old_rows, $key, 0, $values );
+					}
+				}
+
+				// Iterate over inserted/duplicated rows in reverse order, so they're inserted into the correct spot.
+				if ( ! empty( $new_rows_to_move ) ) {
+					krsort( $new_rows_to_move );
+					foreach ( $new_rows_to_move as $key => $values ) {
+						array_splice( $old_rows, $key, 0, $values );
+					}
+				}
+
+				// Append any new rows.
+				foreach ( $new_rows as $new_row ) {
+					$old_rows[] = $new_row;
+				}
+
+				// Update the rows in the database.
+				$new_row_num = 0;
+				foreach ( $old_rows as $key => $row ) {
+					if ( 'acf_deleted' === $row ) {
+						unset( $old_rows[ $key ] );
+						continue;
+					}
+
+					$this->update_row( $row, $new_row_num, $field, $post_id );
+					++$new_row_num;
+				}
+
+				// Calculate the total number of rows that will be saved after this update.
+				$new_value = count( $old_rows );
 			} else {
-				
-				continue;
-				
+				$i = -1;
+
+				foreach ( $value as $row ) {
+					++$i;
+
+					// Bail early if no row.
+					if ( ! is_array( $row ) ) {
+						continue;
+					}
+
+					$this->update_row( $row, $i, $field, $post_id );
+					++$new_value;
+				}
 			}
-			
-			
-			// modify name for save
-			$sub_field['name'] = "{$field['name']}_{$i}_{$sub_field['name']}";
-						
-			
-			// update field
-			acf_update_value( $value, $post_id, $sub_field );
-				
-		}
-		
-		
-		// return
-		return true;
-		
-	}
-	
-	
-	/*
-	*  delete_row
-	*
-	*  This function will delete a value row
-	*
-	*  @type	function
-	*  @date	15/2/17
-	*  @since	5.5.8
-	*
-	*  @param	$i (int)
-	*  @param	$field (array)
-	*  @param	$post_id (mixed)
-	*  @return	(boolean)
-	*/
-	
-	function delete_row( $i = 0, $field, $post_id ) {
-		
-		// bail early if no sub fields
-		if( empty($field['sub_fields']) ) return false;
-		
-		
-		// loop
-		foreach( $field['sub_fields'] as $sub_field ) {
-			
-			// modify name for delete
-			$sub_field['name'] = "{$field['name']}_{$i}_{$sub_field['name']}";
-			
-			
-			// delete value
-			acf_delete_value( $post_id, $sub_field );
-			
-		}
-		
-		
-		// return
-		return true;
-		
-	}
-	
-	
-	/*
-	*  update_value()
-	*
-	*  This filter is appied to the $value before it is updated in the db
-	*
-	*  @type	filter
-	*  @since	3.6
-	*  @date	23/01/13
-	*
-	*  @param	$value - the value which will be saved in the database
-	*  @param	$field - the field array holding all the field options
-	*  @param	$post_id - the $post_id of which the value will be saved
-	*
-	*  @return	$value - the modified value
-	*/
-	
-	function update_value( $value, $post_id, $field ) {
-		
-		// bail early if no sub fields
-		if( empty($field['sub_fields']) ) return $value;
-		
-		
-		// vars
-		$new_value = 0;
-		$old_value = (int) acf_get_metadata( $post_id, $field['name'] );
-		
-		
-		// update sub fields
-		if( !empty($value) ) { $i = -1;
-			
-			// remove acfcloneindex
-			if( isset($value['acfcloneindex']) ) {
-			
-				unset($value['acfcloneindex']);
-				
+
+			// Remove old rows.
+			if ( $old_value > $new_value ) {
+				for ( $i = $new_value; $i < $old_value; $i++ ) {
+					$this->delete_row( $i, $field, $post_id );
+				}
 			}
-			
-			// loop through rows
-			foreach( $value as $row ) {	$i++;
-				
-				// bail early if no row
-				if( !is_array($row) ) continue;
-				
-				
-				// update row
-				$this->update_row( $row, $i, $field, $post_id );
-				
-				
-				// append
-				$new_value++;
-				
+
+			// Save empty string for empty value.
+			if ( empty( $new_value ) ) {
+				$new_value = '';
 			}
-			
+
+			return $new_value;
 		}
-		
-		
-		// remove old rows
-		if( $old_value > $new_value ) {
-			
-			// loop
-			for( $i = $new_value; $i < $old_value; $i++ ) {
-				
+
+		/**
+		 * Deletes any subfields after the field has been deleted.
+		 *
+		 * @date    4/04/2014
+		 * @since   5.0.0
+		 *
+		 * @param array $field The main field array.
+		 * @return void
+		 */
+		function delete_field( $field ) {
+			// Bail early if no subfields.
+			if ( empty( $field['sub_fields'] ) ) {
+				return;
+			}
+
+			// Delete any subfields.
+			foreach ( $field['sub_fields'] as $sub_field ) {
+				acf_delete_field( $sub_field['ID'] );
+			}
+		}
+
+		/**
+		 * Deletes a value from the database.
+		 *
+		 * @date    1/07/2015
+		 * @since   5.2.3
+		 *
+		 * @param integer $post_id The post ID to delete the value from.
+		 * @param string  $key     The meta name/key (unused).
+		 * @param array   $field   The main field array.
+		 * @return void
+		 */
+		function delete_value( $post_id, $key, $field ) {
+			// Get the old value from the database.
+			$old_value = (int) acf_get_metadata_by_field( $post_id, $field );
+
+			// Bail early if no rows or no subfields.
+			if ( ! $old_value || empty( $field['sub_fields'] ) ) {
+				return;
+			}
+
+			for ( $i = 0; $i < $old_value; $i++ ) {
 				$this->delete_row( $i, $field, $post_id );
-				
 			}
-			
 		}
-		
-		
-		// save false for empty value
-		if( empty($new_value) ) $new_value = '';
-		
-		
-		// return
-		return $new_value;
-	}
-	
-	
-	/*
-	*  delete_value
-	*
-	*  description
-	*
-	*  @type	function
-	*  @date	1/07/2015
-	*  @since	5.2.3
-	*
-	*  @param	$post_id (int)
-	*  @return	$post_id (int)
-	*/
-	
-	function delete_value( $post_id, $key, $field ) {
-		
-		// get old value (db only)
-		$old_value = (int) acf_get_metadata( $post_id, $field['name'] );
-		
-		
-		// bail early if no rows or no sub fields
-		if( !$old_value || empty($field['sub_fields']) ) return;
-		
-		
-		// loop
-		for( $i = 0; $i < $old_value; $i++ ) {
-			
-			$this->delete_row( $i, $field, $post_id );
-			
-		}
-			
-	}
-	
-	
-	/*
-	*  delete_field
-	*
-	*  description
-	*
-	*  @type	function
-	*  @date	4/04/2014
-	*  @since	5.0.0
-	*
-	*  @param	$post_id (int)
-	*  @return	$post_id (int)
-	*/
-	
-	function delete_field( $field ) {
-		
-		// bail early if no sub fields
-		if( empty($field['sub_fields']) ) return;
-		
-		
-		// loop through sub fields
-		foreach( $field['sub_fields'] as $sub_field ) {
-		
-			acf_delete_field( $sub_field['ID'] );
-			
-		}
-		
-	}
-	
-	
-	/*
-	*  update_field()
-	*
-	*  This filter is appied to the $field before it is saved to the database
-	*
-	*  @type	filter
-	*  @since	3.6
-	*  @date	23/01/13
-	*
-	*  @param	$field - the field array holding all the field options
-	*  @param	$post_id - the field group ID (post_type = acf)
-	*
-	*  @return	$field - the modified field
-	*/
 
-	function update_field( $field ) {
-		
-		// remove sub fields
-		unset($field['sub_fields']);
-		
-				
-		// return		
-		return $field;
-	}
-	
-	
-	/*
-	*  duplicate_field()
-	*
-	*  This filter is appied to the $field before it is duplicated and saved to the database
-	*
-	*  @type	filter
-	*  @since	3.6
-	*  @date	23/01/13
-	*
-	*  @param	$field - the field array holding all the field options
-	*
-	*  @return	$field - the modified field
-	*/
+		/**
+		 * This filter is applied to the $field before it is saved to the database.
+		 *
+		 * @since 3.6
+		 *
+		 * @param  array $field The field array holding all the field options.
+		 * @return array
+		 */
+		public function update_field( $field ) {
+			unset( $field['sub_fields'] );
+			return $field;
+		}
 
-	function duplicate_field( $field ) {
-		
-		// get sub fields
-		$sub_fields = acf_extract_var( $field, 'sub_fields' );
-		
-		
-		// save field to get ID
-		$field = acf_update_field( $field );
-		
-		
-		// duplicate sub fields
-		acf_duplicate_fields( $sub_fields, $field['ID'] );
-		
-						
-		// return		
-		return $field;
-	}
-	
-	
-	/*
-	*  translate_field
-	*
-	*  This function will translate field settings
-	*
-	*  @type	function
-	*  @date	8/03/2016
-	*  @since	5.3.2
-	*
-	*  @param	$field (array)
-	*  @return	$field
-	*/
-	
-	function translate_field( $field ) {
-		
-		// translate
-		$field['button_label'] = acf_translate( $field['button_label'] );
-		
-		
-		// return
-		return $field;
-		
-	}
-	
-	
-	/*
-	*  validate_any_field
-	*
-	*  This function will add compatibility for the 'column_width' setting
-	*
-	*  @type	function
-	*  @date	30/1/17
-	*  @since	5.5.6
-	*
-	*  @param	$field (array)
-	*  @return	$field
-	*/
-	
-	function validate_any_field( $field ) {
-		
-		// width has changed
-		if( isset($field['column_width']) ) {
-			
-			$field['wrapper']['width'] = acf_extract_var($field, 'column_width');
-			
-		}
-		
-		
-		// return
-		return $field;
-		
-	}
-	
-	/**
-	 * prepare_field_for_export
-	 *
-	 * Prepares the field for export.
-	 *
-	 * @date	11/03/2014
-	 * @since	5.0.0
-	 *
-	 * @param	array $field The field settings.
-	 * @return	array
-	 */
-	function prepare_field_for_export( $field ) {
-		
-		// Check for sub fields.
-		if( !empty($field['sub_fields']) ) {
-			$field['sub_fields'] = acf_prepare_fields_for_export( $field['sub_fields'] );
-		}
-		return $field;
-	}
-	
-	/**
-	 * prepare_field_for_import
-	 *
-	 * Returns a flat array of fields containing all sub fields ready for import.
-	 *
-	 * @date	11/03/2014
-	 * @since	5.0.0
-	 *
-	 * @param	array $field The field settings.
-	 * @return	array
-	 */
-	function prepare_field_for_import( $field ) {
-		
-		// Check for sub fields.
-		if( !empty($field['sub_fields']) ) {
+		/**
+		 * This filter is applied to the $field before it is duplicated and saved to the database.
+		 *
+		 * @since 3.6
+		 * @date  23/01/13
+		 *
+		 * @param array $field The field array holding all the field options.
+		 * @return array
+		 */
+		function duplicate_field( $field ) {
+			// get sub fields
 			$sub_fields = acf_extract_var( $field, 'sub_fields' );
-			
-			// Modify sub fields.
-			foreach( $sub_fields as $i => $sub_field ) {
-				$sub_fields[ $i ]['parent'] = $field['key'];
-				$sub_fields[ $i ]['menu_order'] = $i;
-			}
-			
-			// Return array of [field, sub_1, sub_2, ...].
-			return array_merge( array($field), $sub_fields );
-			
+
+			// save field to get ID
+			$field = acf_update_field( $field );
+
+			// duplicate sub fields
+			acf_duplicate_fields( $sub_fields, $field['ID'] );
+
+			return $field;
 		}
-		return $field;
+
+		/**
+		 * This function will translate field settings.
+		 *
+		 * @date  8/03/2016
+		 * @since 5.3.2
+		 *
+		 * @param array $field The main field array.
+		 * @return array
+		 */
+		function translate_field( $field ) {
+			$field['button_label'] = acf_translate( $field['button_label'] );
+			return $field;
+		}
+
+		/**
+		 * This function will add compatibility for the 'column_width' setting
+		 *
+		 * @date  30/1/17
+		 * @since 5.5.6
+		 *
+		 * @param array $field The main field array.
+		 * @return array
+		 */
+		function validate_any_field( $field ) {
+			// width has changed
+			if ( isset( $field['column_width'] ) ) {
+				$field['wrapper']['width'] = acf_extract_var( $field, 'column_width' );
+			}
+
+			return $field;
+		}
+
+		/**
+		 * Prepares the field for export.
+		 *
+		 * @date  11/03/2014
+		 * @since 5.0.0
+		 *
+		 * @param array $field The field settings.
+		 * @return array
+		 */
+		function prepare_field_for_export( $field ) {
+			// Check for subfields.
+			if ( ! empty( $field['sub_fields'] ) ) {
+				$field['sub_fields'] = acf_prepare_fields_for_export( $field['sub_fields'] );
+			}
+
+			return $field;
+		}
+
+		/**
+		 * Returns a flat array of fields containing all subfields ready for import.
+		 *
+		 * @date   11/03/2014
+		 * @since  5.0.0
+		 *
+		 * @param   array $field The field settings.
+		 * @return  array
+		 */
+		function prepare_field_for_import( $field ) {
+			// Check for sub fields.
+			if ( ! empty( $field['sub_fields'] ) ) {
+				$sub_fields = acf_extract_var( $field, 'sub_fields' );
+
+				// Modify sub fields.
+				foreach ( $sub_fields as $i => $sub_field ) {
+					$sub_fields[ $i ]['parent']     = $field['key'];
+					$sub_fields[ $i ]['menu_order'] = $i;
+				}
+
+				// Return array of [field, sub_1, sub_2, ...].
+				return array_merge( array( $field ), $sub_fields );
+			}
+
+			return $field;
+		}
+
+		/**
+		 * Additional validation for the repeater field when submitted via REST.
+		 *
+		 * @param  boolean $valid The current validity booleean
+		 * @param  integer $value The value of the field
+		 * @param  array   $field The field array
+		 * @return boolean|WP
+		 */
+		public function validate_rest_value( $valid, $value, $field ) {
+			if ( ! is_array( $value ) && is_null( $value ) ) {
+				$param = sprintf( '%s[%s]', $field['prefix'], $field['name'] );
+				$data  = array(
+					'param' => $param,
+					'value' => $value,
+				);
+				$error = sprintf( __( '%s must be of type array or null.', 'acf' ), $param );
+				return new WP_Error( 'rest_invalid_param', $error, $param );
+			}
+
+			return $valid;
+		}
+
+		/**
+		 * Return the schema array for the REST API.
+		 *
+		 * @param array $field
+		 * @return array
+		 */
+		public function get_rest_schema( array $field ) {
+			$schema = array(
+				'type'     => array( 'array', 'null' ),
+				'required' => ! empty( $field['required'] ),
+				'items'    => array(
+					'type'       => 'object',
+					'properties' => array(),
+				),
+			);
+
+			foreach ( $field['sub_fields'] as $sub_field ) {
+				if ( $sub_field_schema = acf_get_field_rest_schema( $sub_field ) ) {
+					$schema['items']['properties'][ $sub_field['name'] ] = $sub_field_schema;
+				}
+			}
+
+			if ( ! empty( $field['min'] ) ) {
+				$schema['minItems'] = (int) $field['min'];
+			}
+
+			if ( ! empty( $field['max'] ) ) {
+				$schema['maxItems'] = (int) $field['max'];
+			}
+
+			return $schema;
+		}
+
+		/**
+		 * Apply basic formatting to prepare the value for default REST output.
+		 *
+		 * @param mixed          $value
+		 * @param integer|string $post_id
+		 * @param array          $field
+		 * @return array|mixed
+		 */
+		public function format_value_for_rest( $value, $post_id, array $field ) {
+			if ( empty( $value ) || ! is_array( $value ) || empty( $field['sub_fields'] ) ) {
+				return null;
+			}
+
+			// Loop through each row and within that, each sub field to process sub fields individually.
+			foreach ( $value as &$row ) {
+				foreach ( $field['sub_fields'] as $sub_field ) {
+
+					// Bail early if the field has no name (tab).
+					if ( acf_is_empty( $sub_field['name'] ) ) {
+						continue;
+					}
+
+					// Extract the sub field 'field_key'=>'value' pair from the $row and format it.
+					$sub_value = acf_extract_var( $row, $sub_field['key'] );
+					$sub_value = acf_format_value_for_rest( $sub_value, $post_id, $sub_field );
+
+					// Add the sub field value back to the $row but mapped to the field name instead
+					// of the key reference.
+					$row[ $sub_field['name'] ] = $sub_value;
+				}
+			}
+
+			return $value;
+		}
+
+		/**
+		 * Takes the provided input name and turns it into a field name that
+		 * works with repeater fields that are subfields of other fields.
+		 *
+		 * @param  string $input_name The name attribute used in the repeater.
+		 * @return string|boolean
+		 */
+		public function get_field_name_from_input_name( $input_name ) {
+			$parts = array();
+			preg_match_all( '/\[([^\]]*)\]/', is_null( $input_name ) ? '' : $input_name, $parts );
+
+			if ( ! isset( $parts[1] ) ) {
+				return false;
+			}
+
+			$field_keys = $parts[1];
+			$name_parts = array();
+
+			foreach ( $field_keys as $field_key ) {
+				// Preserve acfcloneindex
+				if ( $field_key === 'acfcloneindex' ) {
+					$name_parts[] = 'acfcloneindex';
+					continue;
+				}
+
+				// Handle row numbers (row-0, row-1, etc.)
+				if ( strpos( $field_key, 'row-' ) === 0 ) {
+					$row_num = substr( $field_key, 4 );
+					if ( is_numeric( $row_num ) ) {
+						$name_parts[] = (int) $row_num;
+						continue;
+					}
+				}
+
+				// Handle compound keys (field_..._field_...)
+				$compound_keys = preg_split( '/_field_/', $field_key );
+				if ( count( $compound_keys ) > 1 ) {
+					foreach ( $compound_keys as $i => $sub_key ) {
+						if ( $i > 0 ) {
+							$sub_key = 'field_' . $sub_key;
+						}
+
+						// Seamless clone fields use compound keys which can be skipped.
+						$field = acf_get_field( $sub_key );
+						if ( $field && 'clone' === $field['type'] && 'seamless' === $field['display'] ) {
+							continue;
+						}
+
+						$name_parts[] = $field && ! empty( $field['name'] ) ? $field['name'] : $sub_key;
+					}
+					continue;
+				}
+
+				// Handle standard field keys
+				if ( strpos( $field_key, 'field_' ) === 0 ) {
+
+					// Skip clone fields with prefix_name disabled.
+					$field = acf_get_field( $field_key );
+					if ( $field && $field['type'] === 'clone' && empty( $field['prefix_name'] ) ) {
+						continue;
+					}
+
+					$name_parts[] = $field && ! empty( $field['name'] ) ? $field['name'] : $field_key;
+					continue;
+				}
+
+				// Fallback: just add as is
+				$name_parts[] = $field_key;
+			}
+
+			return implode( '_', $name_parts );
+		}
+
+		/**
+		 * Returns an array of rows used to populate the repeater table over AJAX.
+		 *
+		 * @since 6.0.0
+		 *
+		 * @return void|WP_Error
+		 */
+		public function ajax_get_rows() {
+			$args = acf_request_args(
+				array(
+					'field_name'        => '',
+					'field_key'         => '',
+					'field_prefix'      => '',
+					'post_id'           => 0,
+					'rows_per_page'     => 0,
+					'refresh'           => false,
+					'nonce'             => '',
+					'options_page_slug' => '',
+				)
+			);
+
+			if ( ! acf_verify_ajax( $args['nonce'], $args['field_key'], true ) ) {
+				$error = array( 'error' => __( 'Invalid nonce.', 'acf' ) );
+				wp_send_json_error( $error, 401 );
+			}
+
+			$post_id_info = acf_decode_post_id( acf_get_valid_post_id( $args['post_id'] ) );
+			if ( ! acf_current_user_can_edit_in_context( $post_id_info, sanitize_text_field( $args['options_page_slug'] ) ) ) {
+				$error = array( 'error' => __( 'Sorry, you do not have permission to do that.', 'acf' ) );
+				wp_send_json_error( $error, 403 );
+			}
+
+			if ( '' === $args['field_name'] || '' === $args['field_key'] ) {
+				$error = array( 'error' => __( 'Invalid field key or name.', 'acf' ) );
+				wp_send_json_error( $error, 404 );
+			}
+
+			$field    = acf_get_field( $args['field_key'] );
+			$post_id  = acf_get_valid_post_id( $args['post_id'] );
+			$response = array();
+
+			if ( ! $field || ! $post_id ) {
+				$error = array( 'error' => __( 'There was an error retrieving the field.', 'acf' ) );
+				wp_send_json_error( $error, 404 );
+			}
+
+			// Make sure we have a valid field.
+			$field = acf_validate_field( $field );
+
+			if ( empty( $field['pagination'] ) ) {
+				$error = array( 'error' => __( 'Pagination is not enabled for this field.', 'acf' ) );
+				wp_send_json_error( $error, 400 );
+			}
+
+			// Make sure that we only get a subset of the rows.
+			$this->is_rendering = true;
+
+			$args['rows_per_page'] = (int) $args['rows_per_page'];
+
+			if ( $args['rows_per_page'] ) {
+				$field['rows_per_page'] = $args['rows_per_page'];
+			}
+
+			/**
+			 * We have to swap out the field name and prefix with the ones sent via JS,
+			 * as the repeater could be inside a subfield.
+			 */
+			$field['name']   = $args['field_name'];
+			$field['prefix'] = $args['field_prefix'];
+			$field['value']  = acf_get_value( $post_id, $field );
+
+			if ( $args['refresh'] ) {
+				$response['total_rows'] = (int) acf_get_metadata_by_field( $post_id, $field );
+			}
+
+			// Render the rows to be sent back via AJAX.
+			$field            = acf_prepare_field( $field );
+			$repeater_table   = new ACF_Repeater_Table( $field );
+			$response['rows'] = $repeater_table->rows( true );
+
+			wp_send_json_success( $response );
+		}
+
+		/**
+		 * Returns an array of JSON-LD Property output types that are supported by this field type.
+		 *
+		 * @since 6.8
+		 *
+		 * @return string[]
+		 */
+		public function get_jsonld_output_types(): array {
+			return array( 'Thing', 'ItemList' );
+		}
+
+		/**
+		 * Formats the field value for JSON-LD output.
+		 *
+		 * @since 6.8.0
+		 *
+		 * @param mixed          $value   The value of the field.
+		 * @param integer|string $post_id The ID of the post.
+		 * @param array          $field   The field array.
+		 * @return mixed
+		 */
+		public function format_value_for_jsonld( $value, $post_id, $field ) {
+			if ( empty( $value ) || ! is_array( $value ) || empty( $field['sub_fields'] ) ) {
+				return null;
+			}
+
+			// Get output format with fallback.
+			$output_format = $field['schema_output_format'] ?? '';
+			if ( empty( $output_format ) ) {
+				$property      = $field['schema_property'] ?? '';
+				$output_format = \ACF\AI\GEO\Schema::get_default_output_format( $this->name, $property );
+			}
+
+			// Get all Schema.org types for type detection.
+			$all_types   = array_keys( \ACF\AI\GEO\SchemaData::get_type_hierarchy() );
+			$all_types[] = 'Thing';
+
+			$items = array();
+
+			// Process each row.
+			foreach ( $value as $row ) {
+				if ( ! is_array( $row ) ) {
+					continue;
+				}
+
+				$row_data = array();
+				$row_type = null;
+
+				// Add @type to each row item if we have a specific output format.
+				// For ItemList, items don't get the @type directly (they get wrapped in ListItem).
+				if ( ! empty( $output_format ) && 'ItemList' !== $output_format ) {
+					$row_type = $output_format;
+				}
+
+				// Process each sub field in the row.
+				foreach ( $field['sub_fields'] as $sub_field ) {
+					// Get the sub field value - try both key and name.
+					$sub_value = $row[ $sub_field['key'] ] ?? $row[ $sub_field['_name'] ] ?? $row[ $sub_field['name'] ] ?? null;
+
+					if ( null === $sub_value ) {
+						continue;
+					}
+
+					// Check if sub field has a schema property mapping.
+					$schema_property = $sub_field['schema_property'] ?? '';
+
+					if ( empty( $schema_property ) ) {
+						// No schema property - skip this field for JSON-LD output.
+						continue;
+					}
+
+					// Check if schema_property is actually a Schema.org type (e.g., HowToStep).
+					// If so, use it as the row's @type instead of as a property.
+					if ( in_array( $schema_property, $all_types, true ) ) {
+						$row_type = $schema_property;
+						continue;
+					}
+
+					// Parse qualified property (e.g., "Thing.name" -> "name") to strip type prefix.
+					$property_name = \ACF\AI\GEO\Schema::get_property_name( $schema_property );
+
+					// Format the sub field value for JSON-LD.
+					$formatted_value = \ACF\AI\GEO\GEO::format_field_value_for_jsonld( $sub_value, $sub_field );
+
+					if ( null !== $formatted_value ) {
+						$row_data[ $property_name ] = $formatted_value;
+					}
+				}
+
+				// Add @type if we determined one.
+				if ( $row_type ) {
+					$row_data = array_merge( array( '@type' => $row_type ), $row_data );
+				}
+
+				// If row has only one property and no @type, extract just the value for cleaner output.
+				if ( count( $row_data ) === 1 && ! isset( $row_data['@type'] ) ) {
+					$items[] = reset( $row_data );
+				} elseif ( ! empty( $row_data ) ) {
+					// Only add row if it has content.
+					$items[] = $row_data;
+				}
+			}
+
+			if ( empty( $items ) ) {
+				return null;
+			}
+
+			// For ItemList, wrap items in the proper structure.
+			if ( 'ItemList' === $output_format ) {
+				$list_items = array();
+				foreach ( $items as $position => $item ) {
+					$list_items[] = array(
+						'@type'    => 'ListItem',
+						'position' => $position + 1,
+						'item'     => $item,
+					);
+				}
+				return array(
+					'@type'           => 'ItemList',
+					'itemListElement' => $list_items,
+				);
+			}
+
+			return $items;
+		}
 	}
 
-}
-
-
-// initialize
-acf_register_field_type( 'acf_field_repeater' );
-
+	// initialize
+	acf_register_field_type( 'acf_field_repeater' );
 endif; // class_exists check
-
-?>

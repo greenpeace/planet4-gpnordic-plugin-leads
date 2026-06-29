@@ -15,7 +15,7 @@
     "tests"
   ],
   "dependencies": {
-    "vue": "2.6.14",
+    "vue": "2.7.16",
     "lodash": "^4.17.21",
     "bodymovin": "^5.12.2"
   },

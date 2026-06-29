@@ -9,23 +9,51 @@
 
 namespace WordPressCS\WordPress\Sniffs\PHP;
 
+use PHP_CodeSniffer\Sniffs\DeprecatedSniff;
 use WordPressCS\WordPress\AbstractFunctionRestrictionsSniff;
 
 /**
  * Perl compatible regular expressions (PCRE, preg_ functions) should be used in preference
  * to their POSIX counterparts.
  *
- * @link    https://make.wordpress.org/core/handbook/best-practices/coding-standards/php/#regular-expressions
- * @link    http://php.net/manual/en/ref.regex.php
+ * @link https://developer.wordpress.org/coding-standards/wordpress-coding-standards/php/#regular-expressions
+ * @link https://php-legacy-docs.zend.com/manual/php5/en/ref.regex
  *
- * @package WPCS\WordPressCodingStandards
+ * @since 0.10.0 Previously this check was contained within the
+ *               `WordPress.VIP.RestrictedFunctions` and the
+ *               `WordPress.PHP.DiscouragedPHPFunctions` sniffs.
+ * @since 0.13.0 Class name changed: this class is now namespaced.
  *
- * @since   0.10.0 Previously this check was contained within the
- *                 `WordPress.VIP.RestrictedFunctions` and the
- *                 `WordPress.PHP.DiscouragedPHPFunctions` sniffs.
- * @since   0.13.0 Class name changed: this class is now namespaced.
+ * @deprecated 3.3.0 Use the PHPCompatibility standard instead.
  */
-class POSIXFunctionsSniff extends AbstractFunctionRestrictionsSniff {
+final class POSIXFunctionsSniff extends AbstractFunctionRestrictionsSniff implements DeprecatedSniff {
+
+	/**
+	 * Provide the version number in which the sniff was deprecated.
+	 *
+	 * @return string
+	 */
+	public function getDeprecationVersion() {
+		return 'WordPressCS v3.3.0';
+	}
+
+	/**
+	 * Provide the version number in which the sniff will be removed.
+	 *
+	 * @return string
+	 */
+	public function getRemovalVersion() {
+		return 'WordPressCS v4.0.0';
+	}
+
+	/**
+	 * Provide a custom message to display with the deprecation.
+	 *
+	 * @return string
+	 */
+	public function getDeprecationMessage() {
+		return 'To scan for PHP cross-version compatibility issues, use the PHPCompatibility standard instead.';
+	}
 
 	/**
 	 * Groups of functions to restrict.
@@ -72,5 +100,4 @@ class POSIXFunctionsSniff extends AbstractFunctionRestrictionsSniff {
 
 		);
 	}
-
 }

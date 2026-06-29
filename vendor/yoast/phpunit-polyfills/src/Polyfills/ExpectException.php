@@ -20,6 +20,8 @@ use PHPUnit_Util_InvalidArgumentHelper;
  *
  * @link https://github.com/sebastianbergmann/phpunit/commit/55d97d56696d5f6dee02732c08212ec519057803
  * @link https://github.com/sebastianbergmann/phpunit/commit/13305a6183ede02fc5d2f3534a93efac852813d5
+ *
+ * @since 0.2.0
  */
 trait ExpectException {
 
@@ -45,6 +47,8 @@ trait ExpectException {
 	 * Clear any stored exception information between each test.
 	 *
 	 * @after
+	 *
+	 * @return void
 	 */
 	public function clearExceptionInfo() {
 		$this->exceptionMessage = '';

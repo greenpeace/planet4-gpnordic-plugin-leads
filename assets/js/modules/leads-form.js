@@ -132,11 +132,9 @@
           // fix for the local dev env
           let jQueryPostStrCounter = "";
           if (this.isLocalEnv) {
-            jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode
-              }?v=${Date.now()}`;
+            jQueryPostStrCounter = `/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
           } else {
-            jQueryPostStrCounter = `/${window.location.pathname.split("/")[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode
-              }?v=${Date.now()}`;
+            jQueryPostStrCounter = `/${window.location.pathname.split("/")[1]}/wp-json/gplp/v2/leads/count/${this.sourceCode}?v=${Date.now()}`;
           }
 
           jQuery.get(jQueryPostStrCounter, (count) => {
@@ -751,6 +749,7 @@
         },
       },
     });
+    
   };
 
   // Initialize each block on page load (front end).

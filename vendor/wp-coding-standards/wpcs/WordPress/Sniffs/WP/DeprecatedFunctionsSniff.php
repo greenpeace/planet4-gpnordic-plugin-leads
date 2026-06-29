@@ -9,7 +9,9 @@
 
 namespace WordPressCS\WordPress\Sniffs\WP;
 
+use PHPCSUtils\Utils\MessageHelper;
 use WordPressCS\WordPress\AbstractFunctionRestrictionsSniff;
+use WordPressCS\WordPress\Helpers\MinimumWPVersionTrait;
 
 /**
  * Restricts the use of various deprecated WordPress functions and suggests alternatives.
@@ -20,23 +22,20 @@ use WordPressCS\WordPress\AbstractFunctionRestrictionsSniff;
  * By default, it is set to presume that a project will support the current
  * WP version and up to three releases before.
  *
- * @package WPCS\WordPressCodingStandards
+ * @since 0.11.0
+ * @since 0.13.0 Class name changed: this class is now namespaced.
+ * @since 0.14.0 Now has the ability to handle minimum supported WP version
+ *               being provided via the command-line or as as <config> value
+ *               in a custom ruleset.
  *
- * @since   0.11.0
- * @since   0.13.0 Class name changed: this class is now namespaced.
- * @since   0.14.0 Now has the ability to handle minimum supported WP version
- *                 being provided via the command-line or as as <config> value
- *                 in a custom ruleset.
- *
- * @uses    \WordPressCS\WordPress\Sniff::$minimum_supported_version
+ * @uses \WordPressCS\WordPress\Helpers\MinimumWPVersionTrait::$minimum_wp_version
  */
-class DeprecatedFunctionsSniff extends AbstractFunctionRestrictionsSniff {
+final class DeprecatedFunctionsSniff extends AbstractFunctionRestrictionsSniff {
+
+	use MinimumWPVersionTrait;
 
 	/**
 	 * List of deprecated functions with alternative when available.
-	 *
-	 * To be updated after every major release.
-	 * Last updated for WordPress 4.8.
 	 *
 	 * Version numbers should be fully qualified.
 	 * Replacement functions should have parentheses.
@@ -44,10 +43,11 @@ class DeprecatedFunctionsSniff extends AbstractFunctionRestrictionsSniff {
 	 * To retrieve a function list for comparison, the following tool is available:
 	 * https://github.com/JDGrimes/wp-deprecated-code-scanner
 	 *
+	 * {@internal To be updated after every major release. Last updated for WordPress 6.9.0-RC2.}
+	 *
 	 * @var array
 	 */
 	private $deprecated_functions = array(
-
 		// WP 0.71.
 		'the_category_head' => array(
 			'alt'     => 'get_the_category_by_ID()',
@@ -404,10 +404,6 @@ class DeprecatedFunctionsSniff extends AbstractFunctionRestrictionsSniff {
 		),
 		'register_widget_control' => array(
 			'alt'     => 'wp_register_widget_control()',
-			'version' => '2.8.0',
-		),
-		'sanitize_url' => array(
-			'alt'     => 'esc_url_raw()',
 			'version' => '2.8.0',
 		),
 		'the_author_aim' => array(
@@ -984,7 +980,7 @@ class DeprecatedFunctionsSniff extends AbstractFunctionRestrictionsSniff {
 			'version' => '3.5.0',
 		),
 		'wp_cache_reset' => array(
-			'alt'     => 'WP_Object_Cache::reset()',
+			'alt'     => 'wp_cache_switch_to_blog()',
 			'version' => '3.5.0',
 		),
 		'wp_create_thumbnail' => array(
@@ -1365,6 +1361,365 @@ class DeprecatedFunctionsSniff extends AbstractFunctionRestrictionsSniff {
 			'alt'     => 'wp_get_user_request()',
 			'version' => '5.4.0',
 		),
+
+		// WP 5.5.0.
+		'_wp_register_meta_args_whitelist' => array(
+			'alt'     => '_wp_register_meta_args_allowed_list()',
+			'version' => '5.5.0',
+		),
+		'add_option_whitelist' => array(
+			'alt'     => 'add_allowed_options()',
+			'version' => '5.5.0',
+		),
+		'remove_option_whitelist' => array(
+			'alt'     => 'remove_allowed_options()',
+			'version' => '5.5.0',
+		),
+		'wp_blacklist_check' => array(
+			'alt'     => 'wp_check_comment_disallowed_list()',
+			'version' => '5.5.0',
+		),
+		'wp_make_content_images_responsive' => array(
+			'alt'     => 'wp_filter_content_tags()',
+			'version' => '5.5.0',
+		),
+		'wp_unregister_GLOBALS' => array(
+			'alt'     => '',
+			'version' => '5.5.0',
+		),
+
+		// WP 5.7.0.
+		'noindex' => array(
+			'alt'     => 'wp_robots_noindex()',
+			'version' => '5.7.0',
+		),
+		'wp_no_robots' => array(
+			'alt'     => 'wp_robots_no_robots()',
+			'version' => '5.7.0',
+		),
+		'wp_sensitive_page_meta' => array(
+			'alt'     => 'wp_robots_sensitive_page()',
+			'version' => '5.7.0',
+		),
+
+		// WP 5.8.0.
+		'_excerpt_render_inner_columns_blocks' => array(
+			'alt'     => '_excerpt_render_inner_blocks()',
+			'version' => '5.8.0',
+		),
+
+		// WP 5.9.0.
+		'readonly' => array(
+			'alt'     => 'wp_readonly()',
+			'version' => '5.9.0',
+		),
+
+		// WP 5.9.1.
+		'wp_render_duotone_filter_preset' => array(
+			'alt'     => 'wp_get_duotone_filter_property()',
+			'version' => '5.9.1',
+		),
+
+		// WP 6.0.0.
+		'image_attachment_fields_to_save' => array(
+			'alt'     => '',
+			'version' => '6.0.0',
+		),
+		'wp_add_iframed_editor_assets_html' => array(
+			'alt'     => '',
+			'version' => '6.0.0',
+		),
+		'wp_skip_border_serialization' => array(
+			'alt'     => 'wp_should_skip_block_supports_serialization()',
+			'version' => '6.0.0',
+		),
+		'wp_skip_dimensions_serialization' => array(
+			'alt'     => 'wp_should_skip_block_supports_serialization()',
+			'version' => '6.0.0',
+		),
+		'wp_skip_spacing_serialization' => array(
+			'alt'     => 'wp_should_skip_block_supports_serialization()',
+			'version' => '6.0.0',
+		),
+
+		// WP 6.0.2.
+		'the_meta' => array(
+			'alt'     => 'get_post_meta()',
+			'version' => '6.0.2',
+		),
+
+		// WP 6.0.3.
+		// Verified; see https://core.trac.wordpress.org/ticket/56791#comment:10.
+		'_filter_query_attachment_filenames' => array(
+			'alt'     => 'add_filter( "wp_allow_query_attachment_by_filename", "__return_true" )',
+			'version' => '6.0.3',
+		),
+
+		// WP 6.1.0.
+		'_get_path_to_translation' => array(
+			'alt'     => 'WP_Textdomain_Registry',
+			'version' => '6.1.0',
+		),
+		'_get_path_to_translation_from_lang_dir' => array(
+			'alt'     => 'WP_Textdomain_Registry',
+			'version' => '6.1.0',
+		),
+		'_wp_multiple_block_styles' => array(
+			'alt'     => '',
+			'version' => '6.1.0',
+		),
+		'global_terms' => array(
+			'alt'     => '',
+			'version' => '6.1.0',
+		),
+		'global_terms_enabled' => array(
+			'alt'     => '',
+			'version' => '6.1.0',
+		),
+		'install_global_terms' => array(
+			'alt'     => '',
+			'version' => '6.1.0',
+		),
+		'sync_category_tag_slugs' => array(
+			'alt'     => '',
+			'version' => '6.1.0',
+		),
+		'wp_get_attachment_thumb_file' => array(
+			'alt'     => '',
+			'version' => '6.1.0',
+		),
+		'wp_typography_get_css_variable_inline_style' => array(
+			'alt'     => 'wp_style_engine_get_styles()',
+			'version' => '6.1.0',
+		),
+
+		// WP 6.2.0.
+		'_resolve_home_block_template' => array(
+			'alt'     => '',
+			'version' => '6.2.0',
+		),
+		'get_page_by_title' => array(
+			'alt'     => 'WP_Query',
+			'version' => '6.2.0',
+		),
+
+		// WP 6.3.0.
+		'_wp_tinycolor_bound_alpha' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'block_core_navigation_get_classic_menu_fallback' => array(
+			'alt'     => 'WP_Navigation_Fallback::get_classic_menu_fallback',
+			'version' => '6.3.0',
+		),
+		'block_core_navigation_get_classic_menu_fallback_blocks' => array(
+			'alt'     => 'WP_Navigation_Fallback::get_classic_menu_fallback_blocks',
+			'version' => '6.3.0',
+		),
+		'block_core_navigation_get_most_recently_published_navigation' => array(
+			'alt'     => 'WP_Navigation_Fallback::get_most_recently_published_navigation',
+			'version' => '6.3.0',
+		),
+		'block_core_navigation_maybe_use_classic_menu_fallback' => array(
+			'alt'     => 'WP_Navigation_Fallback::create_classic_menu_fallback',
+			'version' => '6.3.0',
+		),
+		'block_core_navigation_parse_blocks_from_menu_items' => array(
+			'alt'     => 'WP_Navigation_Fallback::parse_blocks_from_menu_items',
+			'version' => '6.3.0',
+		),
+		'block_core_navigation_submenu_build_css_colors' => array(
+			// Verified correct alternative.
+			'alt'     => 'wp_apply_colors_support()',
+			'version' => '6.3.0',
+		),
+		'wlwmanifest_link' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'wp_get_duotone_filter_id' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'wp_get_duotone_filter_property' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'wp_get_duotone_filter_svg' => array(
+			'alt'     => 'WP_Duotone::get_filter_svg_from_preset()',
+			'version' => '6.3.0',
+		),
+		'wp_get_global_styles_svg_filters' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'wp_get_loading_attr_default' => array(
+			'alt'     => 'wp_get_loading_optimization_attributes()',
+			'version' => '6.3.0',
+		),
+		'wp_global_styles_render_svg_filters' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'wp_img_tag_add_loading_attr' => array(
+			'alt'     => 'wp_img_tag_add_loading_optimization_attrs()',
+			'version' => '6.3.0',
+		),
+		'wp_queue_comments_for_comment_meta_lazyload' => array(
+			'alt'     => 'wp_lazyload_comment_meta()',
+			'version' => '6.3.0',
+		),
+		'wp_register_duotone_support' => array(
+			'alt'     => 'WP_Duotone::register_duotone_support()',
+			'version' => '6.3.0',
+		),
+		'wp_render_duotone_support' => array(
+			'alt'     => 'WP_Duotone::render_duotone_support()',
+			'version' => '6.3.0',
+		),
+		'wp_tinycolor_bound01' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'wp_tinycolor_hsl_to_rgb' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'wp_tinycolor_hue_to_rgb' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'wp_tinycolor_rgb_to_rgb' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+		'wp_tinycolor_string_to_rgb' => array(
+			'alt'     => '',
+			'version' => '6.3.0',
+		),
+
+		// WP 6.4.0.
+		'_admin_bar_bump_cb' => array(
+			'alt'     => 'wp_enqueue_admin_bar_bump_styles()',
+			'version' => '6.4.0',
+		),
+		'_inject_theme_attribute_in_block_template_content' => array(
+			'alt'     => 'traverse_and_serialize_blocks( parse_blocks( $template_content ), "_inject_theme_attribute_in_template_part_block" )',
+			'version' => '6.4.0',
+		),
+		'_remove_theme_attribute_in_block_template_content' => array(
+			'alt'     => 'traverse_and_serialize_blocks( parse_blocks( $template_content ), "_remove_theme_attribute_from_template_part_block" )',
+			'version' => '6.4.0',
+		),
+		'_wp_theme_json_webfonts_handler' => array(
+			'alt'     => 'wp_print_font_faces()',
+			'version' => '6.4.0',
+		),
+		'print_embed_styles' => array(
+			'alt'     => 'wp_enqueue_embed_styles()',
+			'version' => '6.4.0',
+		),
+		'print_emoji_styles' => array(
+			'alt'     => 'wp_enqueue_emoji_styles()',
+			'version' => '6.4.0',
+		),
+		'the_block_template_skip_link' => array(
+			'alt'     => 'wp_enqueue_block_template_skip_link()',
+			'version' => '6.4.0',
+		),
+		'wp_admin_bar_header' => array(
+			'alt'     => 'wp_enqueue_admin_bar_header_styles()',
+			'version' => '6.4.0',
+		),
+		'wp_img_tag_add_decoding_attr' => array(
+			'alt'     => 'wp_img_tag_add_loading_optimization_attrs()',
+			'version' => '6.4.0',
+		),
+		'wp_update_https_detection_errors' => array(
+			// Verified correct alternative.
+			'alt'     => 'wp_get_https_detection_errors()',
+			'version' => '6.4.0',
+		),
+
+		// WP 6.5.0.
+		'block_core_file_ensure_interactivity_dependency' => array(
+			'alt'     => 'wp_register_script_module()',
+			'version' => '6.5.0',
+		),
+		'block_core_image_ensure_interactivity_dependency' => array(
+			'alt'     => 'wp_register_script_module()',
+			'version' => '6.5.0',
+		),
+		'block_core_query_ensure_interactivity_dependency' => array(
+			'alt'     => 'wp_register_script_module()',
+			'version' => '6.5.0',
+		),
+
+		// WP 6.6.0.
+		'wp_interactivity_process_directives_of_interactive_blocks' => array(
+			'alt'     => '',
+			'version' => '6.6.0',
+		),
+		'wp_render_elements_support' => array(
+			'alt'     => 'wp_render_elements_class_name()',
+			'version' => '6.6.0',
+		),
+
+		// WP 6.7.0.
+		'current_user_can_for_blog' => array(
+			'alt'     => 'current_user_can_for_site()',
+			'version' => '6.7.0',
+		),
+		'wp_create_block_style_variation_instance_name' => array(
+			'alt'     => 'wp_unique_id( $variation . \'--\' )',
+			'version' => '6.7.0',
+		),
+		'wp_enqueue_global_styles_custom_css' => array(
+			'alt'     => 'wp_enqueue_global_styles()',
+			'version' => '6.7.0',
+		),
+		'wp_get_global_styles_custom_css' => array(
+			'alt'     => 'wp_get_global_stylesheet() or WP_Theme_JSON::get_styles_for_block()',
+			'version' => '6.7.0',
+		),
+		'wp_init_targeted_link_rel_filters' => array(
+			'alt'     => '',
+			'version' => '6.7.0',
+		),
+		'wp_remove_targeted_link_rel_filters' => array(
+			'alt'     => '',
+			'version' => '6.7.0',
+		),
+		'wp_simplepie_autoload' => array(
+			'alt'     => 'SimplePie_Autoloader',
+			'version' => '6.7.0',
+		),
+		'wp_targeted_link_rel' => array(
+			'alt'     => '',
+			'version' => '6.7.0',
+		),
+		'wp_targeted_link_rel_callback' => array(
+			'alt'     => '',
+			'version' => '6.7.0',
+		),
+
+		// WP 6.8.0.
+		'wp_add_editor_classic_theme_styles' => array(
+			'alt'     => 'wp_enqueue_classic_theme_styles()',
+			'version' => '6.8.0',
+		),
+
+		// WP 6.9.0.
+		// Note: the deprecation of the (polyfilled) `utf8_encode()` and `utf8_decode()` functions is deliberately
+		// not listed here as these are polyfills for the PHP native functions, not WP native functions.
+		'seems_utf8' => array(
+			'alt'     => 'wp_is_valid_utf8()',
+			'version' => '6.9.0',
+		),
+		'wp_print_auto_sizes_contain_css_fix' => array(
+			'alt'     => 'wp_enqueue_img_auto_sizes_contain_css_fix()',
+			'version' => '6.9.0',
+		),
 	);
 
 	/**
@@ -1374,7 +1729,7 @@ class DeprecatedFunctionsSniff extends AbstractFunctionRestrictionsSniff {
 	 */
 	public function getGroups() {
 		// Make sure all array keys are lowercase.
-		$this->deprecated_functions = array_change_key_case( $this->deprecated_functions, CASE_LOWER );
+		$this->deprecated_functions = array_change_key_case( $this->deprecated_functions, \CASE_LOWER );
 
 		return array(
 			'deprecated_functions' => array(
@@ -1389,34 +1744,33 @@ class DeprecatedFunctionsSniff extends AbstractFunctionRestrictionsSniff {
 	 * @param int    $stackPtr        The position of the current token in the stack.
 	 * @param string $group_name      The name of the group which was matched. Will
 	 *                                always be 'deprecated_functions'.
-	 * @param string $matched_content The token content (function name) which was matched.
+	 * @param string $matched_content The token content (function name) which was matched
+	 *                                in lowercase.
 	 *
 	 * @return void
 	 */
 	public function process_matched_token( $stackPtr, $group_name, $matched_content ) {
 
-		$this->get_wp_version_from_cl();
-
-		$function_name = strtolower( $matched_content );
+		$this->set_minimum_wp_version();
 
 		$message = '%s() has been deprecated since WordPress version %s.';
 		$data    = array(
-			$matched_content,
-			$this->deprecated_functions[ $function_name ]['version'],
+			$this->tokens[ $stackPtr ]['content'],
+			$this->deprecated_functions[ $matched_content ]['version'],
 		);
 
-		if ( ! empty( $this->deprecated_functions[ $function_name ]['alt'] ) ) {
+		if ( ! empty( $this->deprecated_functions[ $matched_content ]['alt'] ) ) {
 			$message .= ' Use %s instead.';
-			$data[]   = $this->deprecated_functions[ $function_name ]['alt'];
+			$data[]   = $this->deprecated_functions[ $matched_content ]['alt'];
 		}
 
-		$this->addMessage(
+		MessageHelper::addMessage(
+			$this->phpcsFile,
 			$message,
 			$stackPtr,
-			( version_compare( $this->deprecated_functions[ $function_name ]['version'], $this->minimum_supported_version, '<' ) ),
-			$this->string_to_errorcode( $matched_content . 'Found' ),
+			( $this->wp_version_compare( $this->deprecated_functions[ $matched_content ]['version'], $this->minimum_wp_version, '<' ) ),
+			MessageHelper::stringToErrorcode( $matched_content . 'Found' ),
 			$data
 		);
 	}
-
 }

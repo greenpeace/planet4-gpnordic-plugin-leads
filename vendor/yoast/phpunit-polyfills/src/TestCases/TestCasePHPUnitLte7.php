@@ -12,6 +12,7 @@ use Yoast\PHPUnitPolyfills\Polyfills\AssertionRenames;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertIsType;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertNumericType;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertObjectEquals;
+use Yoast\PHPUnitPolyfills\Polyfills\AssertObjectProperty;
 use Yoast\PHPUnitPolyfills\Polyfills\AssertStringContains;
 use Yoast\PHPUnitPolyfills\Polyfills\EqualToSpecializations;
 use Yoast\PHPUnitPolyfills\Polyfills\ExpectException;
@@ -27,6 +28,8 @@ use Yoast\PHPUnitPolyfills\Polyfills\ExpectPHPException;
  * methods to get round the signature change in PHPUnit 8.
  *
  * When using this TestCase, the snakecase method names need to be used to overload a fixture method.
+ *
+ * @since 0.1.0
  */
 abstract class TestCase extends PHPUnit_TestCase {
 
@@ -39,6 +42,7 @@ abstract class TestCase extends PHPUnit_TestCase {
 	use AssertIsType;
 	use AssertNumericType;
 	use AssertObjectEquals;
+	use AssertObjectProperty;
 	use AssertStringContains;
 	use EqualToSpecializations;
 	use ExpectException;
@@ -75,6 +79,8 @@ abstract class TestCase extends PHPUnit_TestCase {
 	 *
 	 * This method is called before the execution of a test starts and after setUp() is called.
 	 *
+	 * @since 0.2.0
+	 *
 	 * @return void
 	 */
 	protected function assertPreConditions() {
@@ -86,6 +92,8 @@ abstract class TestCase extends PHPUnit_TestCase {
 	 * Performs assertions shared by all tests of a test case.
 	 *
 	 * This method is called before the execution of a test ends and before tearDown() is called.
+	 *
+	 * @since 0.2.0
 	 *
 	 * @return void
 	 */
