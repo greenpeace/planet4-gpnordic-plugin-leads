@@ -9,11 +9,6 @@
  * @param   (int|string) $post_id The post ID this block is saved to.
  */
 
-// Prevents HTMLPostProcessor from modifying form content.
-add_filter('planet4_master_theme_process_buffer', function($should_process) {
-    return false;
-});
-
 // Create id attribute allowing for custom "anchor" value.
 $id = 'leads-form-' . $block['id'];
 if (!empty($block['anchor'])) {

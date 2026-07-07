@@ -16,10 +16,18 @@
     //console.log($block, jQuery($block).hasClass('leads-form'), $block[0].children[0])
     if (!jQuery($block).hasClass("leads-form")) $block = $block[0].children[0];
     else $block = `#${$block.attr("id")}`;
-    // console.log('Initialize Block', `leads_form_${jQuery($block).attr('data-block-id')}`, $block)
+    //console.log('Initialize Block', `leads_form_${jQuery($block).attr('data-block-id')}`, $block)
     const blockData =
       window[`leads_form_${jQuery($block).attr("data-block-id")}`];
-    // console.log('blockData', blockData)
+    //console.log('blockData', blockData)
+    
+    const el = jQuery($block)[0];
+
+    if (el.dataset.initialized === "true") {
+      return;
+    }
+
+    el.dataset.initialized = "true";
 
     new Vue({
       el: $block,
@@ -409,12 +417,12 @@
                                   this.dataLayer &&
                                     this.dataLayer.push({
                                       event: "petitionThankYou",
-                                      sourceCode: this.sourceCode, 
+                                      sourceCode: this.sourceCode,
                                       flow: "single-step-flow",
-                                      donationOption: "predefined link to donation", 
+                                      donationOption: "predefined link to donation",
                                     }); //should trigger when Default flow & amount set
-                                  
-                                  const amountDefault = this.donateAmount ;
+
+                                  const amountDefault = this.donateAmount;
                                   donateBtn.addEventListener("click", () => {
                                     this.dataLayer &&
                                       this.dataLayer.push({
@@ -749,7 +757,7 @@
         },
       },
     });
-    
+
   };
 
   // Initialize each block on page load (front end).
@@ -764,7 +772,8 @@
   // Initialize dynamic block preview (editor).
   if (window.acf) {
     window.acf.addAction("render_block_preview/type=leads-form", ($block) => {
-      window.setTimeout(initializeBlock($block), 2000);
+      window.setTimeout(() => initializeBlock($block), 2000); 
     });
   }
+
 })(jQuery);
