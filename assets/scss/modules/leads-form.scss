@@ -137,6 +137,9 @@
     // display: none;
     grid-column: 1/8;
     color: white;
+    & .description {
+      margin-bottom: 1rem;
+    }
     @media only screen and (max-width: $leads--x-large) {
       grid-column: 1/7;
     }
@@ -288,9 +291,19 @@
   }
   &__share,
   &__donate {
-    width: calc(50% - 15px);
+    width: calc(40% - 15px);
+    margin-bottom: 1rem;
     @media only screen and (max-width: $leads--medium) {
       width: 100%;
+    }
+    @media only screen and (min-width: $leads--medium) and (max-width: $leads--large) {
+      width: inherit;
+      margin-bottom: 2rem;
+
+      & #whatsapp {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
     }
   }
   &__share {

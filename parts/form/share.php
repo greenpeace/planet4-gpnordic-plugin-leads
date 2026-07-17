@@ -26,6 +26,7 @@ switch ($checkLanguage) {
 $onFbClick = $form_type === 'multistep' ? "completeMultistep($step_index), pushDataLayer('action_share', 'Facebook')" : "";
 $onWaClick = $form_type === 'multistep' ? "completeMultistep($step_index), pushDataLayer('action_share', 'Whatsapp')" : "";
 
+$waMessage = "✊ Minä allekirjoitin tämän vetoomuksen. Jokainen allekirjoitus merkitsee – tule mukaan ja allekirjoita sinäkin:";
 $share_url_copy_link = "$url?utm_source=copy_link&utm_medium=share_button";
 $share_url_facebook = "$url?utm_source=facebook.com%26utm_medium=share_button";
 $share_url_whatsapp = "$url?utm_source=whatsapp.com%26utm_medium=share_button";
@@ -43,7 +44,7 @@ $share_url_whatsapp = "$url?utm_source=whatsapp.com%26utm_medium=share_button";
   <div class="leads-form__share__icons">
     <a @click="<?php echo $onFbClick; ?>" id="facebook" class="button button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url_facebook; ?>" target="_blank"><?php GPPL4\svg_icon('facebook'); ?></a>
     <?php if ($checkLanguage === 'finland') : ?>
-      <a @click="<?php echo $onWaClick; ?>" id="whatsapp" class="button button--share" href="https://api.whatsapp.com/send?text=✊ Minä allekirjoitin tämän vetoomuksen. Jokainen allekirjoitus merkitsee - tule mukaan ja allekirjoita sinäkin: <?php echo $share_url_whatsapp; ?>" target="_blank">
+      <a @click="<?php echo $onWaClick; ?>" id="whatsapp" class="button button--share" href="https://api.whatsapp.com/send?text=Minä allekirjoitin tämän vetoomuksen. Jokainen allekirjoitus merkitsee - tule mukaan ja allekirjoita sinäkin: <?php echo $share_url_whatsapp; ?>" target="_blank">
         <?php GPPL4\svg_icon('whatsapp'); ?> Whatsapp
       </a>
     <?php endif; ?> 
