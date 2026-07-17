@@ -3,6 +3,7 @@
 function get_thank_you_settings()
 {
     $shared_donate_fields = get_shared_donate_fields();
+    // $shared_share_fields = get_shared_share_fields();
     $thank_you_settings = new StoutLogic\AcfBuilder\FieldsBuilder('thank_you_settings');
     $thank_you_settings->addGroup('thank_you_settings', [
         'conditional_logic' => [
@@ -45,6 +46,11 @@ function get_thank_you_settings()
             'toolbar' => 'basic',
             'media_upload' => 0,
             'delay' => 0,
+        ])
+        // ->addTrueFalse('enable_wa_message', $shared_share_fields['share_whatsapp'])       
+        ->addText('share_whatsapp', [
+            'label' => 'Whatsapp share message',
+            'default_value' => 'I signed this petition, join me and sign it too!',
         ])
         ->addText('donate_headline', [
             'label' => 'Donation ask headline',

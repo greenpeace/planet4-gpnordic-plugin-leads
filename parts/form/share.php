@@ -1,10 +1,24 @@
 <?php
+
+// function get_shared_share_fields() {
+//   return array(
+//     'enable_wa_message' => [
+//       'label' => 'Enable default donation amount',
+//       'instructions' => 'Customize your share message on Whatsapp',
+//       'message' => 'Write a short message here (emojis not supoprted)',
+//       'default_value' => 1,
+//       'ui' => 1,
+//     ],
+//   );
+// }
+
 //Copy the page link to share
 $checkLanguage = $_SERVER['REQUEST_URI'];
 $checkLanguage = explode('/', $checkLanguage);
 $checkLanguage = $checkLanguage[1];
 
 $copy_link_button_caption = "";
+$waMessage = rawurlencode($whatsapp_message);
 
 switch ($checkLanguage) {
   case "denmark":
@@ -26,7 +40,6 @@ switch ($checkLanguage) {
 $onFbClick = $form_type === 'multistep' ? "completeMultistep($step_index), pushDataLayer('action_share', 'Facebook')" : "";
 $onWaClick = $form_type === 'multistep' ? "completeMultistep($step_index), pushDataLayer('action_share', 'Whatsapp')" : "";
 
-$waMessage = "✊ Minä allekirjoitin tämän vetoomuksen. Jokainen allekirjoitus merkitsee – tule mukaan ja allekirjoita sinäkin:";
 $share_url_copy_link = "$url?utm_source=copy_link&utm_medium=share_button";
 $share_url_facebook = "$url?utm_source=facebook.com%26utm_medium=share_button";
 $share_url_whatsapp = "$url?utm_source=whatsapp.com%26utm_medium=share_button";
@@ -43,8 +56,8 @@ $share_url_whatsapp = "$url?utm_source=whatsapp.com%26utm_medium=share_button";
   <?php echo $description; ?>
   <div class="leads-form__share__icons">
     <a @click="<?php echo $onFbClick; ?>" id="facebook" class="button button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url_facebook; ?>" target="_blank"><?php GPPL4\svg_icon('facebook'); ?></a>
-    <?php if ($checkLanguage === 'finland') : ?>
-      <a @click="<?php echo $onWaClick; ?>" id="whatsapp" class="button button--share" href="https://api.whatsapp.com/send?text=Minä allekirjoitin tämän vetoomuksen. Jokainen allekirjoitus merkitsee - tule mukaan ja allekirjoita sinäkin: <?php echo $share_url_whatsapp; ?>" target="_blank">
+    <?php if ($checkLanguage === 'finland' || $checkLanguage === 'sweden') : ?>
+      <a @click="<?php echo $onWaClick; ?>" id="whatsapp" class="button button--share" href="https://api.whatsapp.com/send?text=<?php echo $waMessage; ?> <?php echo $share_url_whatsapp; ?>" target="_blank">
         <?php GPPL4\svg_icon('whatsapp'); ?> Whatsapp
       </a>
     <?php endif; ?> 
