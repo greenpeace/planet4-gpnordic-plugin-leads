@@ -54,6 +54,25 @@ function get_multistep_settings()
         ->addTab('share')
         ->addText('share_headline')
         ->addWysiwyg('share_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])
+        ->addTrueFalse('enable_wa_message', [
+            'label' => 'Enable share on WhatsApp button',
+            'default_value' => 1,
+            'ui' => 1,
+        ])
+        ->addText('share_whatsapp', [
+            'label' => 'WhatsApp share message',
+            'instructions' => 'This message will be shared before the petition link.',
+            'default_value' => 'I signed this petition, join me and sign it too!',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'enable_wa_message',
+                        'operator' => '==',
+                        'value' => 1,
+                    ],
+                ],
+            ],
+        ])
         ->addTab('custom_ask')
         ->addText('custom_ask_headline')
         ->addWysiwyg('custom_ask_description', ['tabs' => 'all', 'toolbar' => 'basic', 'media_upload' => 0, 'delay' => 0])

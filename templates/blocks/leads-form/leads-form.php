@@ -122,7 +122,7 @@ $share_data = array(
     'headline' => $has_multisteps ? $steps['share_headline'] : $thank_you_settings['share_headline'],
     'description' => $has_multisteps ? $steps['share_description'] : $thank_you_settings['share_description'],
     'url' => $url,
-    // 'enable_wa_message' => $has_multisteps ? $steps['enable_wa_message'] : $thank_you_settings['enable_wa_message'],
+    'enable_wa_message' => $has_multisteps ? $steps['enable_wa_message'] : $thank_you_settings['enable_wa_message'],
     'whatsapp_message' => $has_multisteps ? $steps['share_whatsapp'] : $thank_you_settings['share_whatsapp'],
 );
 $donate_data = array(

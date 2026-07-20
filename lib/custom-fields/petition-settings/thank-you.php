@@ -47,10 +47,24 @@ function get_thank_you_settings()
             'media_upload' => 0,
             'delay' => 0,
         ])
-        // ->addTrueFalse('enable_wa_message', $shared_share_fields['share_whatsapp'])       
+        ->addTrueFalse('enable_wa_message', [
+            'label' => 'Enable share on WhatsApp button',
+            'default_value' => 1,
+            'ui' => 1,
+        ])       
         ->addText('share_whatsapp', [
-            'label' => 'Whatsapp share message',
+            'label' => 'WhatsApp share message',
+            'instructions' => 'This message will be shared before the petition link.',
             'default_value' => 'I signed this petition, join me and sign it too!',
+            'conditional_logic' => [
+                [
+                    [
+                        'field' => 'enable_wa_message',
+                        'operator' => '==',
+                        'value' => 1,
+                    ],
+                ],
+            ],
         ])
         ->addText('donate_headline', [
             'label' => 'Donation ask headline',

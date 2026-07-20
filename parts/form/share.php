@@ -1,17 +1,5 @@
 <?php
 
-// function get_shared_share_fields() {
-//   return array(
-//     'enable_wa_message' => [
-//       'label' => 'Enable default donation amount',
-//       'instructions' => 'Customize your share message on Whatsapp',
-//       'message' => 'Write a short message here (emojis not supoprted)',
-//       'default_value' => 1,
-//       'ui' => 1,
-//     ],
-//   );
-// }
-
 //Copy the page link to share
 $checkLanguage = $_SERVER['REQUEST_URI'];
 $checkLanguage = explode('/', $checkLanguage);
@@ -56,8 +44,8 @@ $share_url_whatsapp = "$url?utm_source=whatsapp.com%26utm_medium=share_button";
   <?php echo $description; ?>
   <div class="leads-form__share__icons">
     <a @click="<?php echo $onFbClick; ?>" id="facebook" class="button button--share" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $share_url_facebook; ?>" target="_blank"><?php GPPL4\svg_icon('facebook'); ?></a>
-    <?php if ($checkLanguage === 'finland' || $checkLanguage === 'sweden') : ?>
-      <a @click="<?php echo $onWaClick; ?>" id="whatsapp" class="button button--share" href="https://api.whatsapp.com/send?text=<?php echo $waMessage; ?> <?php echo $share_url_whatsapp; ?>" target="_blank">
+    <?php if (!empty($enable_wa_message)) : ?>
+      <a @click="<?php echo $onWaClick; ?>" id="whatsapp" class="button button--share" href="https://api.whatsapp.com/send?text=<?php echo rawurlencode($whatsapp_message . ' ' . $share_url_whatsapp); ?>" target="_blank">
         <?php GPPL4\svg_icon('whatsapp'); ?> Whatsapp
       </a>
     <?php endif; ?> 
