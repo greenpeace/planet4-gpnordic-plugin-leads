@@ -49,7 +49,7 @@ function get_thank_you_settings()
         ])
         ->addTrueFalse('enable_wa_message', [
             'label' => 'Enable share on WhatsApp button',
-            'default_value' => 1,
+            'default_value' => 0,
             'ui' => 1,
         ])       
         ->addText('share_whatsapp', [
