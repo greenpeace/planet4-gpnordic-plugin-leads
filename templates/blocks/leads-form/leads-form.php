@@ -37,7 +37,9 @@ $form_fields_translations = get_field('form_fields_translations', 'options');
 // Background Image
 $background_image = get_the_post_thumbnail_url($form_id, 'large');
 // Small screen Image
-$small_screen_image = $extra_options['small_screen_image'];
+$small_screen_image = $small_screen_image = is_array($extra_options)
+    ? ($extra_options['small_screen_image'] ?? false)
+    : false;
 
 // Colors
 $brand_green_light = "#73BE1E";
