@@ -22,7 +22,7 @@ if (!empty($block['className'])) {
 }
 // $form_id = get_field('form');
 // Get the form ID directly from the block data.
-$form_id = $block['data']['form'] ?? null;
+// $form_id = $block['data']['form'] ?? null;
 
 // Stop rendering if no valid form has been selected.
 // if (!$form_id || !get_post($form_id)) {
@@ -53,7 +53,7 @@ if (
     !$form_status ||
     ($form_status !== 'publish' && !$allow_unpublished)
 ) {
-    echo '<div class="leads-form-error">Form unavailable.</div>';
+    echo '<div class="leads-form-error">Form unavailable. Please select a published form (expect a slight delay in the editor preview while refreshing).</div>';
     return;
 }
 
@@ -65,6 +65,13 @@ $form_settings = get_field('form_settings', $form_id);
 $hero_settings = get_field('hero_settings', $form_id);
 $thank_you_settings = get_field('thank_you_settings', $form_id);
 $form_styles = get_field('form_styles', $form_id);
+if (!is_array($form_styles)) {
+    $form_styles = [];
+}
+
+if (!isset($form_styles['colors']) || !is_array($form_styles['colors'])) {
+    $form_styles['colors'] = [];
+}
 $extra_options = get_field('extra_options', $form_id);
 $form_fields_translations = get_field('form_fields_translations', 'options');
 
