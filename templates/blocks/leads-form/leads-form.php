@@ -33,26 +33,19 @@ $form_id = $block['data']['form'] ?? null;
 //     return;
 // }
 
-$form_id = $block['data']['form']
-    ?? $block['data']['field_petition_form_block_form']
-    ?? null;
+$form_id = $block['data']['form'] ?? null;
 
-$form_status = get_post_status($form_id);
+$form_status = $form_id ? get_post_status($form_id) : false;
 
-$is_editor_mode = isset($block['mode']) && in_array(
-    $block['mode'],
-    ['edit', 'preview'],
-    true
-);
+$is_preview = isset($_GET['preview_leads_form'])
+    && (int) $_GET['preview_leads_form'] === (int) $form_id;
 
-$is_url_preview =
-    isset($_GET['preview_leads_form']) &&
-    (int) $_GET['preview_leads_form'] === (int) $form_id;
+$is_editor = current_user_can('edit_posts');
 
 if (
     $form_status !== 'publish'
-    && !$is_editor_mode
-    && !$is_url_preview
+    && !$is_preview
+    && !$is_editor
 ) {
     return;
 }
