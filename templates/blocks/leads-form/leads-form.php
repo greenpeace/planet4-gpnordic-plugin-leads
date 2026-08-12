@@ -65,13 +65,10 @@ $form_settings = get_field('form_settings', $form_id);
 $hero_settings = get_field('hero_settings', $form_id);
 $thank_you_settings = get_field('thank_you_settings', $form_id);
 $form_styles = get_field('form_styles', $form_id);
-if (!is_array($form_styles)) {
-    $form_styles = [];
-}
-
-if (!isset($form_styles['colors']) || !is_array($form_styles['colors'])) {
-    $form_styles['colors'] = [];
-}
+$form_styles = is_array($form_styles) ? $form_styles : [];
+$colors = isset($form_styles['colors']) && is_array($form_styles['colors'])
+    ? $form_styles['colors']
+    : [];
 $extra_options = get_field('extra_options', $form_id);
 $form_fields_translations = get_field('form_fields_translations', 'options');
 
@@ -79,7 +76,7 @@ $form_fields_translations = get_field('form_fields_translations', 'options');
 // Background Image
 $background_image = get_the_post_thumbnail_url($form_id, 'large');
 // Small screen Image
-$small_screen_image = $small_screen_image = is_array($extra_options)
+$small_screen_image = is_array($extra_options)
     ? ($extra_options['small_screen_image'] ?? false)
     : false;
 
@@ -103,8 +100,15 @@ if (isset($form_styles['colors']['cta_background']) && $form_styles['colors']['c
 }
 
 // Dark mode
-$theme_option = $form_styles['colors']['theme'];
-$theme = (isset($theme_option) && $theme_option != false) ? $theme_option : '';
+// $theme_option = $form_styles['colors']['theme'];
+// $theme = (isset($theme_option) && $theme_option != false) ? $theme_option : '';
+// Dark mode
+$colors = is_array($form_styles['colors'] ?? null)
+    ? $form_styles['colors']
+    : [];
+
+$theme_option = $colors['theme'] ?? false;
+$theme = $theme_option ?: '';
 
 // CTA text color
 if (isset($form_styles['colors']['cta_text']) && $form_styles['colors']['cta_text'] != false) {
@@ -660,12 +664,12 @@ JS;
         heroDescription: <?php echo json_encode(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['description'] ?? '')))); ?>,
         display: "<?php echo $display; ?>",
         formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
-        enableCounter: '<?php echo $form_settings['enable_counter']; ?>',
-        counter: <?php echo (int)(get_post_meta($form_id, 'count', true) ?: 0) + (int)$form_settings['counter']; ?>,
-        counterGoalValue: '<?php echo $form_settings['counter_goal_value']; ?>',
-        counterApiEndpoints: [<?php echo $form_settings['counter_api-endpoints'] ? join(',', array_map(function ($url) {
-                                    return "\"${url['endpoint']}\"";
-                                }, $form_settings['counter_api-endpoints'])) : ''; ?>],
+        enableCounter: '<?php echo $form_settings['enable_counter'] ?? ''; ?>',
+        counter: <?php echo (int)(get_post_meta($form_id, 'count', true) ?: 0) + (int)($form_settings['counter'] ?? 0); ?>,
+        counterGoalValue: '<?php echo $form_settings['counter_goal_value'] ?? ''; ?>',
+        counterApiEndpoints: [<?php echo !empty($form_settings['counter-api-endpoints']) ? join(',', array_map(function ($url) {
+                                    return '"' . esc_js($url['endpoint'] ?? '') . '"';
+                                }, $form_settings['counter-api-endpoints'])) : ''; ?>],
         sourceCode: '<?php echo trim($form_settings['source_code'], " \t\n\r\0\x0B"); ?>',
         readMore: '<?php echo $form_fields_translations['read_more']; ?>',
         readLess: '<?php echo $form_fields_translations['read_less']; ?>',
