@@ -25,11 +25,35 @@ if (!empty($block['className'])) {
 $form_id = $block['data']['form'] ?? null;
 
 // Stop rendering if no valid form has been selected.
-if (!$form_id || !get_post($form_id)) {
-    if ($is_preview) {
-        echo '<p>Please select a published form for this block.</p>';
-    }
+// if (!$form_id || !get_post($form_id)) {
+//     if ($is_preview) {
+//         echo '<p>Please select a published form for this block.</p>';
+//     }
 
+//     return;
+// }
+
+$form_id = $block['data']['form']
+    ?? $block['data']['field_petition_form_block_form']
+    ?? null;
+
+$form_status = get_post_status($form_id);
+
+$is_editor_mode = isset($block['mode']) && in_array(
+    $block['mode'],
+    ['edit', 'preview'],
+    true
+);
+
+$is_url_preview =
+    isset($_GET['preview_leads_form']) &&
+    (int) $_GET['preview_leads_form'] === (int) $form_id;
+
+if (
+    $form_status !== 'publish'
+    && !$is_editor_mode
+    && !$is_url_preview
+) {
     return;
 }
 
@@ -37,7 +61,7 @@ if (!$form_id || !get_post($form_id)) {
 $display = get_field('display');
 
 $form_settings = get_field('form_settings', $form_id);
-$form_status = get_post_status($form_id);
+// $form_status = get_post_status($form_id);
 $hero_settings = get_field('hero_settings', $form_id);
 $thank_you_settings = get_field('thank_you_settings', $form_id);
 $form_styles = get_field('form_styles', $form_id);
