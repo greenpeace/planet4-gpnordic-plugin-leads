@@ -24,18 +24,6 @@ if (!empty($block['className'])) {
 // Get the form ID directly from the block data.
 $form_id = $block['data']['form'] ?? null;
 
-// Stop rendering if no valid form has been selected.
-// if (!$form_id || !get_post($form_id)) {
-//     if ($is_preview) {
-//         echo '<p>Please select a published form for this block.</p>';
-//     }
-
-//     return;
-// }
-// $form_id = $block['data']['form']
-//     ?? $block['data']['field_petition_form_block_form']
-//     ?? null;
-
 $form_status = $form_id ? get_post_status($form_id) : false;
 
 $is_url_preview = isset($_GET['preview_leads_form'])
@@ -61,21 +49,13 @@ if (
 $display = get_field('display') ?: '';
 
 $form_settings = get_field('form_settings', $form_id);
-// $form_status = get_post_status($form_id);
 $hero_settings = get_field('hero_settings', $form_id);
 $thank_you_settings = get_field('thank_you_settings', $form_id);
-// $form_styles = get_field('form_styles', $form_id);
-// $form_styles = is_array($form_styles) ? $form_styles : [];
-// $colors = isset($form_styles['colors']) && is_array($form_styles['colors'])
-//     ? $form_styles['colors']
-//     : [];
-// $extra_options = get_field('extra_options', $form_id);
-// $form_fields_translations = get_field('form_fields_translations', 'options');
 $form_styles = get_field('form_styles', $form_id);
 $form_styles = is_array($form_styles) ? $form_styles : [];
 
 // Safely extract colors array
-$colors = (isset($form_styles['colors']) && is_array($form_styles['colors']))
+$colors = is_array($form_styles['colors'] ?? null)
     ? $form_styles['colors']
     : [];
 
@@ -88,7 +68,7 @@ $hero_settings             = is_array($hero_settings) ? $hero_settings : [];
 $thank_you_settings        = is_array($thank_you_settings) ? $thank_you_settings : [];
 $form_styles               = is_array($form_styles) ? $form_styles : [];
 $extra_options             = is_array($extra_options) ? $extra_options : [];
-$steps                     = is_array($steps) ? $steps : [];
+// $steps                     = is_array($steps) ? $steps : [];
 $form_fields_translations = is_array($form_fields_translations) ? $form_fields_translations : [];
 
 // Background Image
@@ -103,23 +83,11 @@ $brand_green_light = "#73BE1E";
 $brand_green_dark = "#005C42";
 
 // Primary color
-// if (isset($form_styles['colors']['form_headline']) && $form_styles['colors']['form_headline'] != false) {
-//     $primary_color = $form_styles['colors']['form_headline'];
-// } else {
-//     $primary_color = $brand_green_light;
-// }
-$primary_color = !empty($colors['form_headline']) 
-    ? $colors['form_headline'] 
+$primary_color = !empty($colors['form_headline'])
+    ? $colors['form_headline']
     : $brand_green_light;
 
 // Secondary/background overlay color
-// if (isset($form_styles['colors']['cta_background']) && $form_styles['colors']['cta_background'] != false) {
-//     $secondary_color = $form_styles['colors']['cta_background'];
-// } elseif (isset($form_styles['colors']['form_headline']) && $form_styles['colors']['form_headline'] != false) {
-//     $secondary_color = GPPL4\hexToHsl(str_replace('#', '', $primary_color));
-// } else {
-//     $secondary_color = $brand_green_dark;
-// }
 if (!empty($colors['cta_background'])) {
     $secondary_color = $colors['cta_background'];
 } elseif (!empty($colors['form_headline'])) {
@@ -129,36 +97,24 @@ if (!empty($colors['cta_background'])) {
 }
 
 // Dark mode
-// $theme_option = $form_styles['colors']['theme'];
-// $theme = (isset($theme_option) && $theme_option != false) ? $theme_option : '';
 $theme_option = $colors['theme'] ?? false;
 $theme        = $theme_option ?: '';
 
 // CTA text color
-// if (isset($form_styles['colors']['cta_text']) && $form_styles['colors']['cta_text'] != false) {
-//     $cta_text_color = $form_styles['colors']['cta_text'];
-// } elseif ($theme_option == 'dark') {
-//     $cta_text_color = $secondary_color;
-// } else {
-//     $cta_text_color = '#ffffff';
-// }
-$cta_text_color = !empty($colors['cta_text']) 
-    ? $colors['cta_text'] 
+$cta_text_color = !empty($colors['cta_text'])
+    ? $colors['cta_text']
     : ($theme_option === 'dark' ? $secondary_color : '#ffffff');
 
 // Errors and successes color
-// $error_color = isset($form_styles['colors']['error']) ? $form_styles['colors']['error'] : "#FF785A";
-// $success_color = isset($form_styles['colors']['success']) ? $form_styles['colors']['success'] : "#73BE1E";
 $error_color   = !empty($colors['error']) ? $colors['error'] : "#FF785A";
 $success_color = !empty($colors['success']) ? $colors['success'] : "#73BE1E";
 
 // Opacity
-$opacity = !empty($form_styles['opacity']) 
-    ? 'opacity--' . $form_styles['opacity'] 
+$opacity = !empty($form_styles['opacity'])
+    ? 'opacity--' . $form_styles['opacity']
     : 'opacity--50';
 
 // Alignment
-// $align = $form_styles['placement'];
 $align = $form_styles['placement'] ?? '';
 
 // Url
@@ -168,8 +124,8 @@ $url = get_the_permalink();
 $form_type = get_field('form_type', $form_id);
 // Multistep: steps
 $steps = get_field('steps', $form_id);
-$multistep_count = $steps && $steps['step'] ? count($steps['step']) + 2 : 0;
-
+$steps = is_array($steps) ? $steps : [];
+$multistep_count = (!empty($steps['step']) && is_array($steps['step'])) ? count($steps['step']) + 2 : 0;
 $has_multisteps = $form_type === 'multistep';
 
 // Prepare data arrays for partials
@@ -198,33 +154,33 @@ $counter_data = array(
 );
 $share_data = array(
     'form_type' => $form_type,
-    'headline' => $has_multisteps ? $steps['share_headline'] : $thank_you_settings['share_headline'],
-    'description' => $has_multisteps ? $steps['share_description'] : $thank_you_settings['share_description'],
+    'headline' => $has_multisteps ? ($steps['share_headline'] ?? '') : ($thank_you_settings['share_headline'] ?? ''),
+    'description' => $has_multisteps ? ($steps['share_description'] ?? '') : ($thank_you_settings['share_description'] ?? ''),
     'url' => $url,
-    'enable_wa_message' => $has_multisteps ? $steps['enable_wa_message'] : $thank_you_settings['enable_wa_message'],
-    'whatsapp_message' => $has_multisteps ? $steps['share_whatsapp'] : $thank_you_settings['share_whatsapp'],
+    'enable_wa_message' => $has_multisteps ? ($steps['enable_wa_message'] ?? false) : ($thank_you_settings['enable_wa_message'] ?? false),
+    'whatsapp_message' => $has_multisteps ? ($steps['share_whatsapp'] ?? '') : ($thank_you_settings['share_whatsapp'] ?? ''),
 );
 $donate_data = array(
     'form_type' => $form_type,
-    'headline' => $has_multisteps ? $steps['donation_headline'] : $thank_you_settings['donate_headline'],
-    'description' => $has_multisteps ? $steps['donation_description'] : $thank_you_settings['donate_description'],
-    'donate_preset_amounts' => $has_multisteps ? $steps['donate_preset_amounts'] : null,
+    'headline' => $has_multisteps ? ($steps['donation_headline'] ?? '') : ($thank_you_settings['donate_headline'] ?? ''),
+    'description' => $has_multisteps ? ($steps['donation_description'] ?? '') : ($thank_you_settings['donate_description'] ?? ''),
+    'donate_preset_amounts' => $has_multisteps ? ($steps['donate_preset_amounts'] ?? null) : null,
     'thank_you_settings' => $thank_you_settings,
-    'enable_donation_amount' => $has_multisteps ? $steps['enable_donation_amount'] : $thank_you_settings['enable_donation_amount'],
-    'donate_url' => $has_multisteps ? $steps['donate_url'] : $thank_you_settings['donate_url'],
-    'donate_cta' => $has_multisteps ? $steps['donate_cta'] : $thank_you_settings['donate_cta'],
+    'enable_donation_amount' => $has_multisteps ? ($steps['enable_donation_amount'] ?? false) : ($thank_you_settings['enable_donation_amount'] ?? false),
+    'donate_url' => $has_multisteps ? ($steps['donate_url'] ?? '') : ($thank_you_settings['donate_url'] ?? ''),
+    'donate_cta' => $has_multisteps ? ($steps['donate_cta'] ?? '') : ($thank_you_settings['donate_cta'] ?? ''),
     'form_fields_translations' => $form_fields_translations
 );
 $final_data = array(
     'multistep_count' => $multistep_count,
-    'final_all_completed_headline' => $has_multisteps ? $steps['final_all_completed_headline'] : null,
-    'final_all_completed_description' => $has_multisteps ? $steps['final_all_completed_description'] : null,
-    'final_all_completed_button_caption' => $has_multisteps ? $steps['final_all_completed_button_caption'] : null,
-    'final_all_completed_button_url' => $has_multisteps ? $steps['final_all_completed_button_url'] : null,
-    'final_incomplete_headline' => $has_multisteps ? $steps['final_incomplete_headline'] : null,
-    'final_incomplete_description' => $has_multisteps ? $steps['final_incomplete_description'] : null,
-    'final_incomplete_button_caption' => $has_multisteps ? $steps['final_incomplete_button_caption'] : null,
-    'final_incomplete_button_url' => $has_multisteps ? $steps['final_incomplete_button_url'] : null
+    'final_all_completed_headline' => $has_multisteps ? ($steps['final_all_completed_headline'] ?? null) : null,
+    'final_all_completed_description' => $has_multisteps ? ($steps['final_all_completed_description'] ?? null) : null,
+    'final_all_completed_button_caption' => $has_multisteps ? ($steps['final_all_completed_button_caption'] ?? null) : null,
+    'final_all_completed_button_url' => $has_multisteps ? ($steps['final_all_completed_button_url'] ?? null) : null,
+    'final_incomplete_headline' => $has_multisteps ? ($steps['final_incomplete_headline'] ?? null) : null,
+    'final_incomplete_description' => $has_multisteps ? ($steps['final_incomplete_description'] ?? null) : null,
+    'final_incomplete_button_caption' => $has_multisteps ? ($steps['final_incomplete_button_caption'] ?? null) : null,
+    'final_incomplete_button_url' => $has_multisteps ? ($steps['final_incomplete_button_url'] ?? null) : null
 );
 $custom_ask_data = array(
     'headline' => $has_multisteps ? $steps['custom_ask_headline'] : null,
@@ -659,9 +615,9 @@ $layouts_data = array(
 </style>
 
 <?php
-$donate_amount_default = $form_type === 'multistep' ? $steps['donate_default_amount'] : $thank_you_settings['donate_default_amount'];
-$donate_amount = $donate_amount_default ? $donate_amount_default : ($form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0);
-$ty_description = $form_type === 'multistep' ? $steps['thank_you_description'] : $thank_you_settings['description'];
+$donate_amount_default = $form_type === 'multistep' ? ($steps['donate_default_amount'] ?? 0) : ($thank_you_settings['donate_default_amount'] ?? 0);
+$donate_amount = $donate_amount_default ?: (!empty($form_fields_translations['donate_minimum_amount']) ? $form_fields_translations['donate_minimum_amount'] : 0);
+$ty_description = $form_type === 'multistep' ? ($steps['thank_you_description'] ?? '') : ($thank_you_settings['description'] ?? '');
 $phone_by_country = <<<'JS'
 (function() {
     const path = window.location.pathname.toLowerCase();
@@ -686,22 +642,22 @@ JS;
     window['leads_form_<?php echo $block['id']; ?>'] = {
         // toggle donations amount
         donateAmount: <?php echo $donate_amount; ?>,
-        donateMinimumAmount: <?php echo $form_fields_translations['donate_minimum_amount'] ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
-        thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? $steps['thank_you_headline'] : $thank_you_settings['headline']); ?>',
-        thankYouDescription: '<?php echo addslashes(trim(preg_replace('/\s+/', ' ', trim($ty_description)))); ?>',
+        donateMinimumAmount: <?php echo !empty($form_fields_translations['donate_minimum_amount']) ? $form_fields_translations['donate_minimum_amount'] : 0; ?>,
+        thankYouTitle: '<?php echo addslashes($form_type === 'multistep' ? ($steps['thank_you_headline'] ?? '') : ($thank_you_settings['headline'] ?? '')); ?>',
+        thankYouDescription: '<?php echo addslashes(trim(preg_replace('/\s+/', ' ', trim($ty_description ?? '')))); ?>',
         pluginUrl: '<?php echo GPLP_PLUGIN_ROOT; ?>',
         //heroTitle trim slashes,remove tags and new lines
-        heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'])))); ?>',
+        heroTitle: '<?php echo addslashes(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['headline'] ?? '')))); ?>',
         heroDescription: <?php echo json_encode(wp_strip_all_tags(trim(preg_replace('/\s\s+/', ' ', $hero_settings['description'] ?? '')))); ?>,
         display: "<?php echo $display; ?>",
-        formStyle: '<?php echo $form_settings['collapse_inputs']; ?>',
+        formStyle: '<?php echo $form_settings['collapse_inputs'] ?? ''; ?>',
         enableCounter: '<?php echo $form_settings['enable_counter'] ?? ''; ?>',
         counter: <?php echo (int)(get_post_meta($form_id, 'count', true) ?: 0) + (int)($form_settings['counter'] ?? 0); ?>,
         counterGoalValue: '<?php echo $form_settings['counter_goal_value'] ?? ''; ?>',
         counterApiEndpoints: [<?php echo !empty($form_settings['counter-api-endpoints']) ? join(',', array_map(function ($url) {
                                     return '"' . esc_js($url['endpoint'] ?? '') . '"';
                                 }, $form_settings['counter-api-endpoints'])) : ''; ?>],
-        sourceCode: '<?php echo trim($form_settings['source_code'], " \t\n\r\0\x0B"); ?>',
+        sourceCode: '<?php echo trim($form_settings['source_code'] ?? '', " \t\n\r\0\x0B"); ?>',
         readMore: '<?php echo $form_fields_translations['read_more']; ?>',
         readLess: '<?php echo $form_fields_translations['read_less']; ?>',
         formFields: {
@@ -777,42 +733,42 @@ JS;
             fname: {
                 value: '',
                 id: 'fname',
-                fieldName: '<?php echo $form_fields_translations['first_name']; ?>',
+                fieldName: '<?php echo $form_fields_translations['first_name'] ?? ''; ?>',
                 required: true,
                 regex: /^([^0-9]*){2,30}$/
             },
             lname: {
                 value: '',
                 id: 'lname',
-                fieldName: '<?php echo $form_fields_translations['last_name']; ?>',
+                fieldName: '<?php echo $form_fields_translations['last_name'] ?? ''; ?>',
                 required: true,
                 regex: /^([^0-9]*){2,30}$/
             },
             email: {
                 value: '',
                 id: 'email',
-                fieldName: '<?php echo $form_fields_translations['email']; ?>',
+                fieldName: '<?php echo $form_fields_translations['email'] ?? ''; ?>',
                 required: true,
                 regex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             },
             phone: {
                 value: '',
                 id: 'phone',
-                fieldName: '<?php echo $form_fields_translations['phone']; ?>',
-                required: <?php echo $form_settings['phone'] == 'required' ? 1 : 0; ?>,
+                fieldName: '<?php echo $form_fields_translations['phone'] ?? ''; ?>',
+                required: <?php echo ($form_settings['phone'] ?? '') === 'required' ? 1 : 0; ?>,
                 regex: <?php echo $phone_by_country; ?>
             },
             consent: {
-                value: <?php echo var_export((bool)($form_settings['consent_method'] == 'checkbox_checked' || $form_settings['consent_method'] == 'assumed'), true); ?>,
-                fieldName: "<?php echo trim(preg_replace('/\s\s+/', ' ', strip_tags($form_fields_translations['terms_agree']))); ?>",
+                value: <?php echo var_export((bool)(($form_settings['consent_method'] ?? '') === 'checkbox_checked' || ($form_settings['consent_method'] ?? '') === 'assumed'), true); ?>,
+                fieldName: "<?php echo trim(preg_replace('/\s\s+/', ' ', strip_tags($form_fields_translations['terms_agree'] ?? ''))); ?>",
                 required: false,
                 regex: ''
             },
         },
         errorMessages: {
-            required: <?php echo json_encode($form_fields_translations['error_required']); ?>,
-            format: <?php echo json_encode($form_fields_translations['error_format']); ?>,
-            phoneFormat: <?php echo json_encode($form_fields_translations['error_format_phone']); ?>
+            required: <?php echo json_encode($form_fields_translations['error_required'] ?? ''); ?>,
+            format: <?php echo json_encode($form_fields_translations['error_format'] ?? ''); ?>,
+            phoneFormat: <?php echo json_encode($form_fields_translations['error_format_phone'] ?? ''); ?>
         },
         formType: '<?php echo $form_type; ?>',
         multistepCount: <?php echo $multistep_count; ?>,
