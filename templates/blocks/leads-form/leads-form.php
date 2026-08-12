@@ -32,21 +32,28 @@ $form_id = $block['data']['form'] ?? null;
 
 //     return;
 // }
-
-$form_id = $block['data']['form'] ?? null;
+$form_id = $block['data']['form']
+    ?? $block['data']['field_petition_form_block_form']
+    ?? null;
 
 $form_status = $form_id ? get_post_status($form_id) : false;
 
-$is_preview = isset($_GET['preview_leads_form'])
+$is_url_preview = isset($_GET['preview_leads_form'])
     && (int) $_GET['preview_leads_form'] === (int) $form_id;
 
 $is_editor = current_user_can('edit_posts');
+$is_acf_preview = !empty($is_preview);
 
+$allow_unpublished = $is_url_preview || $is_editor || $is_acf_preview;
+
+// Only stop rendering if the form doesn't exist
+// or is unpublished and we're not allowed to preview it.
 if (
-    $form_status !== 'publish'
-    && !$is_preview
-    && !$is_editor
+    !$form_id ||
+    !$form_status ||
+    ($form_status !== 'publish' && !$allow_unpublished)
 ) {
+    echo '<div class="leads-form-error">Form unavailable.</div>';
     return;
 }
 
