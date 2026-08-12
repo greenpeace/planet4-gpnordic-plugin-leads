@@ -64,14 +64,23 @@ $form_settings = get_field('form_settings', $form_id);
 // $form_status = get_post_status($form_id);
 $hero_settings = get_field('hero_settings', $form_id);
 $thank_you_settings = get_field('thank_you_settings', $form_id);
+// $form_styles = get_field('form_styles', $form_id);
+// $form_styles = is_array($form_styles) ? $form_styles : [];
+// $colors = isset($form_styles['colors']) && is_array($form_styles['colors'])
+//     ? $form_styles['colors']
+//     : [];
+// $extra_options = get_field('extra_options', $form_id);
+// $form_fields_translations = get_field('form_fields_translations', 'options');
 $form_styles = get_field('form_styles', $form_id);
 $form_styles = is_array($form_styles) ? $form_styles : [];
-$colors = isset($form_styles['colors']) && is_array($form_styles['colors'])
+
+// Safely extract colors array
+$colors = (isset($form_styles['colors']) && is_array($form_styles['colors']))
     ? $form_styles['colors']
     : [];
+
 $extra_options = get_field('extra_options', $form_id);
 $form_fields_translations = get_field('form_fields_translations', 'options');
-
 
 // Background Image
 $background_image = get_the_post_thumbnail_url($form_id, 'large');
@@ -85,15 +94,26 @@ $brand_green_light = "#73BE1E";
 $brand_green_dark = "#005C42";
 
 // Primary color
-if (isset($form_styles['colors']['form_headline']) && $form_styles['colors']['form_headline'] != false) {
-    $primary_color = $form_styles['colors']['form_headline'];
-} else {
-    $primary_color = $brand_green_light;
-}
+// if (isset($form_styles['colors']['form_headline']) && $form_styles['colors']['form_headline'] != false) {
+//     $primary_color = $form_styles['colors']['form_headline'];
+// } else {
+//     $primary_color = $brand_green_light;
+// }
+$primary_color = !empty($colors['form_headline'])
+    ? $colors['form_headline']
+    : $brand_green_light;
+
 // Secondary color
-if (isset($form_styles['colors']['cta_background']) && $form_styles['colors']['cta_background'] != false) {
-    $secondary_color = $form_styles['colors']['cta_background'];
-} elseif (isset($form_styles['colors']['form_headline']) && $form_styles['colors']['form_headline'] != false) {
+// if (isset($form_styles['colors']['cta_background']) && $form_styles['colors']['cta_background'] != false) {
+//     $secondary_color = $form_styles['colors']['cta_background'];
+// } elseif (isset($form_styles['colors']['form_headline']) && $form_styles['colors']['form_headline'] != false) {
+//     $secondary_color = GPPL4\hexToHsl(str_replace('#', '', $primary_color));
+// } else {
+//     $secondary_color = $brand_green_dark;
+// }
+if (!empty($colors['cta_background'])) {
+    $secondary_color = $colors['cta_background'];
+} elseif (!empty($colors['form_headline'])) {
     $secondary_color = GPPL4\hexToHsl(str_replace('#', '', $primary_color));
 } else {
     $secondary_color = $brand_green_dark;
@@ -102,33 +122,39 @@ if (isset($form_styles['colors']['cta_background']) && $form_styles['colors']['c
 // Dark mode
 // $theme_option = $form_styles['colors']['theme'];
 // $theme = (isset($theme_option) && $theme_option != false) ? $theme_option : '';
-// Dark mode
-$colors = is_array($form_styles['colors'] ?? null)
-    ? $form_styles['colors']
-    : [];
-
 $theme_option = $colors['theme'] ?? false;
-$theme = $theme_option ?: '';
+$theme        = $theme_option ?: '';
 
 // CTA text color
-if (isset($form_styles['colors']['cta_text']) && $form_styles['colors']['cta_text'] != false) {
-    $cta_text_color = $form_styles['colors']['cta_text'];
-} elseif ($theme_option == 'dark') {
+// if (isset($form_styles['colors']['cta_text']) && $form_styles['colors']['cta_text'] != false) {
+//     $cta_text_color = $form_styles['colors']['cta_text'];
+// } elseif ($theme_option == 'dark') {
+//     $cta_text_color = $secondary_color;
+// } else {
+//     $cta_text_color = '#ffffff';
+// }
+if (!empty($colors['cta_text'])) {
+    $cta_text_color = $colors['cta_text'];
+} elseif ($theme_option === 'dark') {
     $cta_text_color = $secondary_color;
 } else {
     $cta_text_color = '#ffffff';
 }
 
 // Errors and successes color
-$error_color = isset($form_styles['colors']['error']) ? $form_styles['colors']['error'] : "#FF785A";
-$success_color = isset($form_styles['colors']['success']) ? $form_styles['colors']['success'] : "#73BE1E";
-
+// $error_color = isset($form_styles['colors']['error']) ? $form_styles['colors']['error'] : "#FF785A";
+// $success_color = isset($form_styles['colors']['success']) ? $form_styles['colors']['success'] : "#73BE1E";
+$error_color   = !empty($colors['error']) ? $colors['error'] : "#FF785A";
+$success_color = !empty($colors['success']) ? $colors['success'] : "#73BE1E";
 
 // Opacity
-$opacity = (isset($form_styles['opacity']) && $form_styles['opacity'] != false) ? 'opacity--' . $form_styles['opacity'] : 'opacity--50';
+// $opacity = !empty($form_styles['opacity']) 
+    ? 'opacity--' . $form_styles['opacity'] 
+    : 'opacity--50';
 
 // Alignment
-$align = $form_styles['placement'];
+// $align = $form_styles['placement'];
+$align = $form_styles['placement'] ?? '';
 
 // Url
 $url = get_the_permalink();
