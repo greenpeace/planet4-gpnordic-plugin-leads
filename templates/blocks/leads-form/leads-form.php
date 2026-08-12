@@ -20,7 +20,18 @@ $className = 'leads-form';
 if (!empty($block['className'])) {
     $className .= ' ' . $block['className'];
 }
-$form_id = get_field('form');
+// $form_id = get_field('form');
+// Get the form ID directly from the block data.
+$form_id = $block['data']['form'] ?? null;
+
+// Stop rendering if no valid form has been selected.
+if (!$form_id || !get_post($form_id)) {
+    if ($is_preview) {
+        echo '<p>Please select a published form for this block.</p>';
+    }
+
+    return;
+}
 
 // Get "Display" (size/format)
 $display = get_field('display');
