@@ -22,7 +22,7 @@ if (!empty($block['className'])) {
 }
 // $form_id = get_field('form');
 // Get the form ID directly from the block data.
-// $form_id = $block['data']['form'] ?? null;
+$form_id = $block['data']['form'] ?? null;
 
 // Stop rendering if no valid form has been selected.
 // if (!$form_id || !get_post($form_id)) {
@@ -32,9 +32,9 @@ if (!empty($block['className'])) {
 
 //     return;
 // }
-$form_id = $block['data']['form']
-    ?? $block['data']['field_petition_form_block_form']
-    ?? null;
+// $form_id = $block['data']['form']
+//     ?? $block['data']['field_petition_form_block_form']
+//     ?? null;
 
 $form_status = $form_id ? get_post_status($form_id) : false;
 
@@ -46,12 +46,12 @@ $is_acf_preview = !empty($is_preview);
 
 $allow_unpublished = $is_url_preview || $is_editor || $is_acf_preview;
 
-// Only stop rendering if the form doesn't exist
-// or is unpublished and we're not allowed to preview it.
 if (
-    !$form_id ||
-    !$form_status ||
-    ($form_status !== 'publish' && !$allow_unpublished)
+    $form_id &&
+    (
+        !$form_status ||
+        ($form_status !== 'publish' && !$allow_unpublished)
+    )
 ) {
     echo '<div class="leads-form-error">Form unavailable. Please select a published form (expect a slight delay in the editor preview while refreshing).</div>';
     return;
