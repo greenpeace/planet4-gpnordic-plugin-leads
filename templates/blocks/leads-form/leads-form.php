@@ -58,7 +58,7 @@ if (
 }
 
 // Get "Display" (size/format)
-$display = get_field('display');
+$display = get_field('display') ?: '';
 
 $form_settings = get_field('form_settings', $form_id);
 // $form_status = get_post_status($form_id);
@@ -82,6 +82,15 @@ $colors = (isset($form_styles['colors']) && is_array($form_styles['colors']))
 $extra_options = get_field('extra_options', $form_id);
 $form_fields_translations = get_field('form_fields_translations', 'options');
 
+// Ensure all ACF group arrays are safely initialized as arrays
+$form_settings             = is_array($form_settings) ? $form_settings : [];
+$hero_settings             = is_array($hero_settings) ? $hero_settings : [];
+$thank_you_settings        = is_array($thank_you_settings) ? $thank_you_settings : [];
+$form_styles               = is_array($form_styles) ? $form_styles : [];
+$extra_options             = is_array($extra_options) ? $extra_options : [];
+$steps                     = is_array($steps) ? $steps : [];
+$form_fields_translations = is_array($form_fields_translations) ? $form_fields_translations : [];
+
 // Background Image
 $background_image = get_the_post_thumbnail_url($form_id, 'large');
 // Small screen Image
@@ -99,11 +108,11 @@ $brand_green_dark = "#005C42";
 // } else {
 //     $primary_color = $brand_green_light;
 // }
-$primary_color = !empty($colors['form_headline'])
-    ? $colors['form_headline']
+$primary_color = !empty($colors['form_headline']) 
+    ? $colors['form_headline'] 
     : $brand_green_light;
 
-// Secondary color
+// Secondary/background overlay color
 // if (isset($form_styles['colors']['cta_background']) && $form_styles['colors']['cta_background'] != false) {
 //     $secondary_color = $form_styles['colors']['cta_background'];
 // } elseif (isset($form_styles['colors']['form_headline']) && $form_styles['colors']['form_headline'] != false) {
@@ -116,7 +125,7 @@ if (!empty($colors['cta_background'])) {
 } elseif (!empty($colors['form_headline'])) {
     $secondary_color = GPPL4\hexToHsl(str_replace('#', '', $primary_color));
 } else {
-    $secondary_color = $brand_green_dark;
+    $secondary_color = $brand_green_dark; // Safe fallback when empty
 }
 
 // Dark mode
@@ -133,13 +142,9 @@ $theme        = $theme_option ?: '';
 // } else {
 //     $cta_text_color = '#ffffff';
 // }
-if (!empty($colors['cta_text'])) {
-    $cta_text_color = $colors['cta_text'];
-} elseif ($theme_option === 'dark') {
-    $cta_text_color = $secondary_color;
-} else {
-    $cta_text_color = '#ffffff';
-}
+$cta_text_color = !empty($colors['cta_text']) 
+    ? $colors['cta_text'] 
+    : ($theme_option === 'dark' ? $secondary_color : '#ffffff');
 
 // Errors and successes color
 // $error_color = isset($form_styles['colors']['error']) ? $form_styles['colors']['error'] : "#FF785A";
@@ -148,7 +153,7 @@ $error_color   = !empty($colors['error']) ? $colors['error'] : "#FF785A";
 $success_color = !empty($colors['success']) ? $colors['success'] : "#73BE1E";
 
 // Opacity
-// $opacity = !empty($form_styles['opacity']) 
+$opacity = !empty($form_styles['opacity']) 
     ? 'opacity--' . $form_styles['opacity'] 
     : 'opacity--50';
 
@@ -170,8 +175,8 @@ $has_multisteps = $form_type === 'multistep';
 // Prepare data arrays for partials
 $content_data = array(
     'form_type' => $form_type,
-    'headline' => $hero_settings['headline'],
-    'description' => $hero_settings['description']
+    'headline' => $hero_settings['headline'] ?? '',
+    'description' => $hero_settings['description'] ?? ''
 );
 $form_data = array(
     'form_type' => $form_type,
@@ -181,12 +186,12 @@ $form_data = array(
     'display' => $display
 );
 $thank_you_data = array(
-    'form_type' => $form_type,
-    'share_button_caption' => $has_multisteps ? $steps['thank_you_share_button_caption'] : null,
-    'skip_button_caption' => $has_multisteps ? $steps['thank_you_skip_button_caption'] : null,
-    'share_go_to_step' => $has_multisteps ? 1 : null,
-    'skip_go_to_step' => $has_multisteps ? 2 : null,
-    'description' => $has_multisteps ? $steps['thank_you_description'] : $thank_you_settings['description'],
+    'form_type'            => $form_type,
+    'share_button_caption' => $has_multisteps ? ($steps['thank_you_share_button_caption'] ?? '') : null,
+    'skip_button_caption'  => $has_multisteps ? ($steps['thank_you_skip_button_caption'] ?? '') : null,
+    'share_go_to_step'     => $has_multisteps ? 1 : null,
+    'skip_go_to_step'      => $has_multisteps ? 2 : null,
+    'description'          => $has_multisteps ? ($steps['thank_you_description'] ?? '') : ($thank_you_settings['description'] ?? ''),
 );
 $counter_data = array(
     'form_settings' => $form_settings,
