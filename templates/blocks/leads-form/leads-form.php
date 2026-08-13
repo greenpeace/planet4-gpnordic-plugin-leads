@@ -25,10 +25,10 @@ $form_id = get_field('form');
 // Get "Display" (size/format)
 $display = get_field('display');
 
-$form_settings = get_field('form_settings', $form_id);
+$form_settings = get_field('form_settings', $form_id) ?: [];
 $form_status = get_post_status($form_id);
-$hero_settings = get_field('hero_settings', $form_id);
-$thank_you_settings = get_field('thank_you_settings', $form_id);
+$hero_settings = get_field('hero_settings', $form_id) ?: [];
+$thank_you_settings = get_field('thank_you_settings', $form_id) ?: [];
 $form_styles = get_field('form_styles', $form_id) ?: [];
 $extra_options = get_field('extra_options', $form_id) ?: [];
 $form_fields_translations = get_field('form_fields_translations', 'options') ?: [];
@@ -90,7 +90,7 @@ $url = get_the_permalink();
 // Form type 
 $form_type = get_field('form_type', $form_id);
 // Multistep: steps
-$steps = get_field('steps', $form_id);
+$steps = get_field('steps', $form_id) ?: [];
 $multistep_count = $steps && $steps['step'] ? count($steps['step']) + 2 : 0;
 
 $has_multisteps = $form_type === 'multistep';
@@ -178,7 +178,7 @@ $layouts_data = array(
         }
         ?>
     </div>
-    <?php if (!empty($small_screen_image_url)) : ?>
+    <?php if (!empty($small_screen_image)) : ?>
         <div ref="smallBkg" class="leads-form__bkg leads-form__bkg--small <?php echo $opacity; ?>" style="background-image: url(<?php echo $small_screen_image['url']; ?>);"></div>
     <?php endif; ?>
     <div ref="bkg" class="leads-form__bkg <?php echo $opacity; ?> <?php if ($small_screen_image) echo "leads-form__bkg--large" ?>" style="background-image: url(<?php echo $background_image; ?>);"></div>
