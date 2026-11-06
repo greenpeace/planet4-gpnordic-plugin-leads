@@ -22,7 +22,7 @@ if (!empty($block['className'])) {
 }
 // $form_id = get_field('form');
 // Get the form ID directly from the block data.
-$form_id = $block['data']['form'] ?? null;
+$form_id = get_field('form') ?: ($block['data']['form'] ?? null);
 
 // Stop rendering if no valid form has been selected.
 // if (!$form_id || !get_post($form_id)) {
@@ -88,7 +88,6 @@ $hero_settings             = is_array($hero_settings) ? $hero_settings : [];
 $thank_you_settings        = is_array($thank_you_settings) ? $thank_you_settings : [];
 $form_styles               = is_array($form_styles) ? $form_styles : [];
 $extra_options             = is_array($extra_options) ? $extra_options : [];
-$steps                     = is_array($steps) ? $steps : [];
 $form_fields_translations = is_array($form_fields_translations) ? $form_fields_translations : [];
 
 // Background Image
@@ -168,6 +167,7 @@ $url = get_the_permalink();
 $form_type = get_field('form_type', $form_id);
 // Multistep: steps
 $steps = get_field('steps', $form_id);
+$steps = is_array($steps) ? $steps : [];
 $multistep_count = $steps && $steps['step'] ? count($steps['step']) + 2 : 0;
 
 $has_multisteps = $form_type === 'multistep';

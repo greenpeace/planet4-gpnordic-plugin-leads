@@ -17,11 +17,22 @@
     if (!jQuery($block).hasClass("leads-form")) $block = $block[0].children[0];
     else $block = `#${$block.attr("id")}`;
     //console.log('Initialize Block', `leads_form_${jQuery($block).attr('data-block-id')}`, $block)
-    const blockData =
-      window[`leads_form_${jQuery($block).attr("data-block-id")}`];
-    //console.log('blockData', blockData)
     
+    // const blockData =
+    //   window[`leads_form_${jQuery($block).attr("data-block-id")}`];
+    
+    //console.log('blockData', blockData)
+
     const el = jQuery($block)[0];
+
+    const blockWindow = el.ownerDocument.defaultView;
+    const blockData =
+      blockWindow[`leads_form_${el.getAttribute("data-block-id")}`];
+
+    if (!blockData) {
+      console.error("Leads form data was not found for this block.", el);
+      return;
+    }
 
     if (el.dataset.initialized === "true") {
       return;
@@ -120,16 +131,37 @@
             sourceCode: this.sourceCode,
             counter: this.blockData.enableCounter ? "yes" : "no",
           });
+        // gsap
+        //   .timeline({})
+        //   .from(".leads-form__content", {
+        //     y: 100,
+        //     opacity: 0,
+        //     duration: this.animationSpeed,
+        //   })
+        //   .from(
+        //     ".leads-form__main-container",
+        //     { y: 100, opacity: 0, duration: this.animationSpeed },
+        //     `-=${this.animationSpeed / 2}`
+        //   );
+
+        const selectInForm = gsap.utils.selector(this.$el);
+        const content = selectInForm(".leads-form__content");
+        const mainContainer = selectInForm(".leads-form__main-container");
+
         gsap
           .timeline({})
-          .from(".leads-form__content", {
+          .from(content, {
             y: 100,
             opacity: 0,
             duration: this.animationSpeed,
           })
           .from(
-            ".leads-form__main-container",
-            { y: 100, opacity: 0, duration: this.animationSpeed },
+            mainContainer,
+            {
+              y: 100,
+              opacity: 0,
+              duration: this.animationSpeed,
+            },
             `-=${this.animationSpeed / 2}`
           );
 
@@ -772,7 +804,7 @@
   // Initialize dynamic block preview (editor).
   if (window.acf) {
     window.acf.addAction("render_block_preview/type=leads-form", ($block) => {
-      window.setTimeout(() => initializeBlock($block), 2000); 
+      window.setTimeout(() => initializeBlock($block), 2000);
     });
   }
 

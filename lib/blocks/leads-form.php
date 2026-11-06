@@ -41,3 +41,20 @@ function admin_enqueue_scripts()
 }
 
 add_action('admin_enqueue_scripts',  __NAMESPACE__ . '\\admin_enqueue_scripts');
+
+function enqueue_leads_form_editor_style()
+{
+    if (!is_admin()) {
+        return;
+    }
+
+    $plugin_data = get_plugin_data(GPLP_PLUGIN_ROOT_FILE);
+
+    wp_enqueue_style(
+        'gplp-leads-form-editor',
+        GPLP_PLUGIN_ROOT . 'public/css/app.css',
+        array(),
+        $plugin_data['Version']
+    );
+}
+add_action('enqueue_block_assets', __NAMESPACE__ . '\\enqueue_leads_form_editor_style');
