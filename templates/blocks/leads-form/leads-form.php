@@ -698,9 +698,9 @@ JS;
         enableCounter: '<?php echo $form_settings['enable_counter'] ?? ''; ?>',
         counter: <?php echo (int)(get_post_meta($form_id, 'count', true) ?: 0) + (int)($form_settings['counter'] ?? 0); ?>,
         counterGoalValue: '<?php echo $form_settings['counter_goal_value'] ?? ''; ?>',
-        counterApiEndpoints: [<?php echo !empty($form_settings['counter-api-endpoints']) ? join(',', array_map(function ($url) {
+        counterApiEndpoints: [<?php echo !empty($form_settings['counter_api-endpoints']) ? join(',', array_map(function ($url) {
                                     return '"' . esc_js($url['endpoint'] ?? '') . '"';
-                                }, $form_settings['counter-api-endpoints'])) : ''; ?>],
+                                }, $form_settings['counter_api-endpoints'])) : ''; ?>],
         sourceCode: '<?php echo trim($form_settings['source_code'], " \t\n\r\0\x0B"); ?>',
         readMore: '<?php echo $form_fields_translations['read_more']; ?>',
         readLess: '<?php echo $form_fields_translations['read_less']; ?>',
